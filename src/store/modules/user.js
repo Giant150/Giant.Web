@@ -51,7 +51,7 @@ const user = {
     GetInfo ({ commit }) {
       return new Promise((resolve, reject) => {
         getInfo().then(response => {
-          const result = response.result
+          const result = response.Data
 
           if (result.role && result.role.permissions.length > 0) {
             const role = result.role
