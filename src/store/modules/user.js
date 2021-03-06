@@ -52,13 +52,12 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo().then(response => {
           const result = response.Data
-
           if (result.role && result.role.permissions.length > 0) {
             const role = result.role
             role.permissions = result.role.permissions
             role.permissions.map(per => {
-              if (per.actionEntitySet != null && per.actionEntitySet.length > 0) {
-                const action = per.actionEntitySet.map(action => { return action.action })
+              if (per.actions != null && per.actions.length > 0) {
+                const action = per.actions.map(action => { return action.action })
                 per.actionList = action
               }
             })

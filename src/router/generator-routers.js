@@ -41,16 +41,7 @@ const constantRouterComponents = {
   // exception
   'Exception403': () => import(/* webpackChunkName: "fail" */ '@/views/exception/403'),
   'Exception404': () => import(/* webpackChunkName: "fail" */ '@/views/exception/404'),
-  'Exception500': () => import(/* webpackChunkName: "fail" */ '@/views/exception/500'),
-
-  // account
-  'AccountCenter': () => import('@/views/account/center'),
-  'AccountSettings': () => import('@/views/account/settings/Index'),
-  'BaseSettings': () => import('@/views/account/settings/BaseSetting'),
-  'SecuritySettings': () => import('@/views/account/settings/Security'),
-  'CustomSettings': () => import('@/views/account/settings/Custom'),
-  'BindingSettings': () => import('@/views/account/settings/Binding'),
-  'NotificationSettings': () => import('@/views/account/settings/Notification')
+  'Exception500': () => import(/* webpackChunkName: "fail" */ '@/views/exception/500')
 
   // 'TestWork': () => import(/* webpackChunkName: "TestWork" */ '@/views/dashboard/TestWork')
 }
@@ -61,17 +52,16 @@ const notFoundRouter = {
 }
 
 // 根级菜单
-const rootRouter = {
-  key: '',
-  name: 'index',
-  path: '',
-  component: 'BasicLayout',
-  redirect: '/dashboard',
-  meta: {
-    title: '首页'
-  },
-  children: []
-}
+// const rootRouter = {
+//   name: 'index',
+//   path: '',
+//   component: 'BasicLayout',
+//   redirect: '/Sys/Sys_Org/List',
+//   meta: {
+//     title: '首页'
+//   },
+//   children: []
+// }
 
 /**
  * 动态生成菜单
@@ -80,15 +70,32 @@ const rootRouter = {
  */
 export const generatorDynamicRouter = (token) => {
   return new Promise((resolve, reject) => {
-    loginService.getCurrentUserNav(token).then(res => {
+    loginService.getCurrentUserNav().then(res => {
       console.log('res', res)
-      const { result } = res
+      const result = []
+      res.Data.forEach(element => {
+        result.push({
+          id: element.Id,
+          parentId: element.ParentId,
+          name: element.Code,
+          path: element.Path === null ? '' : element.Path,
+          component: element.Component,
+          redirect: element.Redirect === null ? '' : element.Path,
+          meta: {
+            title: element.Name,
+            icon: element.Icon
+          }
+        })
+      })
       const menuNav = []
       const childrenNav = []
       //      后端数据, 根级树数组,  根级 PID
-      listToTree(result, childrenNav, 0)
-      rootRouter.children = childrenNav
-      menuNav.push(rootRouter)
+      listToTree(result, childrenNav, null)
+      childrenNav.forEach(element => {
+        menuNav.push(element)
+      })
+      // rootRouter.children = childrenNav
+      // menuNav.push(rootRouter)
       console.log('menuNav', menuNav)
       const routers = generator(menuNav)
       routers.push(notFoundRouter)
@@ -112,13 +119,13 @@ export const generator = (routerMap, parent) => {
     const { title, show, hideChildren, hiddenHeaderContent, target, icon } = item.meta || {}
     const currentRouter = {
       // 如果路由设置了 path，则作为默认 path，否则 路由地址 动态拼接生成如 /dashboard/workplace
-      path: item.path || `${parent && parent.path || ''}/${item.key}`,
+      path: item.path,
       // 路由名称，建议唯一
-      name: item.name || item.key || '',
+      name: item.name || '',
       // 该路由对应页面的 组件 :方案1
       // component: constantRouterComponents[item.component || item.key],
       // 该路由对应页面的 组件 :方案2 (动态加载)
-      component: (constantRouterComponents[item.component || item.key]) || (() => import(`@/views/${item.component}`)),
+      component: (constantRouterComponents[item.component]) || (() => import(`@/views${item.component}`)),
 
       // meta: 页面标题, 菜单图标, 页面权限(供指令权限用，可去掉)
       meta: {
@@ -164,7 +171,6 @@ const listToTree = (list, tree, parentId) => {
     if (item.parentId === parentId) {
       const child = {
         ...item,
-        key: item.key || item.name,
         children: []
       }
       // 迭代 list， 找到当前菜单相符合的所有子菜单

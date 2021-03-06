@@ -10,7 +10,7 @@ const userApi = {
   SendSmsErr: '/account/sms_err',
   // get my info
   UserInfo: '/api/Operator/GetUserInfo',
-  UserMenu: '/user/nav'
+  UserMenu: '/api/Operator/GetUserMenu'
 }
 
 /**
@@ -43,10 +43,7 @@ export function getSmsCaptcha (parameter) {
 export function getInfo () {
   return request({
     url: userApi.UserInfo,
-    method: 'get',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8'
-    }
+    method: 'get'
   })
 }
 
@@ -60,10 +57,7 @@ export function getCurrentUserNav () {
 export function logout () {
   return request({
     url: userApi.Logout,
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8'
-    }
+    method: 'post'
   })
 }
 
