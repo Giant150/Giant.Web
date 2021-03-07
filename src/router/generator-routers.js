@@ -6,10 +6,10 @@ import { BasicLayout, BlankLayout, PageView, RouteView } from '@/layouts'
 // 前端路由表
 const constantRouterComponents = {
   // 基础页面 layout 必须引入
-  BasicLayout: BasicLayout,
-  BlankLayout: BlankLayout,
-  RouteView: RouteView,
-  PageView: PageView,
+  'BasicLayout': BasicLayout,
+  'BlankLayout': BlankLayout,
+  'RouteView': RouteView,
+  'PageView': PageView,
   '403': () => import(/* webpackChunkName: "error" */ '@/views/exception/403'),
   '404': () => import(/* webpackChunkName: "error" */ '@/views/exception/404'),
   '500': () => import(/* webpackChunkName: "error" */ '@/views/exception/500'),
@@ -52,16 +52,16 @@ const notFoundRouter = {
 }
 
 // 根级菜单
-// const rootRouter = {
-//   name: 'index',
-//   path: '',
-//   component: 'BasicLayout',
-//   redirect: '/Sys/Sys_Org/List',
-//   meta: {
-//     title: '首页'
-//   },
-//   children: []
-// }
+const rootRouter = {
+  path: '/',
+  name: 'index',
+  component: 'BasicLayout',
+  redirect: '/Sys/Sys_Org',
+  meta: {
+    title: '首页'
+  },
+  children: []
+}
 
 /**
  * 动态生成菜单
@@ -91,11 +91,11 @@ export const generatorDynamicRouter = (token) => {
       const childrenNav = []
       //      后端数据, 根级树数组,  根级 PID
       listToTree(result, childrenNav, null)
-      childrenNav.forEach(element => {
-        menuNav.push(element)
-      })
-      // rootRouter.children = childrenNav
-      // menuNav.push(rootRouter)
+      // childrenNav.forEach(element => {
+      //   menuNav.push(element)
+      // })
+      rootRouter.children = childrenNav
+      menuNav.push(rootRouter)
       console.log('menuNav', menuNav)
       const routers = generator(menuNav)
       routers.push(notFoundRouter)
