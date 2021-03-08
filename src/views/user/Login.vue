@@ -18,7 +18,7 @@
             <a-input
               size="large"
               type="text"
-              :placeholder="$t('user.login.username.placeholder')"
+              placeholder="用户名"
               v-decorator="[
                 'UserName',
                 {rules: [{ required: true, message: $t('user.userName.required') }]}
@@ -31,7 +31,7 @@
           <a-form-item>
             <a-input-password
               size="large"
-              :placeholder="$t('user.login.password.placeholder')"
+              placeholder="密码"
               v-decorator="[
                 'Password',
                 {rules: [{ required: true, message: $t('user.password.required') }]}
