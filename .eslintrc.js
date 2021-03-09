@@ -13,11 +13,11 @@ module.exports = {
     'generator-star-spacing': 'off',
     'no-mixed-operators': 0,
     'vue/max-attributes-per-line': [
-      2,
+      10,
       {
-        'singleline': 5,
+        'singleline': 10,
         'multiline': {
-          'max': 1,
+          'max': 10,
           'allowFirstLine': false
         }
       }

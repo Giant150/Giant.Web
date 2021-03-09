@@ -54,12 +54,6 @@ request.interceptors.request.use(config => {
 
 // response interceptor
 request.interceptors.response.use((response) => {
-  if (!response.data.Success) {
-    notification.error({
-      message: '请求服务器出错',
-      description: response.data.Msg
-    })
-  }
   return response.data
 }, errorHandler)
 

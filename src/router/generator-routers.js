@@ -73,7 +73,7 @@ export const generatorDynamicRouter = (token) => {
     loginService.getCurrentUserNav().then(res => {
       console.log('res', res)
       const result = []
-      res.Data.forEach(element => {
+      res.forEach(element => {
         result.push({
           id: element.Id,
           parentId: element.ParentId,
@@ -133,6 +133,7 @@ export const generator = (routerMap, parent) => {
         icon: icon || undefined,
         hiddenHeaderContent: hiddenHeaderContent,
         target: target,
+        keepAlive: true,
         permission: item.name
       }
     }
