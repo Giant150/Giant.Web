@@ -1,4 +1,3 @@
-/* eslint-disable vue/max-attributes-per-line */
 <template>
   <a-card :bordered="false">
     <div class="table-page-search-wrapper">

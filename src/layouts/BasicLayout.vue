@@ -22,11 +22,11 @@
           增加 Header 左侧内容区自定义
     -->
     <template v-slot:headerContentRender>
-      <div>
+      <!-- <div>
         <a-tooltip title="刷新页面">
           <a-icon type="reload" style="font-size: 18px;cursor: pointer;" @click="() => { $message.info('只是一个DEMO') }" />
         </a-tooltip>
-      </div>
+      </div> -->
     </template>
 
     <!-- <setting-drawer :settings="settings" @change="handleSettingChange">

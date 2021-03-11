@@ -22,9 +22,8 @@ export default {
      */
     Get(id) {
         return request({
-            url: '/api/Sys_User/Get',
-            method: 'get',
-            data: { id: id }
+            url: '/api/Sys_User/Get?id=' + id,
+            method: 'get'
         })
     },
     /**

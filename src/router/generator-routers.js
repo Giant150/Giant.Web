@@ -73,7 +73,7 @@ export const generatorDynamicRouter = (token) => {
     loginService.getCurrentUserNav().then(res => {
       console.log('res', res)
       const result = []
-      res.forEach(element => {
+      res.Data.forEach(element => {
         result.push({
           id: element.Id,
           parentId: element.ParentId,

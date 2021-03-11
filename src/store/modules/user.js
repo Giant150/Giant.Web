@@ -34,12 +34,12 @@ const user = {
 
   actions: {
     // 登录
-    Login ({ commit }, userInfo) {
+    Login({ commit }, userInfo) {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
-          const result = response
-          storage.set(ACCESS_TOKEN, result.Data, 7 * 24 * 60 * 60 * 1000)
-          commit('SET_TOKEN', result.Data)
+          const result = response.Data
+          storage.set(ACCESS_TOKEN, result, 7 * 24 * 60 * 60 * 1000)
+          commit('SET_TOKEN', result)
           resolve()
         }).catch(error => {
           reject(error)
@@ -48,10 +48,10 @@ const user = {
     },
 
     // 获取用户信息
-    GetInfo ({ commit }) {
+    GetInfo({ commit }) {
       return new Promise((resolve, reject) => {
         getInfo().then(response => {
-          const result = response
+          const result = response.Data
           if (result.role && result.role.permissions.length > 0) {
             const role = result.role
             role.permissions = result.role.permissions
@@ -79,7 +79,7 @@ const user = {
     },
 
     // 登出
-    Logout ({ commit, state }) {
+    Logout({ commit, state }) {
       return new Promise((resolve) => {
         logout().then(() => {
           commit('SET_TOKEN', '')
