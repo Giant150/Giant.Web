@@ -2,8 +2,23 @@
   <a-modal :title="title" :width="640" :visible="visible" :confirmLoading="loading" @ok="handleSubmit" @cancel="()=>{this.visible=false}">
     <a-spin :spinning="loading">
       <a-form-model ref="form" :model="entity" :rules="rules" v-bind="layout">
-        <a-form-model-item label="角色名" prop="Name">
+        <a-form-model-item label="工号" prop="Code">
+          <a-input v-model="entity.Code" autocomplete="off" />
+        </a-form-model-item>
+        <a-form-model-item label="名称" prop="Name">
           <a-input v-model="entity.Name" autocomplete="off" />
+        </a-form-model-item>
+        <a-form-model-item label="帐号" prop="UserName">
+          <a-input v-model="entity.UserName" autocomplete="off" />
+        </a-form-model-item>
+        <a-form-model-item label="密码" prop="Password">
+          <a-input v-model="entity.Password" autocomplete="off" />
+        </a-form-model-item>
+        <a-form-model-item label="性别" prop="Sex">
+          <a-input v-model="entity.Sex" autocomplete="off" />
+        </a-form-model-item>
+        <a-form-model-item label="所属组织" prop="OrgId">
+          <a-input v-model="entity.OrgId" autocomplete="off" />
         </a-form-model-item>
       </a-form-model>
     </a-spin>
@@ -11,7 +26,7 @@
 </template>
 
 <script>
-import MainSvc from '@/api/Sys/Sys_RoleSvc'
+import MainSvc from '@/api/Sys/Sys_UserSvc'
 export default {
   components: {
     MainSvc
@@ -20,9 +35,10 @@ export default {
   data() {
     return {
       title: '新建',
-      layout: { labelCol: { xs: { span: 24 }, sm: { span: 7 } }, wrapperCol: { xs: { span: 24 }, sm: { span: 13 } } },
+      layout: { labelCol: { xs: { span: 24 }, sm: { span: 6 } }, wrapperCol: { xs: { span: 24 }, sm: { span: 14 } } },
       rules: {
-        Name: [{ required: true, message: '必填' }]
+        Name: [{ required: true, message: '必填' }],
+        UserName: [{ required: true, message: '必填' }]
       },
       visible: false,
       loading: false,
@@ -34,7 +50,7 @@ export default {
     init() {
       this.loading = false
       this.visible = true
-      this.entity = { Id: '', Name: '' }
+      this.entity = { Id: '', Code: '', Name: '', UserName: '', Password: '', Sex: 'Boy', OrgId: '', Status: 'Active' }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })
