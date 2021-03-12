@@ -2,7 +2,10 @@
   <a-modal :title="title" :width="640" :visible="visible" :confirmLoading="loading" @ok="handleSubmit" @cancel="()=>{this.visible=false}">
     <a-spin :spinning="loading">
       <a-form-model ref="form" :model="entity" :rules="rules" v-bind="layout">
-        <a-form-model-item label="角色名" prop="Name">
+        <a-form-model-item label="上级组织" prop="ParentId">
+          <OrgSelect v-model="entity.ParentId" :allowClear="true"></OrgSelect>
+        </a-form-model-item>
+        <a-form-model-item label="组织名称" prop="Name">
           <a-input v-model="entity.Name" autocomplete="off" />
         </a-form-model-item>
       </a-form-model>
@@ -11,10 +14,12 @@
 </template>
 
 <script>
-import MainSvc from '@/api/Sys/Sys_RoleSvc'
+import MainSvc from '@/api/Sys/Sys_OrgSvc'
+import OrgSelect from '@/components/Sys/SysOrgSelect'
 export default {
   components: {
-    MainSvc
+    MainSvc,
+    OrgSelect
   },
   props: {},
   data() {
