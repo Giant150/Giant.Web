@@ -1,5 +1,5 @@
 <template>
-  <a-tree-select v-model="curVal" :treeData="treeData" :replaceFields="replaceFields" @select="onSelect" v-bind="$attrs"></a-tree-select>
+  <a-tree-select v-model="curVal" :treeData="treeData" :replaceFields="replaceFields" @change="onChange" v-bind="$attrs"></a-tree-select>
 </template>
 
 <script>
@@ -13,6 +13,11 @@ export default {
       type: String,
       required: true,
       default: ''
+    }
+  },
+  watch: {
+    value(newVal) {
+      this.curVal = newVal
     }
   },
   mounted() {
@@ -29,9 +34,9 @@ export default {
     }
   },
   methods: {
-    onSelect(value, node, extra) {
+    onChange(value, node, extra) {
       this.$emit('input', value)
-      this.$emit('select', value, node, extra)
+      this.$emit('change', value, node, extra)
     }
   }
 }
