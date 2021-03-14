@@ -13,10 +13,13 @@
           <a v-action:Update @click="handleEdit(record)">修改</a>
           <a-divider type="vertical" />
           <a v-action:Delete @click="handleDelete([record])">删除</a>
+          <a-divider type="vertical" />
+          <a @click="handleAction(record)">按钮</a>
         </template>
       </span>
     </a-table>
     <EditForm ref="editForm" @Success="loadData"></EditForm>
+    <ActionList :menuId="menuId" :visible="actionVisible" @close="()=>{this.actionVisible=false}"></ActionList>
   </a-card>
 </template>
 
@@ -24,6 +27,7 @@
 import moment from 'moment'
 import MainSvc from '@/api/Sys/Sys_MenuSvc'
 import EditForm from './Edit'
+import ActionList from '../Sys_Action/List'
 
 const columns = [
   { title: '名称', dataIndex: 'Name' },
@@ -39,13 +43,14 @@ export default {
   name: 'TableList',
   components: {
     MainSvc,
-    EditForm
+    EditForm,
+    ActionList
   },
   data() {
     this.columns = columns
     return {
-      // create model
-      visible: false,
+      menuId: '',
+      actionVisible: false,
       confirmLoading: false,
       mdl: null,
       // 高级搜索 展开/关闭
@@ -79,6 +84,11 @@ export default {
       this.visible = true
       this.mdl = { ...record }
       this.$refs.editForm.openForm(record.Id, '修改')
+    },
+    handleAction(record) {
+      this.mdl = { ...record }
+      this.menuId = record.Id
+      this.actionVisible = true
     },
     onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
