@@ -17,7 +17,7 @@
         </template>
       </span>
     </a-table>
-    <EditForm ref="editForm" @Success="()=>{this.$refs.table.refresh()}"></EditForm>
+    <EditForm ref="editForm" @Success="loadData"></EditForm>
   </a-card>
 </template>
 
