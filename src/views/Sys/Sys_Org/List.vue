@@ -33,7 +33,6 @@ const columns = [
 ]
 
 export default {
-  name: 'TableList',
   components: {
     MainSvc,
     EditForm

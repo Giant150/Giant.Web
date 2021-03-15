@@ -18,7 +18,7 @@
       </a-form>
     </div>
 
-    <div class="table-operator">
+    <div class="table-operator" v-if="!inModal">
       <a-button type="primary" v-action:Add icon="plus" @click="handleAdd">新建</a-button>
       <a-button type="primary" v-action:Delete icon="delete" @click="handleDelete()">批量删除</a-button>
     </div>
@@ -27,7 +27,7 @@
       <span slot="ModifyTime" slot-scope="text">
         {{ moment(text).format("yyyy-MM-DD") }}
       </span>
-      <span slot="action" slot-scope="text, record">
+      <span slot="action" slot-scope="text, record" v-if="!inModal">
         <template>
           <a v-action:Update @click="handleEdit(record)">修改</a>
           <a-divider type="vertical" />
@@ -52,11 +52,17 @@ const columns = [
 ]
 
 export default {
-  name: 'TableList',
   components: {
     STable,
     MainSvc,
     EditForm
+  },
+  props: {
+    inModal: {
+      type: Boolean,
+      require: false,
+      default: false
+    }
   },
   data() {
     this.columns = columns
@@ -106,6 +112,9 @@ export default {
     onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
+      if (this.inModal) {
+        this.$emit('onSelectChange', selectedRowKeys, selectedRows)
+      }
     },
     resetSearchForm() {
       this.queryParam = {}

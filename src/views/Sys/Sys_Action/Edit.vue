@@ -43,12 +43,12 @@ export default {
         this.$refs.form.clearValidate()
       })
     },
-    openForm(entity, title) {
-      this.title = title || (entity ? '新建' : '修改')
+    openForm(id, menuId, title) {
+      this.title = title || (id ? '新建' : '修改')
       this.init()
-      this.entity.MenuId = entity.MenuId
-      if (entity.Id) {
-        MainSvc.Get(entity.Id).then(resJson => {
+      this.entity.MenuId = menuId
+      if (id) {
+        MainSvc.Get(id).then(resJson => {
           this.entity = resJson.Data
         })
       }

@@ -20,7 +20,7 @@
           </a-col>
           <a-col :md="!advanced && 6 || 24" :sm="24">
             <span class="table-page-search-submitButtons">
-              <a-button type="primary" v-action:Query @click="$refs.table.refresh(true)">查询</a-button>
+              <a-button type="primary" v-action:Query @click="()=>{this.$refs.table.refresh()}">查询</a-button>
               <a-button style="margin-left: 8px" @click="resetSearchForm(selectedRows)">重置</a-button>
             </span>
           </a-col>
@@ -42,10 +42,13 @@
           <a v-action:Update @click="handleEdit(record)">修改</a>
           <a-divider type="vertical" />
           <a v-action:Delete @click="handleDelete([record])">删除</a>
+          <a-divider type="vertical" />
+          <a @click="handleRole(record)">所属角色</a>
         </template>
       </span>
     </s-table>
     <EditForm ref="editForm" @Success="()=>{this.$refs.table.refresh()}"></EditForm>
+    <UserRole ref="userRole"></UserRole>
   </a-card>
 </template>
 
@@ -54,21 +57,22 @@ import moment from 'moment'
 import { STable } from '@/components'
 import MainSvc from '@/api/Sys/Sys_UserSvc'
 import EditForm from './Edit'
+import UserRole from '../Sys_UserRole/List'
 
 const columns = [
   { title: '工号', dataIndex: 'Code', sorter: true },
   { title: '名称', dataIndex: 'Name', sorter: true },
   { title: '帐号', dataIndex: 'UserName', sorter: true },
   { title: '修改时间', dataIndex: 'ModifyTime', sorter: true, scopedSlots: { customRender: 'ModifyTime' } },
-  { title: '操作', dataIndex: 'action', width: '150px', scopedSlots: { customRender: 'action' } }
+  { title: '操作', dataIndex: 'action', width: '200px', scopedSlots: { customRender: 'action' } }
 ]
 
 export default {
-  name: 'TableList',
   components: {
     STable,
     MainSvc,
-    EditForm
+    EditForm,
+    UserRole
   },
   data() {
     this.columns = columns
@@ -114,6 +118,9 @@ export default {
       this.visible = true
       this.mdl = { ...record }
       this.$refs.editForm.openForm(record.Id, '修改')
+    },
+    handleRole(record) {
+      this.$refs.userRole.openForm(record.Id)
     },
     onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
