@@ -14,7 +14,7 @@
           <a-divider type="vertical" />
           <a v-action:Delete @click="handleDelete([record])">删除</a>
           <a-divider type="vertical" />
-          <a @click="handleAction(record)">按钮</a>
+          <a v-action:Action @click="handleAction(record)">按钮</a>
         </template>
       </span>
     </a-table>

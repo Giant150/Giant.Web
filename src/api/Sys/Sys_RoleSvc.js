@@ -27,6 +27,41 @@ export default {
         })
     },
     /**
+    * 获取角色的权限菜单
+    * @param {string} id 角色Id
+    * @returns 实体数据
+    */
+    GetMenu(id) {
+        return request({
+            url: '/api/Sys_Role/GetMenu?roleId=' + id,
+            method: 'get'
+        })
+    },
+    /**
+    * 获取角色的可有权限
+    * @param {string} id 角色Id
+    * @returns 实体数据
+    */
+    GetAccess(id) {
+        return request({
+            url: '/api/Sys_Role/GetAccess?roleId=' + id,
+            method: 'get'
+        })
+    },
+    /**
+    * 保存权限
+    * @param {string} id 角色Id
+    * @param {Array} access 角色Id
+    * @returns 实体数据
+    */
+    SaveAccess(id, access) {
+        return request({
+            url: '/api/Sys_Role/SaveAccess?roleId=' + id,
+            method: 'post',
+            data: access
+        })
+    },
+    /**
      * 保存数据
      * @param {Object} data 要保存的实体
      * @returns 保存是否成功

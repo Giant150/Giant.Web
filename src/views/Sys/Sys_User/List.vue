@@ -43,7 +43,7 @@
           <a-divider type="vertical" />
           <a v-action:Delete @click="handleDelete([record])">删除</a>
           <a-divider type="vertical" />
-          <a @click="handleRole(record)">所属角色</a>
+          <a v-action:Role @click="handleRole(record)">所属角色</a>
         </template>
       </span>
     </s-table>

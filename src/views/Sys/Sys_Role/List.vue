@@ -32,10 +32,13 @@
           <a v-action:Update @click="handleEdit(record)">修改</a>
           <a-divider type="vertical" />
           <a v-action:Delete @click="handleDelete([record])">删除</a>
+          <a-divider type="vertical" />
+          <a v-action:Access @click="handleAccess(record)">权限</a>
         </template>
       </span>
     </s-table>
     <EditForm ref="editForm" @Success="()=>{this.$refs.table.refresh()}"></EditForm>
+    <AccessForm ref="accessForm"></AccessForm>
   </a-card>
 </template>
 
@@ -44,6 +47,7 @@ import moment from 'moment'
 import { STable } from '@/components'
 import MainSvc from '@/api/Sys/Sys_RoleSvc'
 import EditForm from './Edit'
+import AccessForm from './Access'
 
 const columns = [
   { title: '名称', dataIndex: 'Name', sorter: true },
@@ -55,7 +59,8 @@ export default {
   components: {
     STable,
     MainSvc,
-    EditForm
+    EditForm,
+    AccessForm
   },
   props: {
     inModal: {
@@ -138,6 +143,9 @@ export default {
           })
         }
       })
+    },
+    handleAccess(record) {
+      this.$refs.accessForm.openForm(record.Id)
     }
   }
 }

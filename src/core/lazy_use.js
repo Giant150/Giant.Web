@@ -37,6 +37,7 @@ import {
   DatePicker,
   TimePicker,
   TreeSelect,
+  Tree,
   Upload,
   Progress,
   Skeleton,
@@ -94,6 +95,7 @@ Vue.use(Divider)
 Vue.use(DatePicker)
 Vue.use(TimePicker)
 Vue.use(TreeSelect)
+Vue.use(Tree)
 Vue.use(Upload)
 Vue.use(Progress)
 Vue.use(Skeleton)
