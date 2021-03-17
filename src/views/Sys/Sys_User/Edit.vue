@@ -12,13 +12,13 @@
           <a-input v-model="entity.UserName" autocomplete="off" />
         </a-form-model-item>
         <a-form-model-item label="密码" prop="Password">
-          <a-input v-model="entity.Password" autocomplete="off" />
+          <a-input v-model="entity.Password" autocomplete="off" placeholder="不修改密码可为空" />
         </a-form-model-item>
         <a-form-model-item label="性别" prop="Sex">
           <a-input v-model="entity.Sex" autocomplete="off" />
         </a-form-model-item>
         <a-form-model-item label="所属组织" prop="OrgId">
-          <a-input v-model="entity.OrgId" autocomplete="off" />
+          <OrgSelect v-model="entity.OrgId" autocomplete="off"></OrgSelect>
         </a-form-model-item>
       </a-form-model>
     </a-spin>
@@ -26,10 +26,13 @@
 </template>
 
 <script>
+import md5 from 'md5'
 import MainSvc from '@/api/Sys/Sys_UserSvc'
+import OrgSelect from '@/components/Sys/SysOrgSelect'
 export default {
   components: {
-    MainSvc
+    MainSvc,
+    OrgSelect
   },
   props: {},
   data() {
@@ -60,6 +63,7 @@ export default {
       this.init()
       if (id) {
         MainSvc.Get(id).then(resJson => {
+          resJson.Data.Password = ''
           this.entity = resJson.Data
         })
       }
@@ -70,6 +74,9 @@ export default {
           return
         }
         this.loading = true
+        if (this.entity.Password) {
+          this.entity.Password = md5(this.entity.Password)
+        }
         MainSvc.Save(this.entity).then(result => {
           this.loading = false
           if (result.Success) {

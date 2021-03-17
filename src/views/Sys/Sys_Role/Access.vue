@@ -27,7 +27,7 @@ export default {
       this.roleId = roleId
       this.visible = true
       this.loading = false
-      MainSvc.GetMenu(roleId).then(result => {
+      MainSvc.GetMenu().then(result => {
         this.treeData = result.Data
         MainSvc.GetAccess(roleId).then(result => {
           this.checkedKeys = result.Data

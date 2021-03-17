@@ -31,9 +31,9 @@ export default {
     * @param {string} id 角色Id
     * @returns 实体数据
     */
-    GetMenu(id) {
+    GetMenu() {
         return request({
-            url: '/api/Sys_Role/GetMenu?roleId=' + id,
+            url: '/api/Sys_Role/GetMenu',
             method: 'get'
         })
     },
