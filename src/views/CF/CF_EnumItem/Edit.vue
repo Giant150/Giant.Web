@@ -2,23 +2,17 @@
   <a-modal :title="title" :width="640" :visible="visible" :confirmLoading="loading" @ok="handleSubmit" @cancel="()=>{this.visible=false}">
     <a-spin :spinning="loading">
       <a-form-model ref="form" :model="entity" :rules="rules" v-bind="layout">
-        <a-form-model-item label="工号" prop="Code">
-          <a-input v-model="entity.Code" autocomplete="off" />
-        </a-form-model-item>
         <a-form-model-item label="名称" prop="Name">
           <a-input v-model="entity.Name" autocomplete="off" />
         </a-form-model-item>
-        <a-form-model-item label="帐号" prop="UserName">
-          <a-input v-model="entity.UserName" autocomplete="off" />
+        <a-form-model-item label="编码" prop="Code">
+          <a-input v-model="entity.Code" autocomplete="off" />
         </a-form-model-item>
-        <a-form-model-item label="密码" prop="Password">
-          <a-input v-model="entity.Password" autocomplete="off" placeholder="不修改密码可为空" />
+        <a-form-model-item label="排序" prop="Sort">
+          <a-input-number v-model="entity.Sort" style="width:100%"></a-input-number>
         </a-form-model-item>
-        <a-form-model-item label="性别" prop="Sex">
-          <EnumSelect code="Sex" v-model="entity.Sex"></EnumSelect>
-        </a-form-model-item>
-        <a-form-model-item label="所属组织" prop="OrgId">
-          <OrgSelect v-model="entity.OrgId" autocomplete="off"></OrgSelect>
+        <a-form-model-item label="备注" prop="Remark">
+          <a-textarea v-model="entity.Remark" autocomplete="off"></a-textarea>
         </a-form-model-item>
       </a-form-model>
     </a-spin>
@@ -26,15 +20,10 @@
 </template>
 
 <script>
-import md5 from 'md5'
-import MainSvc from '@/api/Sys/Sys_UserSvc'
-import OrgSelect from '@/components/Sys/SysOrgSelect'
-import EnumSelect from '@/components/CF/EnumSelect'
+import MainSvc from '@/api/CF/CF_EnumItemSvc'
 export default {
   components: {
-    MainSvc,
-    OrgSelect,
-    EnumSelect
+    MainSvc
   },
   props: {},
   data() {
@@ -43,7 +32,7 @@ export default {
       layout: { labelCol: { xs: { span: 24 }, sm: { span: 6 } }, wrapperCol: { xs: { span: 24 }, sm: { span: 14 } } },
       rules: {
         Name: [{ required: true, message: '必填' }],
-        UserName: [{ required: true, message: '必填' }]
+        Code: [{ required: true, message: '必填' }]
       },
       visible: false,
       loading: false,
@@ -55,17 +44,17 @@ export default {
     init() {
       this.loading = false
       this.visible = true
-      this.entity = { Id: '', Code: '', Name: '', UserName: '', Password: '', Sex: '', OrgId: '', Status: 'Active' }
+      this.entity = { Id: '', EnumId: '', Code: '', Name: '', Sort: 1, Remark: '', IsSystem: false }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })
     },
-    openForm(id, title) {
+    openForm(id, enumId, title) {
       this.title = title || (id ? '新建' : '修改')
       this.init()
+      this.entity.EnumId = enumId
       if (id) {
         MainSvc.Get(id).then(resJson => {
-          resJson.Data.Password = ''
           this.entity = resJson.Data
         })
       }
@@ -76,9 +65,6 @@ export default {
           return
         }
         this.loading = true
-        if (this.entity.Password) {
-          this.entity.Password = md5(this.entity.Password)
-        }
         MainSvc.Save(this.entity).then(result => {
           this.loading = false
           if (result.Success) {

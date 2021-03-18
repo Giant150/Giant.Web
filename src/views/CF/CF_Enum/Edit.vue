@@ -8,13 +8,16 @@
         <a-form-model-item label="名称" prop="Name">
           <a-input v-model="entity.Name" autocomplete="off" />
         </a-form-model-item>
+        <a-form-model-item label="备注" prop="Remark">
+          <a-textarea v-model="entity.Remark"></a-textarea>
+        </a-form-model-item>
       </a-form-model>
     </a-spin>
   </a-modal>
 </template>
 
 <script>
-import MainSvc from '@/api/Sys/Sys_UserSvc'
+import MainSvc from '@/api/CF/CF_EnumSvc'
 export default {
   components: {
     MainSvc
@@ -38,7 +41,7 @@ export default {
     init() {
       this.loading = false
       this.visible = true
-      this.entity = { Id: '', Code: '', Name: '' }
+      this.entity = { Id: '', Code: '', Name: '', IsSystem: false, Remark: '' }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })

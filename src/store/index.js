@@ -9,6 +9,7 @@ import user from './modules/user'
 
 // dynamic router permission control (Experimental)
 import permission from './modules/async-router'
+import cfenum from './modules/cfenum'
 import getters from './getters'
 
 Vue.use(Vuex)
@@ -17,7 +18,8 @@ export default new Vuex.Store({
   modules: {
     app,
     user,
-    permission
+    permission,
+    cfenum
   },
   state: {
 

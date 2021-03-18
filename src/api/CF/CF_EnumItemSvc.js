@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 /**
- * CF_Enum API接口服务
+ * CF_EnumItem API接口服务
  */
 export default {
     /**
@@ -10,7 +10,7 @@ export default {
      */
     GetPage(parameter) {
         return request({
-            url: '/api/CF_Enum/GetPage',
+            url: '/api/CF_EnumItem/GetPage',
             method: 'post',
             data: parameter
         })
@@ -22,18 +22,7 @@ export default {
      */
     Get(id) {
         return request({
-            url: '/api/CF_Enum/Get?id=' + id,
-            method: 'get'
-        })
-    },
-    /**
-     * 根据编码获取数据
-     * @param {string} code 编码
-     * @returns 实体数据
-     */
-    GetByCode(code) {
-        return request({
-            url: '/api/CF_Enum/GetByCode?code=' + code,
+            url: '/api/CF_EnumItem/Get?id=' + id,
             method: 'get'
         })
     },
@@ -44,7 +33,7 @@ export default {
      */
     Save(data) {
         return request({
-            url: '/api/CF_Enum/Save',
+            url: '/api/CF_EnumItem/Save',
             method: 'post',
             data: data
         })
@@ -56,7 +45,7 @@ export default {
      */
     Delete(ids) {
         return request({
-            url: '/api/CF_Enum/Delete',
+            url: '/api/CF_EnumItem/Delete',
             method: 'delete',
             data: ids
         })

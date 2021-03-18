@@ -89,6 +89,9 @@ const user = {
         }).catch(() => {
           resolve()
         }).finally(() => {
+          commit('SET_TOKEN', '')
+          commit('SET_ROLES', [])
+          storage.remove(ACCESS_TOKEN)
         })
       })
     }

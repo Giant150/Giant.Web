@@ -1,9 +1,9 @@
 <template>
-  <a-card :bordered="false">
+  <a-drawer title="数据字典值" placement="right" width="50%" :visible="visible" @close="()=>{this.visible=false}">
     <div class="table-page-search-wrapper">
       <a-form layout="inline">
         <a-row :gutter="48">
-          <a-col :md="6" :sm="24">
+          <a-col :md="8" :sm="24">
             <a-form-item label="关键字">
               <a-input v-model="queryParam.Keyword" placeholder="关键字" />
             </a-form-item>
@@ -24,37 +24,34 @@
     </div>
 
     <s-table ref="table" size="default" rowKey="Id" :columns="columns" :data="loadData" :rowSelection="rowSelection" showPagination="auto">
-      <span slot="ModifyTime" slot-scope="text">
-        {{ moment(text).format("yyyy-MM-DD") }}
-      </span>
       <span slot="IsSystem" slot-scope="text">
         {{ text?'是':'否' }}
+      </span>
+      <span slot="ModifyTime" slot-scope="text">
+        {{ moment(text).format("yyyy-MM-DD") }}
       </span>
       <span slot="action" slot-scope="text, record">
         <template>
           <a v-action:Update v-if="!record.IsSystem" @click="handleEdit(record)">修改</a>
           <a-divider type="vertical" />
           <a v-action:Delete v-if="!record.IsSystem" @click="handleDelete([record])">删除</a>
-          <a-divider type="vertical" />
-          <a v-action:Item @click="handleItem(record)">字典值</a>
         </template>
       </span>
     </s-table>
     <EditForm ref="editForm" @Success="()=>{this.$refs.table.refresh()}"></EditForm>
-    <ItemList ref="itemList"></ItemList>
-  </a-card>
+  </a-drawer>
 </template>
 
 <script>
 import moment from 'moment'
 import { STable } from '@/components'
-import MainSvc from '@/api/CF/CF_EnumSvc'
+import MainSvc from '@/api/CF/CF_EnumItemSvc'
 import EditForm from './Edit'
-import ItemList from '../CF_EnumItem/List'
 
 const columns = [
-  { title: '编号', dataIndex: 'Code', sorter: true },
   { title: '名称', dataIndex: 'Name', sorter: true },
+  { title: '编号', dataIndex: 'Code', sorter: true },
+  { title: '排序', dataIndex: 'Sort', sorter: true },
   { title: '系统必需', dataIndex: 'IsSystem', scopedSlots: { customRender: 'IsSystem' } },
   { title: '修改时间', dataIndex: 'ModifyTime', sorter: true, scopedSlots: { customRender: 'ModifyTime' } },
   { title: '操作', dataIndex: 'action', width: '200px', scopedSlots: { customRender: 'action' } }
@@ -64,8 +61,7 @@ export default {
   components: {
     STable,
     MainSvc,
-    EditForm,
-    ItemList
+    EditForm
   },
   data() {
     this.columns = columns
@@ -77,7 +73,7 @@ export default {
       // 高级搜索 展开/关闭
       advanced: false,
       // 查询参数
-      queryParam: { Keyword: '' },
+      queryParam: { Keyword: '', EnumId: '' },
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         const requestParameters = Object.assign({ Search: { ...this.queryParam } }, parameter)
@@ -102,25 +98,27 @@ export default {
   },
   methods: {
     moment,
+    openForm(enumId) {
+      this.visible = true
+      this.queryParam.EnumId = enumId
+      this.$refs.table.refresh()
+    },
     handleAdd() {
       this.mdl = null
       this.visible = true
-      this.$refs.editForm.openForm(null, '新增')
+      this.$refs.editForm.openForm(null, this.queryParam.EnumId, '新增')
     },
     handleEdit(record) {
       this.visible = true
       this.mdl = { ...record }
-      this.$refs.editForm.openForm(record.Id, '修改')
-    },
-    handleItem(record) {
-      this.$refs.itemList.openForm(record.Id)
+      this.$refs.editForm.openForm(record.Id, this.queryParam.EnumId, '修改')
     },
     onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
     },
     resetSearchForm() {
-      this.queryParam = {}
+      this.queryParam.Keyword = ''
     },
     handleDelete(rows) {
       var thisObj = this
