@@ -20,10 +20,13 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import MainSvc from '@/api/CF/CF_EnumItemSvc'
+import EnumSvc from '@/api/CF/CF_EnumSvc'
 export default {
   components: {
-    MainSvc
+    MainSvc,
+    EnumSvc
   },
   props: {},
   data() {
@@ -36,11 +39,13 @@ export default {
       },
       visible: false,
       loading: false,
-      entity: {}
+      entity: {},
+      enumData: {}
     }
   },
   created() { },
   methods: {
+    ...mapActions({ setEnum: 'setEnum' }),
     init() {
       this.loading = false
       this.visible = true
@@ -58,6 +63,11 @@ export default {
           this.entity = resJson.Data
         })
       }
+      if (enumId) {
+        EnumSvc.Get(enumId).then(resJson => {
+          this.enumData = resJson.Data
+        })
+      }
     },
     handleSubmit() {
       this.$refs['form'].validate(valid => {
@@ -68,6 +78,7 @@ export default {
         MainSvc.Save(this.entity).then(result => {
           this.loading = false
           if (result.Success) {
+            this.setEnum(this.enumData.Code)
             this.$message.success(result.Msg)
             this.visible = false
             this.$emit('Success')
