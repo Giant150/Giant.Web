@@ -82,7 +82,7 @@ export default {
       queryParam: { Name: '' },
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        const requestParameters = Object.assign({ Search: { ...this.queryParam } }, parameter)
+        const requestParameters = Object.assign({ sortField: 'Name', sortOrder: 'asc', Search: { ...this.queryParam } }, parameter)
         console.log('loadData request parameters:', requestParameters)
         return MainSvc.GetPage(requestParameters)
       },
