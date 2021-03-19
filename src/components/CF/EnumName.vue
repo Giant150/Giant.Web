@@ -16,6 +16,7 @@ export default {
   },
   computed: {
     enumNameText() {
+      if (!this.enumData.EnumItems) return ''
       var item = this.enumData.EnumItems.find(v => v.Code === this.value)
       if (item) {
         return item.Name
