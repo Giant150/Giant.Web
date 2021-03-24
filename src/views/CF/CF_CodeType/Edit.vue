@@ -8,14 +8,8 @@
         <a-form-model-item label="名称" prop="Name">
           <a-input v-model="entity.Name" autocomplete="off" />
         </a-form-model-item>
-        <a-form-model-item label="类型" prop="Type">
-          <EnumSelect code="CF_Config_Type" v-model="entity.Type"></EnumSelect>
-        </a-form-model-item>
-        <a-form-model-item label="值" prop="Val">
-          <a-input v-model="entity.Val" autocomplete="off" />
-        </a-form-model-item>
-        <a-form-model-item label="备注" prop="Remark">
-          <a-textarea v-model="entity.Remark"></a-textarea>
+        <a-form-model-item label="连接符" prop="JoinChar">
+          <a-input v-model="entity.JoinChar" autocomplete="off" />
         </a-form-model-item>
       </a-form-model>
     </a-spin>
@@ -23,12 +17,10 @@
 </template>
 
 <script>
-import MainSvc from '@/api/CF/CF_ConfigSvc'
-import EnumSelect from '@/components/CF/EnumSelect'
+import MainSvc from '@/api/CF/CF_CodeTypeSvc'
 export default {
   components: {
-    MainSvc,
-    EnumSelect
+    MainSvc
   },
   props: {},
   data() {
@@ -37,8 +29,7 @@ export default {
       layout: { labelCol: { xs: { span: 24 }, sm: { span: 6 } }, wrapperCol: { xs: { span: 24 }, sm: { span: 14 } } },
       rules: {
         Name: [{ required: true, message: '必填' }],
-        Code: [{ required: true, message: '必填' }],
-        Val: [{ required: true, message: '必填' }]
+        Code: [{ required: true, message: '必填' }]
       },
       visible: false,
       loading: false,
@@ -50,7 +41,7 @@ export default {
     init() {
       this.loading = false
       this.visible = true
-      this.entity = { Id: '', Code: '', Name: '', Type: '', Val: '', IsSystem: false, Remark: '' }
+      this.entity = { Id: '', Code: '', Name: '', JoinChar: '' }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })
