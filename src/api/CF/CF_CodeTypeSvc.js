@@ -49,5 +49,17 @@ export default {
             method: 'delete',
             data: ids
         })
+    },
+    /**
+     * 生成编码
+     * @param {String} code 编码类型代码
+     * @param {Object} para 编码参数
+     */
+    Generate(code, para) {
+        return request({
+            url: '/api/CF_CodeType/Generate?code=' + code,
+            method: 'post',
+            data: para
+        })
     }
 }

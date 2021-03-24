@@ -3,7 +3,7 @@
     <a-spin :spinning="loading">
       <a-form-model ref="form" :model="entity" :rules="rules" v-bind="layout">
         <a-form-model-item label="工号" prop="Code">
-          <a-input v-model="entity.Code" autocomplete="off" />
+          <CodeInput code="CF_User_Code" v-model="entity.Code" autocomplete="off"></CodeInput>
         </a-form-model-item>
         <a-form-model-item label="名称" prop="Name">
           <a-input v-model="entity.Name" autocomplete="off" />
@@ -30,11 +30,13 @@ import md5 from 'md5'
 import MainSvc from '@/api/Sys/Sys_UserSvc'
 import OrgSelect from '@/components/Sys/SysOrgSelect'
 import EnumSelect from '@/components/CF/EnumSelect'
+import CodeInput from '@/components/CF/CodeInput'
 export default {
   components: {
     MainSvc,
     OrgSelect,
-    EnumSelect
+    EnumSelect,
+    CodeInput
   },
   props: {},
   data() {

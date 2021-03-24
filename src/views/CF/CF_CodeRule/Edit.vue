@@ -9,10 +9,10 @@
           <a-input v-model="entity.Rule" autocomplete="off" />
         </a-form-model-item>
         <a-form-model-item label="长度" prop="Length">
-          <a-input-number v-model="entity.Length" autocomplete="off" />
+          <a-input-number v-model="entity.Length" autocomplete="off" style="width:100%" />
         </a-form-model-item>
         <a-form-model-item label="排序" prop="Sort">
-          <a-input-number v-model="entity.Sort" autocomplete="off" />
+          <a-input-number v-model="entity.Sort" autocomplete="off" style="width:100%" />
         </a-form-model-item>
       </a-form-model>
     </a-spin>
