@@ -5,6 +5,9 @@
     </div>
 
     <a-table ref="table" size="default" rowKey="Id" :columns="columns" :dataSource="data" childrenColumnName="Children" :rowSelection="rowSelection" :pagination="false">
+      <template slot="Icon" slot-scope="text">
+        <a-icon :type="text" />
+      </template>
       <span slot="ModifyTime" slot-scope="text">
         {{ moment(text).format("yyyy-MM-DD") }}
       </span>
@@ -32,8 +35,9 @@ import ActionList from '../Sys_Action/List'
 const columns = [
   { title: '名称', dataIndex: 'Name' },
   { title: '编码', dataIndex: 'Code' },
-  { title: '图标', dataIndex: 'Icon' },
+  { title: '图标', dataIndex: 'Icon', scopedSlots: { customRender: 'Icon' } },
   { title: '路径', dataIndex: 'Path' },
+  { title: '页面', dataIndex: 'Component' },
   { title: '排序', dataIndex: 'Seq' },
   { title: '修改时间', dataIndex: 'ModifyTime', scopedSlots: { customRender: 'ModifyTime' } },
   { title: '操作', dataIndex: 'action', width: '150px', scopedSlots: { customRender: 'action' } }
