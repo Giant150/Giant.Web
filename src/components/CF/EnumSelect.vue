@@ -24,17 +24,12 @@ export default {
   },
   mounted() {
     this.curValue = this.value
-    var storeData = this.$store.getters.getEnum(this.code)
-    if (!storeData) {
-      this.setEnum(this.code).then(result => {
-        this.enumData = result
-      })
-    } else {
-      this.enumData = storeData
-    }
+    this.getEnum(this.code).then(result => {
+      this.enumData = result
+    })
   },
   methods: {
-    ...mapActions({ setEnum: 'setEnum' }),
+    ...mapActions({ getEnum: 'getEnum' }),
     handleSelected(val) {
       this.$emit('input', val)
     }

@@ -18,12 +18,17 @@ const cfenum = {
     }
   },
   actions: {
-    setEnum({ commit }, code) {
+    getEnum({ commit, state }, code) {
       return new Promise(resolve => {
-        EnumSvc.GetByCode(code).then(result => {
-          commit('SET_ENUM', result.Data)
-          resolve(result.Data)
-        })
+        var curData = state.enumList.find(v => v.Code === code)
+        if (curData) {
+          resolve(curData)
+        } else {
+          EnumSvc.GetByCode(code).then(result => {
+            commit('SET_ENUM', result.Data)
+            resolve(result.Data)
+          })
+        }
       })
     }
   }

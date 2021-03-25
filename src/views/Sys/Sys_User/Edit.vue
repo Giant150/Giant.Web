@@ -3,7 +3,7 @@
     <a-spin :spinning="loading">
       <a-form-model ref="form" :model="entity" :rules="rules" v-bind="layout">
         <a-form-model-item label="工号" prop="Code">
-          <CodeInput code="CF_User_Code" v-model="entity.Code" autocomplete="off"></CodeInput>
+          <CodeInput ref="codeInput" code="CF_User_Code" v-model="entity.Code" autocomplete="off"></CodeInput>
         </a-form-model-item>
         <a-form-model-item label="名称" prop="Name">
           <a-input v-model="entity.Name" autocomplete="off" />
@@ -27,6 +27,7 @@
 
 <script>
 import md5 from 'md5'
+import { mapActions } from 'vuex'
 import MainSvc from '@/api/Sys/Sys_UserSvc'
 import OrgSelect from '@/components/Sys/SysOrgSelect'
 import EnumSelect from '@/components/CF/EnumSelect'
@@ -54,6 +55,7 @@ export default {
   },
   created() { },
   methods: {
+    ...mapActions({ getConfig: 'getConfig' }),
     init() {
       this.loading = false
       this.visible = true
@@ -69,6 +71,12 @@ export default {
         MainSvc.Get(id).then(resJson => {
           resJson.Data.Password = ''
           this.entity = resJson.Data
+        })
+      } else {
+        this.getConfig('Sys_User_Code_AutoGenerate').then(result => {
+          if (result.Val === '1') {
+            this.$refs.codeInput.Generate()
+          }
         })
       }
     },

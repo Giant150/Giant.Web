@@ -37,6 +37,9 @@
       <span slot="ModifyTime" slot-scope="text">
         {{ moment(text).format("yyyy-MM-DD") }}
       </span>
+      <template slot="Status" slot-scope="text">
+        <EnumName code="Sys_User_Status" :value="text"></EnumName>
+      </template>
       <span slot="action" slot-scope="text, record">
         <template>
           <a v-action:Update @click="handleEdit(record)">修改</a>
@@ -58,11 +61,13 @@ import { STable } from '@/components'
 import MainSvc from '@/api/Sys/Sys_UserSvc'
 import EditForm from './Edit'
 import UserRole from '../Sys_UserRole/List'
+import EnumName from '@/components/CF/EnumName'
 
 const columns = [
   { title: '工号', dataIndex: 'Code', sorter: true },
   { title: '名称', dataIndex: 'Name', sorter: true },
   { title: '帐号', dataIndex: 'UserName', sorter: true },
+  { title: '状态', dataIndex: 'Status', scopedSlots: { customRender: 'Status' } },
   { title: '修改时间', dataIndex: 'ModifyTime', sorter: true, scopedSlots: { customRender: 'ModifyTime' } },
   { title: '操作', dataIndex: 'action', width: '200px', scopedSlots: { customRender: 'action' } }
 ]
@@ -72,7 +77,8 @@ export default {
     STable,
     MainSvc,
     EditForm,
-    UserRole
+    UserRole,
+    EnumName
   },
   data() {
     this.columns = columns

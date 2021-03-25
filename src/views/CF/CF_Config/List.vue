@@ -40,9 +40,9 @@
       </span>
       <span slot="action" slot-scope="text, record">
         <template>
-          <a v-action:Update @click="handleEdit(record)">修改</a>
-          <a-divider type="vertical" />
-          <a v-action:Delete @click="handleDelete([record])">删除</a>
+          <a v-action:Update v-if="!record.IsSystem" @click="handleEdit(record)">修改</a>
+          <a-divider type="vertical" v-if="!record.IsSystem" />
+          <a v-action:Delete v-if="!record.IsSystem" @click="handleDelete([record])">删除</a>
         </template>
       </span>
     </s-table>
