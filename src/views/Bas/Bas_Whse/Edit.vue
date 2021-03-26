@@ -43,7 +43,7 @@ export default {
     init() {
       this.loading = false
       this.visible = true
-      this.entity = { Id: '', Code: '', Name: '', Type: '' }
+      this.entity = { Id: '', Code: '', Name: '', Type: '', Status: 'Enable' }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })

@@ -38,14 +38,16 @@
         {{ moment(text).format("yyyy-MM-DD") }}
       </span>
       <template slot="Status" slot-scope="text">
-        <EnumName code="Sys_User_Status" :value="text"></EnumName>
+        <EnumName code="State" :value="text"></EnumName>
       </template>
       <span slot="action" slot-scope="text, record">
         <template>
           <a v-action:Update @click="handleEdit(record)">修改</a>
-          <a-divider type="vertical" />
+          <a-divider v-action:Delete type="vertical" />
           <a v-action:Delete @click="handleDelete([record])">删除</a>
-          <a-divider type="vertical" />
+          <a-divider v-action:Update type="vertical" />
+          <a v-action:Update @click="handleStatus(record)">{{ record.Status==='Enable'?'停用':'启用' }}</a>
+          <a-divider v-action:Role type="vertical" />
           <a v-action:Role @click="handleRole(record)">所属角色</a>
         </template>
       </span>
@@ -69,7 +71,7 @@ const columns = [
   { title: '帐号', dataIndex: 'UserName', sorter: true },
   { title: '状态', dataIndex: 'Status', scopedSlots: { customRender: 'Status' } },
   { title: '修改时间', dataIndex: 'ModifyTime', sorter: true, scopedSlots: { customRender: 'ModifyTime' } },
-  { title: '操作', dataIndex: 'action', width: '200px', scopedSlots: { customRender: 'action' } }
+  { title: '操作', dataIndex: 'action', width: '250px', scopedSlots: { customRender: 'action' } }
 ]
 
 export default {
@@ -127,6 +129,16 @@ export default {
     },
     handleRole(record) {
       this.$refs.userRole.openForm(record.Id)
+    },
+    handleStatus(record) {
+      MainSvc.UpdateStatus(record.Id, record.Status === 'Enable' ? 'Disable' : 'Enable').then(result => {
+        if (result.Success) {
+          this.$message.success('操作成功!')
+          this.$refs.table.refresh()
+        } else {
+          this.$message.error(result.Msg)
+        }
+      })
     },
     onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys

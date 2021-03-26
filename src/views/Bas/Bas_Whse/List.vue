@@ -27,14 +27,19 @@
       <template slot="Type" slot-scope="text">
         <EnumName code="Bas_Whse_Type" :value="text"></EnumName>
       </template>
+      <template slot="Status" slot-scope="text">
+        <EnumName code="State" :value="text"></EnumName>
+      </template>
       <span slot="ModifyTime" slot-scope="text">
         {{ moment(text).format("yyyy-MM-DD") }}
       </span>
       <span slot="action" slot-scope="text, record">
         <template>
           <a v-action:Update @click="handleEdit(record)">修改</a>
-          <a-divider type="vertical" />
+          <a-divider v-action:Delete type="vertical" />
           <a v-action:Delete @click="handleDelete([record])">删除</a>
+          <a-divider v-action:Update type="vertical" />
+          <a v-action:Update @click="handleStatus(record)">{{ record.Status==='Enable'?'停用':'启用' }}</a>
         </template>
       </span>
     </s-table>
@@ -54,6 +59,7 @@ const columns = [
   { title: '编号', dataIndex: 'Code', sorter: true },
   { title: '名称', dataIndex: 'Name', sorter: true },
   { title: '类型', dataIndex: 'Type', scopedSlots: { customRender: 'Type' } },
+  { title: '状态', dataIndex: 'Status', scopedSlots: { customRender: 'Status' } },
   { title: '修改时间', dataIndex: 'ModifyTime', sorter: true, scopedSlots: { customRender: 'ModifyTime' } },
   { title: '操作', dataIndex: 'action', width: '200px', scopedSlots: { customRender: 'action' } }
 ]
@@ -110,6 +116,16 @@ export default {
       this.visible = true
       this.mdl = { ...record }
       this.$refs.editForm.openForm(record.Id, '修改')
+    },
+    handleStatus(record) {
+      MainSvc.UpdateStatus(record.Id, record.Status === 'Enable' ? 'Disable' : 'Enable').then(result => {
+        if (result.Success) {
+          this.$message.success('操作成功!')
+          this.$refs.table.refresh()
+        } else {
+          this.$message.error(result.Msg)
+        }
+      })
     },
     onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys

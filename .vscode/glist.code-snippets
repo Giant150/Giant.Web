@@ -42,7 +42,7 @@
 "      <span slot=\"action\" slot-scope=\"text, record\">",
 "        <template>",
 "          <a v-action:Update @click=\"handleEdit(record)\">修改</a>",
-"          <a-divider type=\"vertical\" />",
+"          <a-divider v-action:Delete type=\"vertical\" />",
 "          <a v-action:Delete @click=\"handleDelete([record])\">删除</a>",
 "        </template>",
 "      </span>",

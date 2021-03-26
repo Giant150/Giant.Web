@@ -49,5 +49,17 @@ export default {
             method: 'delete',
             data: ids
         })
+    },
+    /**
+     * 修改实体状态
+     * @param {String} id 要修改的实体主键
+     * @param {String} status 实体状态
+     * @returns 修改实体状态是否成功
+     */
+    UpdateStatus(id, status) {
+        return request({
+            url: `/api/Sys_User/UpdateStatus?id=${id}&status=${status}`,
+            method: 'patch'
+        })
     }
 }
