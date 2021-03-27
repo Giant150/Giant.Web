@@ -7,6 +7,8 @@ const user = {
   state: {
     token: '',
     name: '',
+    whseId: '',
+    storerId: '',
     welcome: '',
     avatar: '',
     roles: [],
@@ -20,6 +22,12 @@ const user = {
     SET_NAME: (state, { name, welcome }) => {
       state.name = name
       state.welcome = welcome
+    },
+    SET_WHSE: (state, whseId) => {
+      state.whseId = whseId
+    },
+    SET_STORER: (state, storerId) => {
+      state.storerId = storerId
     },
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
@@ -69,6 +77,8 @@ const user = {
           }
 
           commit('SET_NAME', { name: result.name, welcome: welcome() })
+          commit('SET_WHSE', result.whseId)
+          commit('SET_STORER', result.storerId)
           commit('SET_AVATAR', result.avatar)
 
           resolve(response)

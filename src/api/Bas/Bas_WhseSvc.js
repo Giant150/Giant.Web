@@ -61,5 +61,15 @@ export default {
             url: `/api/Bas_Whse/UpdateStatus?id=${id}&status=${status}`,
             method: 'patch'
         })
+    },
+    /**
+     * 获取当前用户有权限的仓库列表
+     * @returns 仓库列表
+     */
+    GetByUser() {
+        return request({
+            url: '/api/Bas_Whse/GetByUser',
+            method: 'get'
+        })
     }
 }

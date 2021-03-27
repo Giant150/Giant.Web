@@ -8,13 +8,19 @@
         <a-form-model-item label="名称" prop="Name">
           <a-input v-model="entity.Name" autocomplete="off" />
         </a-form-model-item>
+        <a-form-model-item label="类型" prop="Type">
+          <EnumSelect code="Bas_Storer_Type" v-model="entity.Type" autocomplete="off"></EnumSelect>
+        </a-form-model-item>
+        <a-form-model-item label="类型" prop="Status">
+          <EnumSelect code="State" v-model="entity.Status" autocomplete="off"></EnumSelect>
+        </a-form-model-item>
       </a-form-model>
     </a-spin>
   </a-modal>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import MainSvc from '@/api/Bas/Bas_StorerSvc'
 import EnumSelect from '@/components/CF/EnumSelect'
 import CodeInput from '@/components/CF/CodeInput'
@@ -38,13 +44,19 @@ export default {
       entity: {}
     }
   },
+  computed: {
+    ...mapGetters({
+      defaultWhseId: 'whseId',
+      defaultStorerId: 'storerId'
+    })
+  },
   created() { },
   methods: {
     ...mapActions({ getConfig: 'getConfig' }),
     init() {
       this.loading = false
       this.visible = true
-      this.entity = { Id: '', Code: '', Name: '' }
+      this.entity = { Id: '', WhseId: this.defaultWhseId, Code: '', Name: '', Type: 'Storer', Status: 'Enable' }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })

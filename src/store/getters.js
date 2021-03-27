@@ -9,6 +9,8 @@ const getters = {
   welcome: state => state.user.welcome,
   roles: state => state.user.roles,
   userInfo: state => state.user.info,
+  whseId: state => state.user.whseId,
+  storerId: state => state.user.storerId,
   addRouters: state => state.permission.addRouters,
   multiTab: state => state.app.multiTab
 }
