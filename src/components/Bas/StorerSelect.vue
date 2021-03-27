@@ -1,5 +1,5 @@
 <template>
-  <a-auto-complete v-model="curValue" v-bind="$attrs" @search="handlerSearch" @change="handlerSelect" optionLabelProp="title" :dropdownMenuStyle="{minWidth:'300px'}" :dropdownMatchSelectWidth="false">
+  <a-auto-complete v-model="curValue" v-bind="$attrs" @search="handlerSearch" @select="handlerSelect" optionLabelProp="title" :dropdownMenuStyle="{minWidth:'300px'}" :dropdownMatchSelectWidth="false">
     <template slot="dataSource">
       <a-select-option v-for="item in data" :key="item.Id" :value="item.Id" :title="item.Name+'('+item.Code+')'">
         <a-row>
