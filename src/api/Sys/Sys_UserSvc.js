@@ -61,5 +61,27 @@ export default {
             url: `/api/Sys_User/UpdateStatus?id=${id}&status=${status}`,
             method: 'patch'
         })
+    },
+    /**
+     * 更新当前用户默认仓库
+     * @param {String} whseId 用户默认仓库Id
+     * @returns 修改当前用户默认仓库是否成功
+     */
+     UpdateCurWhse(whseId) {
+        return request({
+            url: `/api/Sys_User/UpdateCurWhse?whseId=${whseId}`,
+            method: 'patch'
+        })
+    },
+    /**
+     * 更新当前用户默认货主
+     * @param {String} storerId 用户默认货主Id
+     * @returns 修改当前用户默认货主是否成功
+     */
+     UpdateCurStorer(storerId) {
+        return request({
+            url: `/api/Sys_User/UpdateCurStorer?storerId=${storerId}`,
+            method: 'patch'
+        })
     }
 }

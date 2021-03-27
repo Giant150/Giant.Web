@@ -6,9 +6,9 @@ import { BasicLayout, BlankLayout, PageView, RouteView } from '@/layouts'
 // 前端路由表
 const constantRouterComponents = {
   // 基础页面 layout 必须引入
-  'BasicLayout': BasicLayout,
+  'BasicLayout': () => import('@/layouts/BasicLayout'),
   'BlankLayout': BlankLayout,
-  'RouteView': RouteView,
+  'RouteView': () => import('@/layouts/RouteView'),
   'PageView': PageView,
   '403': () => import(/* webpackChunkName: "error" */ '@/views/exception/403'),
   '404': () => import(/* webpackChunkName: "error" */ '@/views/exception/404'),

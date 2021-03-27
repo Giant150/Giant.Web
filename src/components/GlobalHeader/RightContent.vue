@@ -1,19 +1,21 @@
 <template>
   <div :class="wrpCls">
+    <SelectWhse :class="prefixCls"></SelectWhse>
     <avatar-dropdown :menu="showMenu" :current-user="currentUser" :class="prefixCls" />
     <!-- <select-lang :class="prefixCls" /> -->
   </div>
 </template>
 
 <script>
+import SelectWhse from '../Bas/SelectWhse'
 import AvatarDropdown from './AvatarDropdown'
-import SelectLang from '@/components/SelectLang'
+// import SelectLang from '@/components/SelectLang'
 
 export default {
   name: 'RightContent',
   components: {
     AvatarDropdown,
-    SelectLang
+    SelectWhse
   },
   props: {
     prefixCls: {
