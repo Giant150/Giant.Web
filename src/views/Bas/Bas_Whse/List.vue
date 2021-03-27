@@ -40,10 +40,13 @@
           <a v-action:Delete @click="handleDelete([record])">删除</a>
           <a-divider v-action:Update type="vertical" />
           <a v-action:Update @click="handleStatus(record)">{{ record.Status==='Enable'?'停用':'启用' }}</a>
+          <a-divider v-action:Role type="vertical" />
+          <a v-action:Role @click="handleRole(record)">所属角色</a>
         </template>
       </span>
     </s-table>
     <EditForm ref="editForm" @Success="()=>{this.$refs.table.refresh()}"></EditForm>
+    <RoleWhse ref="roleWhse"></RoleWhse>
   </a-card>
 </template>
 
@@ -54,6 +57,7 @@ import MainSvc from '@/api/Bas/Bas_WhseSvc'
 import EditForm from './Edit'
 import EnumSelect from '@/components/CF/EnumSelect'
 import EnumName from '@/components/CF/EnumName'
+import RoleWhse from '../Bas_RoleWhse/List'
 
 const columns = [
   { title: '编号', dataIndex: 'Code', sorter: true },
@@ -61,7 +65,7 @@ const columns = [
   { title: '类型', dataIndex: 'Type', scopedSlots: { customRender: 'Type' } },
   { title: '状态', dataIndex: 'Status', scopedSlots: { customRender: 'Status' } },
   { title: '修改时间', dataIndex: 'ModifyTime', sorter: true, scopedSlots: { customRender: 'ModifyTime' } },
-  { title: '操作', dataIndex: 'action', width: '200px', scopedSlots: { customRender: 'action' } }
+  { title: '操作', dataIndex: 'action', width: '250px', scopedSlots: { customRender: 'action' } }
 ]
 
 export default {
@@ -70,7 +74,8 @@ export default {
     MainSvc,
     EditForm,
     EnumSelect,
-    EnumName
+    EnumName,
+    RoleWhse
   },
   data() {
     this.columns = columns
@@ -116,6 +121,9 @@ export default {
       this.visible = true
       this.mdl = { ...record }
       this.$refs.editForm.openForm(record.Id, '修改')
+    },
+    handleRole(record) {
+      this.$refs.roleWhse.openForm(record.Id)
     },
     handleStatus(record) {
       MainSvc.UpdateStatus(record.Id, record.Status === 'Enable' ? 'Disable' : 'Enable').then(result => {
