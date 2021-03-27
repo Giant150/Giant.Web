@@ -10,7 +10,7 @@
           </a-col>
           <a-col :md="6" :sm="24">
             <a-form-item label="类型">
-              <EnumSelect code="Bas_Storer_Type" v-model="queryParam.Type" placeholder="关键字"></EnumSelect>
+              <EnumSelect code="Bas_Storer_Type" v-model="queryParam.Type[0]" placeholder="关键字"></EnumSelect>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="24">
@@ -86,7 +86,7 @@ export default {
       // 高级搜索 展开/关闭
       advanced: false,
       // 查询参数
-      queryParam: { WhseId: '', Keyword: '', Type: '' },
+      queryParam: { WhseId: '', Keyword: '', Type: [] },
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         const requestParameters = Object.assign({ sortField: 'Code', sortOrder: 'asc', Search: { ...this.queryParam } }, parameter)
@@ -130,7 +130,7 @@ export default {
       this.selectedRows = selectedRows
     },
     resetSearchForm() {
-      this.queryParam = { WhseId: this.defaultWhseId, Keyword: '', Type: '' }
+      this.queryParam = { WhseId: this.defaultWhseId, Keyword: '', Type: [] }
     },
     handleDelete(rows) {
       var thisObj = this

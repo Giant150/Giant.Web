@@ -48,7 +48,8 @@ import {
   Descriptions,
   Space,
   message,
-  notification
+  notification,
+  AutoComplete
 } from 'ant-design-vue'
 import Viser from 'viser-vue'
 
@@ -105,6 +106,7 @@ Vue.use(Result)
 Vue.use(Statistic)
 Vue.use(Descriptions)
 Vue.use(Space)
+Vue.use(AutoComplete)
 
 Vue.prototype.$confirm = Modal.confirm
 Vue.prototype.$message = message
