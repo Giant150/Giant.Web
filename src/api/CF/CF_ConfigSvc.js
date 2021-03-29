@@ -52,12 +52,13 @@ export default {
     },
     /**
      * 获取单个实体数据
+     * @param {string} whseId 仓库Id
      * @param {string} code 编码
      * @returns 实体数据
      */
-    GetByCode(code) {
+    GetByCode(whseId, code) {
         return request({
-            url: '/api/CF_Config/GetByCode?code=' + code,
+            url: `/api/CF_Config/GetByCode?whseId=${whseId}&code=${code}`,
             method: 'get'
         })
     }

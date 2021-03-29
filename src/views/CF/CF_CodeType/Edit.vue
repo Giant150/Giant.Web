@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
 import MainSvc from '@/api/CF/CF_CodeTypeSvc'
 export default {
   components: {
@@ -36,12 +37,19 @@ export default {
       entity: {}
     }
   },
+  computed: {
+    ...mapGetters({
+      defaultWhseId: 'whseId',
+      defaultStorerId: 'storerId'
+    })
+  },
   created() { },
   methods: {
+    ...mapActions({ getConfig: 'getConfig' }),
     init() {
       this.loading = false
       this.visible = true
-      this.entity = { Id: '', Code: '', Name: '', JoinChar: '' }
+      this.entity = { Id: '', WhseId: this.defaultWhseId, Code: '', Name: '', JoinChar: '' }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })

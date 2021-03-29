@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import moment from 'moment'
 import { STable } from '@/components'
 import MainSvc from '@/api/CF/CF_CodeRuleSvc'
@@ -53,7 +54,7 @@ export default {
       // 高级搜索 展开/关闭
       advanced: false,
       // 查询参数
-      queryParam: { CodeTypeId: '' },
+      queryParam: { WhseId: '', CodeTypeId: '' },
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         const requestParameters = Object.assign({ sortField: 'Sort', sortOrder: 'asc', Search: { ...this.queryParam } }, parameter)
@@ -67,8 +68,13 @@ export default {
   filters: {
   },
   created() {
+    this.queryParam.WhseId = this.defaultWhseId
   },
   computed: {
+    ...mapGetters({
+      defaultWhseId: 'whseId',
+      defaultStorerId: 'storerId'
+    }),
     rowSelection() {
       return {
         selectedRowKeys: this.selectedRowKeys,

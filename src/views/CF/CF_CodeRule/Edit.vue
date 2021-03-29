@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
 import MainSvc from '@/api/CF/CF_CodeRuleSvc'
 import EnumSelect from '@/components/CF/EnumSelect'
 export default {
@@ -41,12 +42,19 @@ export default {
       entity: {}
     }
   },
+  computed: {
+    ...mapGetters({
+      defaultWhseId: 'whseId',
+      defaultStorerId: 'storerId'
+    })
+  },
   created() { },
   methods: {
+    ...mapActions({ getConfig: 'getConfig' }),
     init() {
       this.loading = false
       this.visible = true
-      this.entity = { Id: '', CodeTypeId: '', RuleType: '', Rule: '', Length: 0, Sort: 0 }
+      this.entity = { Id: '', WhseId: this.defaultWhseId, CodeTypeId: '', RuleType: '', Rule: '', Length: 0, Sort: 0 }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })

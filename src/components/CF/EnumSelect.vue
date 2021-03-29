@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 export default {
   props: {
     code: { type: String, required: true },
@@ -17,6 +17,12 @@ export default {
       enumData: {}
     }
   },
+  computed: {
+    ...mapGetters({
+      defaultWhseId: 'whseId',
+      defaultStorerId: 'storerId'
+    })
+  },
   watch: {
     value(value) {
       this.curValue = value
@@ -24,7 +30,7 @@ export default {
   },
   mounted() {
     this.curValue = this.value
-    this.getEnum(this.code).then(result => {
+    this.getEnum(this.defaultWhseId, this.code).then(result => {
       this.enumData = result
     })
   },

@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import moment from 'moment'
 import { STable } from '@/components'
 import MainSvc from '@/api/CF/CF_EnumSvc'
@@ -77,7 +78,7 @@ export default {
       // 高级搜索 展开/关闭
       advanced: false,
       // 查询参数
-      queryParam: { Keyword: '' },
+      queryParam: { WhseId: '', Keyword: '' },
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         const requestParameters = Object.assign({ sortField: 'Code', sortOrder: 'asc', Search: { ...this.queryParam } }, parameter)
@@ -91,8 +92,13 @@ export default {
   filters: {
   },
   created() {
+    this.queryParam.WhseId = this.defaultWhseId
   },
   computed: {
+    ...mapGetters({
+      defaultWhseId: 'whseId',
+      defaultStorerId: 'storerId'
+    }),
     rowSelection() {
       return {
         selectedRowKeys: this.selectedRowKeys,
@@ -120,7 +126,7 @@ export default {
       this.selectedRows = selectedRows
     },
     resetSearchForm() {
-      this.queryParam = {}
+      this.queryParam = { WhseId: this.defaultWhseId, Keyword: '' }
     },
     handleDelete(rows) {
       var thisObj = this

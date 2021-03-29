@@ -10,7 +10,7 @@ const cfenum = {
   },
   mutations: {
     SET_ENUM: (state, data) => {
-      var codeIndex = state.enumList.findIndex(v => v.Code === data.Code)
+      var codeIndex = state.enumList.findIndex(v => v.Id === data.Id)
       if (codeIndex >= 0) {
         state.enumList.splice(codeIndex, 1)
       }
@@ -18,13 +18,13 @@ const cfenum = {
     }
   },
   actions: {
-    getEnum({ commit, state }, code) {
+    getEnum({ commit, state }, whseId, code) {
       return new Promise(resolve => {
-        var curData = state.enumList.find(v => v.Code === code)
+        var curData = state.enumList.find(v => v.WhseId === whseId && v.Code === code)
         if (curData) {
           resolve(curData)
         } else {
-          EnumSvc.GetByCode(code).then(result => {
+          EnumSvc.GetByCode(whseId, code).then(result => {
             commit('SET_ENUM', result.Data)
             resolve(result.Data)
           })

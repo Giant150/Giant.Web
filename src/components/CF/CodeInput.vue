@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import MainSvc from '@/api/CF/CF_CodeTypeSvc'
 export default {
   components: {
@@ -20,6 +21,12 @@ export default {
       curVal: ''
     }
   },
+  computed: {
+    ...mapGetters({
+      defaultWhseId: 'whseId',
+      defaultStorerId: 'storerId'
+    })
+  },
   mounted() {
     this.curVal = this.value
   },
@@ -30,7 +37,7 @@ export default {
   },
   methods: {
     Generate() {
-      MainSvc.Generate(this.code, this.para).then(result => {
+      MainSvc.Generate(this.defaultWhseId, this.code, this.para).then(result => {
         this.curVal = result.Data
         this.$emit('input', this.curVal)
       })

@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 export default {
   props: {
     code: { type: String, required: true },
@@ -15,6 +15,10 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      defaultWhseId: 'whseId',
+      defaultStorerId: 'storerId'
+    }),
     enumNameText() {
       if (!this.enumData.EnumItems) return ''
       var item = this.enumData.EnumItems.find(v => v.Code === this.value)
@@ -26,7 +30,7 @@ export default {
     }
   },
   mounted() {
-    this.getEnum(this.code).then(result => {
+    this.getEnum(this.defaultWhseId, this.code).then(result => {
       this.enumData = result
     })
   },

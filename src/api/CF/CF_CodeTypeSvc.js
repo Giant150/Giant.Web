@@ -52,12 +52,13 @@ export default {
     },
     /**
      * 生成编码
+     * @param {String} whseId 仓库ID
      * @param {String} code 编码类型代码
      * @param {Object} para 编码参数
      */
-    Generate(code, para) {
+    Generate(whseId, code, para) {
         return request({
-            url: '/api/CF_CodeType/Generate?code=' + code,
+            url: `/api/CF_CodeType/Generate?whseId=${whseId}&code=${code}`,
             method: 'post',
             data: para
         })

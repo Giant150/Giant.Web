@@ -10,7 +10,7 @@ const cfconfig = {
   },
   mutations: {
     SET_CONFIG: (state, data) => {
-      var codeIndex = state.configList.findIndex(v => v.Code === data.Code)
+      var codeIndex = state.configList.findIndex(v => v.Id === data.Id)
       if (codeIndex >= 0) {
         state.configList.splice(codeIndex, 1)
       }
@@ -18,13 +18,13 @@ const cfconfig = {
     }
   },
   actions: {
-    getConfig({ commit, state }, code) {
+    getConfig({ commit, state }, whseId, code) {
       return new Promise(resolve => {
-        var config = state.configList.find(v => v.Code === code)
+        var config = state.configList.find(v => v.WhseId === whseId && v.Code === code)
         if (config) {
           resolve(config)
         } else {
-          ConfigSvc.GetByCode(code).then(result => {
+          ConfigSvc.GetByCode(whseId, code).then(result => {
             commit('SET_CONFIG', result.Data)
             resolve(result.Data)
           })

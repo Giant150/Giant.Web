@@ -27,7 +27,7 @@
 
 <script>
 import md5 from 'md5'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import MainSvc from '@/api/Sys/Sys_UserSvc'
 import OrgSelect from '@/components/Sys/SysOrgSelect'
 import EnumSelect from '@/components/CF/EnumSelect'
@@ -53,6 +53,12 @@ export default {
       entity: {}
     }
   },
+  computed: {
+    ...mapGetters({
+      defaultWhseId: 'whseId',
+      defaultStorerId: 'storerId'
+    })
+  },
   created() { },
   methods: {
     ...mapActions({ getConfig: 'getConfig' }),
@@ -73,7 +79,7 @@ export default {
           this.entity = resJson.Data
         })
       } else {
-        this.getConfig('Sys_User_Code_AutoGenerate').then(result => {
+        this.getConfig(this.defaultWhseId, 'Sys_User_Code_AutoGenerate').then(result => {
           if (result.Val === '1') {
             this.$refs.codeInput.Generate()
           }

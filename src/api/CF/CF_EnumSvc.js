@@ -28,12 +28,13 @@ export default {
     },
     /**
      * 根据编码获取数据
+     * @param {string} whseId 仓库Id
      * @param {string} code 编码
      * @returns 实体数据
      */
-    GetByCode(code) {
+    GetByCode(whseId, code) {
         return request({
-            url: '/api/CF_Enum/GetByCode?code=' + code,
+            url: `/api/CF_Enum/GetByCode?whseId=${whseId}&code=${code}`,
             method: 'get'
         })
     },

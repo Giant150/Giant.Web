@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import MainSvc from '@/api/CF/CF_EnumItemSvc'
 import EnumSvc from '@/api/CF/CF_EnumSvc'
 export default {
@@ -39,17 +39,22 @@ export default {
       },
       visible: false,
       loading: false,
-      entity: {},
-      enumData: {}
+      entity: {}
     }
+  },
+  computed: {
+    ...mapGetters({
+      defaultWhseId: 'whseId',
+      defaultStorerId: 'storerId'
+    })
   },
   created() { },
   methods: {
-    ...mapActions({ setEnum: 'setEnum' }),
+    ...mapActions({ getConfig: 'getConfig' }),
     init() {
       this.loading = false
       this.visible = true
-      this.entity = { Id: '', EnumId: '', Code: '', Name: '', Sort: 1, Remark: '', IsSystem: false }
+      this.entity = { Id: '', WhseId: this.defaultWhseId, EnumId: '', Code: '', Name: '', Sort: 1, Remark: '', IsSystem: false }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })
@@ -63,11 +68,6 @@ export default {
           this.entity = resJson.Data
         })
       }
-      if (enumId) {
-        EnumSvc.Get(enumId).then(resJson => {
-          this.enumData = resJson.Data
-        })
-      }
     },
     handleSubmit() {
       this.$refs['form'].validate(valid => {
@@ -78,7 +78,6 @@ export default {
         MainSvc.Save(this.entity).then(result => {
           this.loading = false
           if (result.Success) {
-            this.setEnum(this.enumData.Code)
             this.$message.success(result.Msg)
             this.visible = false
             this.$emit('Success')
