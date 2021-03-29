@@ -79,7 +79,7 @@ export default {
           this.entity = resJson.Data
         })
       } else {
-        this.getConfig(this.defaultWhseId, 'Sys_User_Code_AutoGenerate').then(result => {
+        this.getConfig({ whseId: this.defaultWhseId, code: 'Sys_User_Code_AutoGenerate' }).then(result => {
           if (result.Val === '1') {
             this.$refs.codeInput.Generate()
           }

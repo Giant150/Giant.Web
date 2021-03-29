@@ -30,7 +30,7 @@ export default {
     }
   },
   mounted() {
-    this.getEnum(this.defaultWhseId, this.code).then(result => {
+    this.getEnum({ whseId: this.defaultWhseId, code: this.code }).then(result => {
       this.enumData = result
     })
   },
