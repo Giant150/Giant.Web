@@ -62,7 +62,7 @@
 "    init() {",
 "      this.loading = false",
 "      this.visible = true",
-"      this.entity = { Id: '', Code: '', Name: '' }",
+"      this.entity = { Id: '', WhseId: this.defaultWhseId, Code: '', Name: '' }",
 "      this.$$nextTick(() => {",
 "        this.$$refs.form.clearValidate()",
 "      })",

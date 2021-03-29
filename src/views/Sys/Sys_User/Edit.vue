@@ -78,12 +78,6 @@ export default {
           resJson.Data.Password = ''
           this.entity = resJson.Data
         })
-      } else {
-        this.getConfig({ whseId: this.defaultWhseId, code: 'Sys_User_Code_AutoGenerate' }).then(result => {
-          if (result.Val === '1') {
-            this.$refs.codeInput.Generate()
-          }
-        })
       }
     },
     handleSubmit() {
