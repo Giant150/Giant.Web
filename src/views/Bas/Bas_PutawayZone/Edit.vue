@@ -3,16 +3,16 @@
     <a-spin :spinning="loading">
       <a-form-model ref="form" :model="entity" :rules="rules" v-bind="layout">
         <a-form-model-item label="编号" prop="Code">
-          <CodeInput ref="codeInput" code="Bas_Storer_Code" v-model="entity.Code" autocomplete="off"></CodeInput>
+          <a-input v-model="entity.Code" autocomplete="off" />
         </a-form-model-item>
         <a-form-model-item label="名称" prop="Name">
           <a-input v-model="entity.Name" autocomplete="off" />
         </a-form-model-item>
-        <a-form-model-item label="类型" prop="Type">
-          <EnumSelect code="Bas_Storer_Type" v-model="entity.Type" autocomplete="off"></EnumSelect>
+        <a-form-model-item label="补货触发点" prop="ReOrderPoint">
+          <a-input-number v-model="entity.ReOrderPoint" autocomplete="off" style="width:100%" />
         </a-form-model-item>
-        <a-form-model-item label="状态" prop="Status">
-          <EnumSelect code="State" v-model="entity.Status" autocomplete="off"></EnumSelect>
+        <a-form-model-item label="默认拣出库位" prop="PickToLocId">
+          <LocSelect v-model="entity.PickToLocId"></LocSelect>
         </a-form-model-item>
       </a-form-model>
     </a-spin>
@@ -21,14 +21,16 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import MainSvc from '@/api/Bas/Bas_StorerSvc'
+import MainSvc from '@/api/Bas/Bas_PutawayZoneSvc'
 import EnumSelect from '@/components/CF/EnumSelect'
 import CodeInput from '@/components/CF/CodeInput'
+import LocSelect from '@/components/Bas/LocSelect'
 export default {
   components: {
     MainSvc,
     CodeInput,
-    EnumSelect
+    EnumSelect,
+    LocSelect
   },
   props: {},
   data() {
@@ -56,7 +58,7 @@ export default {
     init() {
       this.loading = false
       this.visible = true
-      this.entity = { Id: '', WhseId: this.defaultWhseId, Code: '', Name: '', Type: 'Storer', Status: 'Enable' }
+      this.entity = { Id: '', WhseId: this.defaultWhseId, Code: '', Name: '', ReOrderPoint: 0, PickToLocId: '' }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })
@@ -67,12 +69,6 @@ export default {
       if (id) {
         MainSvc.Get(id).then(resJson => {
           this.entity = resJson.Data
-        })
-      } else {
-        this.getConfig({ whseId: this.defaultWhseId, code: 'Bas_Storer_Code_AutoGenerate' }).then(result => {
-          if (result.Val === '1') {
-            this.$refs.codeInput.Generate()
-          }
         })
       }
     },
