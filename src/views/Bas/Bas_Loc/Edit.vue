@@ -39,17 +39,17 @@
         <a-row>
           <a-col :span="8">
             <a-form-model-item label="上架区域" prop="PutawayZoneId">
-              <a-input v-model="entity.PutawayZoneId" autocomplete="off" />
+              <CommonSelect v-model="entity.PutawayZoneId" table="Bas_PutawayZone"></CommonSelect>
             </a-form-model-item>
           </a-col>
           <a-col :span="8">
             <a-form-model-item label="托盘类型" prop="TrayTypeId">
-              <a-input v-model="entity.TrayTypeId" autocomplete="off" />
+              <CommonSelect v-model="entity.TrayTypeId" table="Bas_TrayType"></CommonSelect>
             </a-form-model-item>
           </a-col>
           <a-col :span="8">
             <a-form-model-item label="巷道" prop="LanewayId">
-              <a-input v-model="entity.LanewayId" autocomplete="off" />
+              <CommonSelect v-model="entity.LanewayId" table="Bas_Laneway"></CommonSelect>
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -103,11 +103,13 @@ import { mapActions, mapGetters } from 'vuex'
 import MainSvc from '@/api/Bas/Bas_LocSvc'
 import EnumSelect from '@/components/CF/EnumSelect'
 import CodeInput from '@/components/CF/CodeInput'
+import CommonSelect from '@/components/CF/CommonSelect'
 export default {
   components: {
     MainSvc,
     CodeInput,
-    EnumSelect
+    EnumSelect,
+    CommonSelect
   },
   props: {},
   data() {
@@ -128,6 +130,29 @@ export default {
       defaultWhseId: 'whseId',
       defaultStorerId: 'storerId'
     })
+  },
+  watch: {
+    entity: {
+      handler: function (newVal, oldVal) { },
+      deep: true
+    },
+    'entity.Code': function (newVal, oldVal) {
+      if (this.entity.Name === oldVal || this.entity.Name === '') {
+        this.entity.Name = newVal
+      }
+      if (this.entity.AllocCode === oldVal || this.entity.AllocCode === '') {
+        this.entity.AllocCode = newVal
+      }
+      if (this.entity.PutawayCode === oldVal || this.entity.PutawayCode === '') {
+        this.entity.PutawayCode = newVal
+      }
+    },
+    'entity.CommingleSku': function (newVal, oldVal) {
+      this.entity.CommingleLot = newVal
+    },
+    'entity.CommingleLot': function (newVal, oldVal) {
+      this.entity.CommingleSku = newVal
+    }
   },
   created() { },
   methods: {
@@ -155,6 +180,9 @@ export default {
           return
         }
         this.loading = true
+        if (!this.entity.Id) {
+          this.entity.Id = `${this.defaultWhseId}_${this.entity.Code}`
+        }
         MainSvc.Save(this.entity).then(result => {
           this.loading = false
           if (result.Success) {

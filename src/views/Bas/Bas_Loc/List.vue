@@ -70,12 +70,13 @@ const columns = [
   { title: '上架路顺', dataIndex: 'PutawayCode', sorter: true },
   { title: '上架区域', dataIndex: 'PutawayZone.Name' },
   { title: '巷道', dataIndex: 'Laneway.Name' },
-  { title: '工作区域', dataIndex: 'ABC', scopedSlots: { customRender: 'ABC' } },
+  { title: '工作区域', dataIndex: 'WorkZone' },
+  { title: 'ABC', dataIndex: 'ABC', scopedSlots: { customRender: 'ABC' } },
   { title: '最大容量', dataIndex: 'MaxCapacity' },
   { title: '最大重量', dataIndex: 'MaxWeight' },
-  { title: '混放商品', dataIndex: 'CommingleSku' },
-  { title: '混放批次', dataIndex: 'CommingleLot' },
-  { title: '空库位', dataIndex: 'IsEmpty' },
+  { title: '混放商品', dataIndex: 'CommingleSku', customRender: (value, row, index) => { return value ? '是' : '否' } },
+  { title: '混放批次', dataIndex: 'CommingleLot', customRender: (value, row, index) => { return value ? '是' : '否' } },
+  { title: '空库位', dataIndex: 'IsEmpty', customRender: (value, row, index) => { return value ? '是' : '否' } },
   { title: '状态', dataIndex: 'Status', scopedSlots: { customRender: 'Status' } },
   { title: '操作', dataIndex: 'action', width: 200, fixed: 'right', scopedSlots: { customRender: 'action' } }
 ]
