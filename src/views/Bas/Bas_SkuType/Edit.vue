@@ -51,7 +51,7 @@ export default {
     init() {
       this.loading = false
       this.visible = true
-      this.entity = { Id: '', WhseId: this.defaultWhseId, Name: '', Code: '' }
+      this.entity = { Id: '', WhseId: this.defaultWhseId, ParentId: null, Name: '', Code: '' }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })
