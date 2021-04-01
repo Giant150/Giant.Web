@@ -180,9 +180,6 @@ export default {
           return
         }
         this.loading = true
-        if (!this.entity.Id) {
-          this.entity.Id = `${this.defaultWhseId}_${this.entity.Code}`
-        }
         MainSvc.Save(this.entity).then(result => {
           this.loading = false
           if (result.Success) {
