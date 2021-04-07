@@ -10,6 +10,7 @@ const constantRouterComponents = {
   'BlankLayout': BlankLayout,
   'RouteView': () => import('@/layouts/RouteView'),
   'PageView': PageView,
+  'Home': () => import('@/views/Home'),
   '403': () => import(/* webpackChunkName: "error" */ '@/views/exception/403'),
   '404': () => import(/* webpackChunkName: "error" */ '@/views/exception/404'),
   '500': () => import(/* webpackChunkName: "error" */ '@/views/exception/500')
@@ -25,7 +26,7 @@ const rootRouter = {
   path: '/',
   name: 'index',
   component: 'BasicLayout',
-  redirect: '/Sys/Sys_Org',
+  redirect: '/Home',
   meta: {
     title: '首页'
   },
@@ -58,6 +59,16 @@ export const generatorDynamicRouter = (token) => {
       })
       const menuNav = []
       const childrenNav = []
+      childrenNav.push({
+        path: '/Home',
+        name: 'Home',
+        component: 'Home',
+        meta: {
+          title: '首页',
+          icon: 'home',
+          keepAlive: true
+        }
+      })
       //      后端数据, 根级树数组,  根级 PID
       listToTree(result, childrenNav, null)
       // childrenNav.forEach(element => {
