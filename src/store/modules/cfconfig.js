@@ -18,13 +18,13 @@ const cfconfig = {
     }
   },
   actions: {
-    getConfig({ commit, state }, data) {
+    getConfig({ commit, state }, { whseId, code }) {
       return new Promise(resolve => {
-        var config = state.configList.find(v => v.WhseId === data.whseId && v.Code === data.code)
+        var config = state.configList.find(v => v.WhseId === whseId && v.Code === code)
         if (config) {
           resolve(config)
         } else {
-          ConfigSvc.GetByCode(data.whseId, data.code).then(result => {
+          ConfigSvc.GetByCode(whseId, code).then(result => {
             commit('SET_CONFIG', result.Data)
             resolve(result.Data)
           })

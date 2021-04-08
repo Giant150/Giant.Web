@@ -59,6 +59,9 @@ export default {
       this.loading = false
       this.visible = true
       this.entity = { Id: '', WhseId: this.defaultWhseId, Code: '', Name: '', ReOrderPoint: 0, PickToLocId: '' }
+      this.getConfig({ whseId: this.defaultWhseId, code: 'Bas_PutawayZone_PickToLocId_Default' }).then(result => {
+        this.entity.PickToLocId = result.Val
+      })
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })

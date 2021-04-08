@@ -40,7 +40,10 @@ export default {
   },
   watch: {
     value(newVal) {
-      this.curValue = newVal
+      if (this.curValue !== newVal) {
+        this.curValue = newVal
+        this.loadData()
+      }
     }
   },
   mounted() {

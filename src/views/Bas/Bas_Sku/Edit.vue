@@ -190,6 +190,15 @@ export default {
       this.loading = false
       this.visible = true
       this.entity = { Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', Name: '', BasUOM: 'EA', Barcode: '', Spec: '', PinYin: '', SupplierId: '', ShelfLife: 0, SkuTypeId: '', Price: 0, LotStgId: '', AllocStgId: '', RotateBy: 'Code', RotateType: 'FIFO', PutawayStgId: '', PutawayZoneId: '', PutawayLocId: '', ABC: 'A', ReOrderPoint: 0, ReOrderQty: 0, RackLife: 0, TrayTypeId: '', Status: 'Enable' }
+      this.getConfig({ whseId: this.defaultWhseId, code: 'Bas_Sku_LotStgId_Default' }).then(result => {
+        this.entity.LotStgId = result.Val
+      })
+      this.getConfig({ whseId: this.defaultWhseId, code: 'Bas_Sku_AllocStgId_Default' }).then(result => {
+        this.entity.AllocStgId = result.Val
+      })
+      this.getConfig({ whseId: this.defaultWhseId, code: 'Bas_Sku_PutawayStgId_Default' }).then(result => {
+        this.entity.PutawayStgId = result.Val
+      })
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })
