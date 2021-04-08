@@ -10,7 +10,7 @@
           </a-col>
           <a-col :md="4" :sm="24">
             <a-form-item label="货主">
-              <a-input v-model="queryParam.StorerId" placeholder="货主" />
+              <StorerSelect v-model="queryParam.StorerId" :type="['Storer']"></StorerSelect>
             </a-form-item>
           </a-col>
           <a-col :md="4" :sm="24">
@@ -73,6 +73,7 @@ import EditForm from './Edit'
 import EnumSelect from '@/components/CF/EnumSelect'
 import EnumName from '@/components/CF/EnumName'
 import TreeSelect from '@/components/CF/TreeSelect'
+import StorerSelect from '@/components/Bas/StorerSelect'
 
 const columns = [
   { title: '货主', dataIndex: 'Storer.Name', width: 100, fixed: 'left' },
@@ -110,7 +111,8 @@ export default {
     EnumSelect,
     EnumName,
     EditForm,
-    TreeSelect
+    TreeSelect,
+    StorerSelect
   },
   data() {
     this.columns = columns
@@ -122,7 +124,7 @@ export default {
       // 高级搜索 展开/关闭
       advanced: false,
       // 查询参数
-      queryParam: { WhseId: '', Keyword: '' },
+      queryParam: { WhseId: '', Keyword: '', StorerId: '', SkuTypeId: '' },
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         this.queryParam.WhseId = this.defaultWhseId
@@ -166,7 +168,7 @@ export default {
       this.selectedRows = selectedRows
     },
     resetSearchForm() {
-      this.queryParam = { WhseId: this.defaultWhseId, Keyword: '' }
+      this.queryParam = { WhseId: this.defaultWhseId, Keyword: '', StorerId: '', SkuTypeId: '' }
     },
     handleDelete(rows) {
       var thisObj = this
