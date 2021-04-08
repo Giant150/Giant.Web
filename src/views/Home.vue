@@ -1,35 +1,30 @@
 <template>
-  <a-list item-layout="horizontal" :data-source="commits">
+  <a-list item-layout="horizontal" rowKey="node_id" :dataSource="commits" :grid="{gutter: 24, lg: 4, md: 3, sm: 1, xs: 1}">
     <a-list-item slot="renderItem" slot-scope="item">
-      <a-list-item-meta :description="item | desc">
-        <a slot="title" :href="item.html_url">{{ item.commit.message }}</a>
-        <a-avatar slot="avatar" :src="item.committer.avatar_url" />
-      </a-list-item-meta>
+      <a-card :hoverable="true">
+        <a-card-meta>
+          <a slot="title" :href="item.committer.html_url" target="_blank">{{ item.commit.committer.name }}</a>
+          <a-avatar class="card-avatar" slot="avatar" :src="item.committer.avatar_url" size="large" />
+          <div class="meta-content" slot="description">
+            <h1>{{ item.commit.message }}</h1>
+          </div>
+        </a-card-meta>
+        <template class="ant-card-actions" slot="actions">
+          <a :href="'mailto:'+item.commit.committer.email" target="_blank">{{ item.commit.committer.email }}</a>
+          <a :href="item.html_url" target="_blank">{{ moment(item.commit.committer.date).format('lll') }}</a>
+        </template>
+      </a-card>
     </a-list-item>
   </a-list>
 </template>
 
 <script>
+import axios from 'axios'
+import moment from 'moment'
 export default {
   data() {
     return {
-      commits: [{
-        commit: {
-          committer: {
-            name: '刘巨',
-            email: 'liuju150@outlook.com',
-            date: '2021-04-07T06:08:06Z'
-          },
-          message: 'SKU'
-        },
-        html_url: 'https://github.com/LiuJu150/Giant.Web/commit/e7bc22d22b0c9b2a3cd0f007df8ceeea61201a30',
-        committer: {
-          avatar_url: 'https://avatars.githubusercontent.com/u/53262973?v=4',
-          url: 'https://api.github.com/users/LiuJu150',
-          html_url: 'https://github.com/LiuJu150',
-          followers_url: 'https://api.github.com/users/LiuJu150/followers'
-        }
-      }]
+      commits: []
     }
   },
   filters: {
@@ -38,9 +33,19 @@ export default {
     }
   },
   mounted() {
-    // this.$http.get('https://api.github.com/repos/LiuJu150/Giant.Web/commits').then(result => {
-    //   this.commits = result
-    // })
+    axios({
+      url: '/repos/LiuJu150/Giant.Web/commits?per_page=16',
+      method: 'get',
+      baseURL: 'https://api.github.com',
+      headers: { 'Accept': 'application/vnd.github.v3+json' }
+    }).then(result => {
+      if (result.status === 200) {
+        this.commits = result.data
+      }
+    })
+  },
+  methods: {
+    moment
   }
 }
 </script>
