@@ -222,6 +222,18 @@ export default {
           return
         }
         this.loading = true
+        if (!this.entity.PutawayLocId) {
+          this.entity.PutawayLocId = null
+        }
+        if (!this.entity.PutawayZoneId) {
+          this.entity.PutawayZoneId = null
+        }
+        if (!this.entity.SupplierId) {
+          this.entity.SupplierId = null
+        }
+        if (!this.entity.TrayTypeId) {
+          this.entity.TrayTypeId = null
+        }
         MainSvc.Save(this.entity).then(result => {
           this.loading = false
           if (result.Success) {

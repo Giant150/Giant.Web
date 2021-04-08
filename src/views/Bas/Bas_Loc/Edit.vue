@@ -180,6 +180,9 @@ export default {
           return
         }
         this.loading = true
+        if (!this.entity.TrayTypeId) {
+          this.entity.TrayTypeId = null
+        }
         MainSvc.Save(this.entity).then(result => {
           this.loading = false
           if (result.Success) {

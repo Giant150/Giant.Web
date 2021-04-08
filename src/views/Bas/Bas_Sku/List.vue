@@ -15,7 +15,7 @@
           </a-col>
           <a-col :md="4" :sm="24">
             <a-form-item label="物料分类">
-              <a-input v-model="queryParam.SkuTypeId" placeholder="物料分类" />
+              <TreeSelect table="Bas_SkuType" v-model="queryParam.SkuTypeId"></TreeSelect>
             </a-form-item>
           </a-col>
           <a-col :md="4" :sm="24">
@@ -72,6 +72,7 @@ import MainSvc from '@/api/Bas/Bas_SkuSvc'
 import EditForm from './Edit'
 import EnumSelect from '@/components/CF/EnumSelect'
 import EnumName from '@/components/CF/EnumName'
+import TreeSelect from '@/components/CF/TreeSelect'
 
 const columns = [
   { title: '货主', dataIndex: 'Storer.Name', width: 100, fixed: 'left' },
@@ -108,7 +109,8 @@ export default {
     MainSvc,
     EnumSelect,
     EnumName,
-    EditForm
+    EditForm,
+    TreeSelect
   },
   data() {
     this.columns = columns
