@@ -1,5 +1,5 @@
 <template>
-  <a-select v-model="curValue" :placeholder="enumData.Name" @select="handleSelected" v-bind="$attrs">
+  <a-select v-model="curValue" :placeholder="enumData.Name" @change="handleChange" @select="handleSelected" v-bind="$attrs">
     <a-select-option v-for="item in enumData.EnumItems" :key="item.Code" :value="item.Code">{{ item.Name }}</a-select-option>
   </a-select>
 </template>
@@ -36,6 +36,11 @@ export default {
   },
   methods: {
     ...mapActions({ getEnum: 'getEnum' }),
+    handleChange(val) {
+      if (!val) {
+        this.$emit('input', '')
+      }
+    },
     handleSelected(val) {
       this.$emit('input', val)
     }

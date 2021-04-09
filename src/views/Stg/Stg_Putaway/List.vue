@@ -32,10 +32,13 @@
           <a v-action:Update @click="handleEdit(record)">修改</a>
           <a-divider v-action:Delete type="vertical" />
           <a v-action:Delete @click="handleDelete([record])">删除</a>
+          <a-divider v-action:Detail type="vertical" />
+          <a v-action:Detail @click="handleDetail(record)">明细</a>
         </template>
       </span>
     </s-table>
     <EditForm ref="editForm" @Success="()=>{this.$refs.table.refresh()}"></EditForm>
+    <ListDetail ref="listDetail"></ListDetail>
   </a-card>
 </template>
 
@@ -47,6 +50,7 @@ import MainSvc from '@/api/Stg/Stg_PutawaySvc'
 import EditForm from './Edit'
 import EnumSelect from '@/components/CF/EnumSelect'
 import EnumName from '@/components/CF/EnumName'
+import ListDetail from '../Stg_PutawayDetail/List'
 
 const columns = [
   { title: '编号', dataIndex: 'Code', sorter: true },
@@ -61,7 +65,8 @@ export default {
     MainSvc,
     EnumSelect,
     EnumName,
-    EditForm
+    EditForm,
+    ListDetail
   },
   data() {
     this.columns = columns
@@ -87,7 +92,7 @@ export default {
   },
   filters: {
   },
-  created() {},
+  created() { },
   computed: {
     ...mapGetters({
       defaultWhseId: 'whseId',
@@ -111,6 +116,9 @@ export default {
       this.visible = true
       this.mdl = { ...record }
       this.$refs.editForm.openForm(record.Id, '修改')
+    },
+    handleDetail(record) {
+      this.$refs.listDetail.openForm(record)
     },
     onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
