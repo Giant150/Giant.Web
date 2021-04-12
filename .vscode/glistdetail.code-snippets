@@ -48,7 +48,7 @@
 "      </span>",
 "    </s-table>",
 "    <EditForm ref=\"editForm\" @Success=\"()=>{this.$$refs.table.refresh()}\"></EditForm>",
-"  </a-card>",
+"  </a-drawer>",
 "</template>",
 "",
 "<script>",
