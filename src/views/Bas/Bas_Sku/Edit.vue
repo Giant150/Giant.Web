@@ -26,8 +26,8 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="8">
-            <a-form-model-item label="基本单位" prop="BasUOM">
-              <EnumSelect code="Unit" v-model="entity.BasUOM"></EnumSelect>
+            <a-form-model-item label="基本单位" prop="BasUom">
+              <EnumSelect code="Unit" v-model="entity.BasUom"></EnumSelect>
             </a-form-model-item>
           </a-col>
           <a-col :span="8">
@@ -189,7 +189,7 @@ export default {
     init() {
       this.loading = false
       this.visible = true
-      this.entity = { Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', Name: '', BasUOM: 'EA', Barcode: '', Spec: '', PinYin: '', SupplierId: '', ShelfLife: 0, SkuTypeId: '', Price: 0, LotStgId: '', AllocStgId: '', RotateBy: 'Code', RotateType: 'FIFO', PutawayStgId: '', PutawayZoneId: '', PutawayLocId: '', ABC: 'A', ReOrderPoint: 0, ReOrderQty: 0, RackLife: 0, TrayTypeId: '', Status: 'Enable' }
+      this.entity = { Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', Name: '', BasUom: 'EA', Barcode: '', Spec: '', PinYin: '', SupplierId: '', ShelfLife: 0, SkuTypeId: '', Price: 0, LotStgId: '', AllocStgId: '', RotateBy: 'Code', RotateType: 'FIFO', PutawayStgId: '', PutawayZoneId: '', PutawayLocId: '', ABC: 'A', ReOrderPoint: 0, ReOrderQty: 0, RackLife: 0, TrayTypeId: '', Status: 'Enable' }
       this.getConfig({ whseId: this.defaultWhseId, code: 'Bas_Sku_LotStgId_Default' }).then(result => {
         this.entity.LotStgId = result.Val
       })

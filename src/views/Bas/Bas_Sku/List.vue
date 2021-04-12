@@ -34,7 +34,7 @@
     </div>
 
     <s-table ref="table" size="default" rowKey="Id" :columns="columns" :data="loadData" :rowSelection="rowSelection" showPagination="auto" :scroll="{ x: 3000 }">
-      <template slot="BasUOM" slot-scope="text">
+      <template slot="BasUom" slot-scope="text">
         <EnumName code="Unit" :value="text"></EnumName>
       </template>
       <template slot="RotateBy" slot-scope="text">
@@ -57,10 +57,13 @@
           <a v-action:Update @click="handleEdit(record)">修改</a>
           <a-divider v-action:Delete type="vertical" />
           <a v-action:Delete @click="handleDelete([record])">删除</a>
+          <a-divider v-action:SkuUom type="vertical" />
+          <a v-action:SkuUom @click="handleSkuUom(record)">物料包装</a>
         </template>
       </span>
     </s-table>
     <EditForm ref="editForm" @Success="()=>{this.$refs.table.refresh()}"></EditForm>
+    <ListSkuUom ref="listSkuUom"></ListSkuUom>
   </a-card>
 </template>
 
@@ -74,12 +77,13 @@ import EnumSelect from '@/components/CF/EnumSelect'
 import EnumName from '@/components/CF/EnumName'
 import TreeSelect from '@/components/CF/TreeSelect'
 import StorerSelect from '@/components/Bas/StorerSelect'
+import ListSkuUom from '../Bas_SkuUom/List'
 
 const columns = [
   { title: '货主', dataIndex: 'Storer.Name', width: 100, fixed: 'left' },
   { title: '编号', dataIndex: 'Code', sorter: true, width: 100, fixed: 'left' },
   { title: '名称', dataIndex: 'Name', sorter: true, width: 100, fixed: 'left' },
-  { title: '基本单位', dataIndex: 'BasUOM', scopedSlots: { customRender: 'BasUOM' } },
+  { title: '基本单位', dataIndex: 'BasUom', scopedSlots: { customRender: 'BasUom' } },
   { title: '物料条码', dataIndex: 'Barcode' },
   { title: '物料规格', dataIndex: 'Spec' },
   { title: '助记码', dataIndex: 'PinYin' },
@@ -112,7 +116,8 @@ export default {
     EnumName,
     EditForm,
     TreeSelect,
-    StorerSelect
+    StorerSelect,
+    ListSkuUom
   },
   data() {
     this.columns = columns
@@ -162,6 +167,9 @@ export default {
       this.visible = true
       this.mdl = { ...record }
       this.$refs.editForm.openForm(record.Id, '修改')
+    },
+    handleSkuUom(record) {
+      this.$refs.listSkuUom.openForm(record)
     },
     onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys

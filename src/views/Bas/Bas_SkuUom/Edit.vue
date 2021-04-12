@@ -8,14 +8,21 @@
         <a-form-model-item label="名称" prop="Name">
           <a-input v-model="entity.Name" autocomplete="off" />
         </a-form-model-item>
-        <a-form-model-item label="配货单位" prop="AllocUom">
-          <EnumSelect code="Unit" v-model="entity.AllocUom"></EnumSelect>
+        <a-form-model-item label="包装单位" prop="Uom">
+          <EnumSelect code="Unit" v-model="entity.Uom"></EnumSelect>
         </a-form-model-item>
-        <a-form-model-item label="配货代码" prop="PickBusCode">
-          <EnumSelect code="Stg_AllocateDetail_PickBusCode" v-model="entity.PickBusCode"></EnumSelect>
+        <a-form-model-item label="转换率" prop="UomCnt">
+          <a-input-number v-model="entity.UomCnt" style="width:100%" />
         </a-form-model-item>
-        <a-form-model-item label="库位类型" prop="LocType">
-          <EnumSelect code="Bas_Loc_Type" v-model="entity.LocType" :allowClear="true"></EnumSelect>
+        <a-form-model-item label="单位类型">
+          <a-checkbox :checked="entity.IsBasUom" @change="(e)=>{entity.IsBasUom=e.target.checked}">是否基本单位</a-checkbox>
+          <a-checkbox :checked="entity.IsTrayUom" @change="(e)=>{entity.IsTrayUom=e.target.checked}">是否托盘单位</a-checkbox>
+        </a-form-model-item>
+        <a-form-model-item label="物料条码" prop="Barcode">
+          <a-input v-model="entity.Barcode" autocomplete="off" />
+        </a-form-model-item>
+        <a-form-model-item label="条码类型" prop="BarcodeType">
+          <EnumSelect code="Bas_SkuUom_BarcodeType" v-model="entity.BarcodeType" :allowClear="true"></EnumSelect>
         </a-form-model-item>
       </a-form-model>
     </a-spin>
@@ -24,7 +31,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import MainSvc from '@/api/Stg/Stg_AllocateDetailSvc'
+import MainSvc from '@/api/Bas/Bas_SkuUomSvc'
 import EnumSelect from '@/components/CF/EnumSelect'
 import CodeInput from '@/components/CF/CodeInput'
 import StorerSelect from '@/components/Bas/StorerSelect'
@@ -69,7 +76,7 @@ export default {
       this.loading = false
       this.visible = true
       // 这里的ParentId为具体业务主表Id
-      this.entity = { Id: '', WhseId: this.defaultWhseId, AllocateStgId: this.parentEntity.Id, Code: '', Name: '', AllocUom: 'EA', PickBusCode: 'Default', LocType: '' }
+      this.entity = { Id: '', WhseId: this.defaultWhseId, StorerId: this.parentEntity.StorerId, SkuId: this.parentEntity.Id, Code: '', Name: '', Uom: 'EA', UomCnt: 1, IsBasUom: false, IsTrayUom: false, Barcode: '', BarcodeType: '' }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })
