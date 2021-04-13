@@ -112,12 +112,12 @@
           </a-col>
           <a-col :span="8">
             <a-form-model-item label="上架区域" prop="PutawayZoneId">
-              <CommonSelect table="Bas_PutawayZone" v-model="entity.PutawayZoneId"></CommonSelect>
+              <CommonSelect table="Bas_PutawayZone" v-model="entity.PutawayZoneId" :allowClear="true"></CommonSelect>
             </a-form-model-item>
           </a-col>
           <a-col :span="8">
             <a-form-model-item label="上架库位" prop="PutawayLocId">
-              <LocSelect v-model="entity.PutawayLocId"></LocSelect>
+              <LocSelect v-model="entity.PutawayLocId" :zone="entity.PutawayZoneId" :allowClear="true"></LocSelect>
             </a-form-model-item>
           </a-col>
         </a-row>
