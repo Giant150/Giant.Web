@@ -2,14 +2,11 @@
   <a-modal :title="title" :width="640" :visible="visible" :confirmLoading="loading" @ok="handleSubmit" @cancel="()=>{this.visible=false}">
     <a-spin :spinning="loading">
       <a-form-model ref="form" :model="entity" :rules="rules" v-bind="layout">
-        <a-form-model-item label="编号" prop="Code">
-          <a-input v-model="entity.Code" autocomplete="off" />
+        <a-form-model-item label="包装单位" prop="Uom">
+          <EnumSelect code="Unit" v-model="entity.Uom" @select="handleUomSelect"></EnumSelect>
         </a-form-model-item>
         <a-form-model-item label="名称" prop="Name">
           <a-input v-model="entity.Name" autocomplete="off" />
-        </a-form-model-item>
-        <a-form-model-item label="包装单位" prop="Uom">
-          <EnumSelect code="Unit" v-model="entity.Uom"></EnumSelect>
         </a-form-model-item>
         <a-form-model-item label="转换率" prop="UomCnt">
           <a-input-number v-model="entity.UomCnt" style="width:100%" />
@@ -76,7 +73,7 @@ export default {
       this.loading = false
       this.visible = true
       // 这里的ParentId为具体业务主表Id
-      this.entity = { Id: '', WhseId: this.defaultWhseId, StorerId: this.parentEntity.StorerId, SkuId: this.parentEntity.Id, Code: '', Name: '', Uom: 'EA', UomCnt: 1, IsBasUom: false, IsTrayUom: false, Barcode: '', BarcodeType: '' }
+      this.entity = { Id: '', WhseId: this.defaultWhseId, StorerId: this.parentEntity.StorerId, SkuId: this.parentEntity.Id, Name: '默认', Uom: 'EA', UomCnt: 1, IsBasUom: false, IsTrayUom: false, Barcode: '', BarcodeType: '' }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })
@@ -108,6 +105,9 @@ export default {
           }
         })
       })
+    },
+    handleUomSelect(val, option) {
+      this.entity.Name = option.Name
     }
   }
 }

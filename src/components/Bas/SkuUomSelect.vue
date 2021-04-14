@@ -1,20 +1,21 @@
 <template>
-  <a-select v-model="curValue" :placeholder="enumData.Name" @change="handleChange" @select="handleSelected" v-bind="$attrs">
-    <a-select-option v-for="item in enumData.EnumItems" :key="item.Code" :value="item.Code">{{ item.Name }}</a-select-option>
+  <a-select v-model="curValue" @change="handleChange" @select="handleSelected" v-bind="$attrs">
+    <a-select-option v-for="item in listData" :key="item.Uom" :value="item.Uom">{{ item.Name }}</a-select-option>
   </a-select>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import MainSvc from '@/api/Bas/Bas_SkuUomSvc'
 export default {
   props: {
-    code: { type: String, required: true },
+    sku: { type: String, required: true },
     value: { type: String, required: false, default: '' }
   },
   data() {
     return {
       curValue: '',
-      enumData: {}
+      listData: {}
     }
   },
   computed: {
@@ -24,18 +25,27 @@ export default {
     })
   },
   watch: {
-    value(value) {
-      this.curValue = value
+    value(newVal) {
+      if (newVal !== this.curValue) {
+        this.curValue = newVal
+        this.getListData()
+      }
+    },
+    sku(newVal) {
+      this.getListData()
     }
   },
   mounted() {
     this.curValue = this.value
-    this.getEnum({ whseId: this.defaultWhseId, code: this.code }).then(result => {
-      this.enumData = result
-    })
+    this.getListData()
   },
   methods: {
     ...mapActions({ getEnum: 'getEnum' }),
+    getListData() {
+      MainSvc.GetBySku(this.sku).then(result => {
+        this.listData = result.Data
+      })
+    },
     handleChange(val) {
       if (!val) {
         this.$emit('input', '')
@@ -43,7 +53,7 @@ export default {
     },
     handleSelected(val) {
       this.$emit('input', val)
-      var item = this.enumData.EnumItems.find(w => w.Code === val)
+      var item = this.listData.find(w => w.Uom === val)
       this.$emit('select', val, item)
     }
   }

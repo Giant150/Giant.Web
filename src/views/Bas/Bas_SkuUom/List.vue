@@ -34,7 +34,6 @@ import EnumSelect from '@/components/CF/EnumSelect'
 import EnumName from '@/components/CF/EnumName'
 
 const columns = [
-  { title: '编号', dataIndex: 'Code', sorter: true },
   { title: '名称', dataIndex: 'Name', sorter: true },
   { title: '包装单位', dataIndex: 'Uom', scopedSlots: { customRender: 'Uom' } },
   { title: '转换率', dataIndex: 'UomCnt', sorter: true },
@@ -99,8 +98,8 @@ export default {
       this.queryParam.StorerId = record.StorerId
       this.queryParam.SkuId = record.Id
       this.visible = true
-      this.nextTick(() => {
-        this.refs.table.refresh()
+      this.$nextTick(() => {
+        this.$refs.table.refresh()
       })
     },
     handleAdd() {

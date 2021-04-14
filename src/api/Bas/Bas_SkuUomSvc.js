@@ -49,5 +49,16 @@ export default {
             method: 'delete',
             data: ids
         })
+    },
+    /**
+     * 获取物料的包装单位
+     * @param {string} skuId 物料Id
+     * @returns 包装单位
+     */
+    GetBySku(skuId) {
+        return request({
+            url: '/api/Bas_SkuUom/GetBySku?skuId=' + skuId,
+            method: 'get'
+        })
     }
 }
