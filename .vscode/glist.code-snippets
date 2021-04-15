@@ -55,7 +55,7 @@
 "import { mapGetters } from 'vuex'",
 "import moment from 'moment'",
 "import { STable } from '@/components'",
-"import MainSvc from '@/api/$1/$1_$2Svc'",
+"import MainSvc from '@/api/${1|Bus,Inv,Bas,CF,Sys|}/${1|Bus,Inv,Bas,CF,Sys|}_$2Svc'",
 "import EditForm from './Edit'",
 "import EnumSelect from '@/components/CF/EnumSelect'",
 "import EnumName from '@/components/CF/EnumName'",
