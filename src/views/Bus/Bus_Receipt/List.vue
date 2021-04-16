@@ -4,14 +4,40 @@
       <a-form layout="inline">
         <a-row :gutter="48">
           <a-col :md="6" :sm="24">
-            <a-form-item label="关键字">
-              <a-input v-model="queryParam.Keyword" placeholder="关键字" />
+            <a-form-item label="货主">
+              <StorerSelect v-model="queryParam.StorerId" :type="['Storer']"></StorerSelect>
             </a-form-item>
           </a-col>
+          <a-col :md="6" :sm="24">
+            <a-form-item label="单号">
+              <a-input v-model="queryParam.Keyword" placeholder="单号" />
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="24">
+            <a-form-item label="收货日期">
+              <a-range-picker :value="[queryParam.RecDateBegin,queryParam.RecDateEnd]" format="YYYY-MM-DD" @change="onDateChange" />
+            </a-form-item>
+          </a-col>
+          <template v-if="advanced">
+            <a-col :md="6" :sm="24">
+              <a-form-item label="收货类型">
+                <EnumSelect code="Bus_Receipt_RecType" v-model="queryParam.RecType"></EnumSelect>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item label="收货状态">
+                <EnumSelect code="Bus_Receipt_Status" v-model="queryParam.Status"></EnumSelect>
+              </a-form-item>
+            </a-col>
+          </template>
           <a-col :md="6" :sm="24">
             <span class="table-page-search-submitButtons">
               <a-button type="primary" v-action:Query @click="()=>{this.$refs.table.refresh()}">查询</a-button>
               <a-button style="margin-left: 8px" @click="resetSearchForm()">重置</a-button>
+              <a @click="()=>{this.advanced=!this.advanced}" style="margin-left: 8px">
+                {{ advanced ? '收起' : '展开' }}
+                <a-icon :type="advanced ? 'up' : 'down'" />
+              </a>
             </span>
           </a-col>
         </a-row>
@@ -24,9 +50,12 @@
     </div>
 
     <s-table ref="table" size="default" rowKey="Id" :columns="columns" :data="loadData" :rowSelection="rowSelection" showPagination="auto">
-      <span slot="ModifyTime" slot-scope="text">
-        {{ moment(text).format("yyyy-MM-DD") }}
-      </span>
+      <template slot="RecType" slot-scope="text">
+        <EnumName code="Bus_Receipt_RecType" :value="text"></EnumName>
+      </template>
+      <template slot="Status" slot-scope="text">
+        <EnumName code="Bus_Receipt_Status" :value="text"></EnumName>
+      </template>
       <span slot="action" slot-scope="text, record">
         <template>
           <a v-action:Update @click="handleEdit(record)">修改</a>
@@ -52,9 +81,14 @@ import SkuSelect from '@/components/Bas/SkuSelect'
 import LocSelect from '@/components/Bas/LocSelect'
 
 const columns = [
+  { title: '货主', dataIndex: 'Storer.Name' },
   { title: '编号', dataIndex: 'Code', sorter: true },
-  { title: '名称', dataIndex: 'Name', sorter: true },
-  { title: '修改时间', dataIndex: 'ModifyTime', sorter: true, scopedSlots: { customRender: 'ModifyTime' } },
+  { title: '收货类型', dataIndex: 'RecType', scopedSlots: { customRender: 'RecType' } },
+  { title: '单据日期', dataIndex: 'DocDate', sorter: true, customRender: (value) => { return moment(value).format('yyyy-MM-DD') } },
+  { title: '收货日期', dataIndex: 'RecDate', sorter: true, customRender: (value) => { return moment(value).format('yyyy-MM-DD') } },
+  { title: '供应商', dataIndex: 'Supplier.Name' },
+  { title: '收货状态', dataIndex: 'Status', scopedSlots: { customRender: 'Status' } },
+  { title: '修改时间', dataIndex: 'ModifyTime', sorter: true, customRender: (value) => { return moment(value).format('yyyy-MM-DD') } },
   { title: '操作', dataIndex: 'action', width: '200px', scopedSlots: { customRender: 'action' } }
 ]
 
@@ -79,11 +113,17 @@ export default {
       // 高级搜索 展开/关闭
       advanced: false,
       // 查询参数
-      queryParam: { WhseId: '', Keyword: '' },
+      queryParam: { WhseId: '', StorerId: '', Keyword: '', RecDateBegin: null, RecDateEnd: null, RecType: '', Status: '' },
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         this.queryParam.WhseId = this.defaultWhseId
-        const requestParameters = Object.assign({ sortField: 'ModifyTime', sortOrder: 'desc', Search: { ...this.queryParam } }, parameter)
+        var _query = Object.assign({}, { ...this.queryParam })
+        for (const key in _query) {
+          if (moment.isMoment(_query[key])) {
+            _query[key] = _query[key].format('YYYY-MM-DD')
+          }
+        }
+        const requestParameters = Object.assign({ sortField: 'ModifyTime', sortOrder: 'desc', Search: _query }, parameter)
         console.log('loadData request parameters:', requestParameters)
         return MainSvc.GetPage(requestParameters)
       },
@@ -93,7 +133,9 @@ export default {
   },
   filters: {
   },
-  created() {},
+  created() {
+    this.resetSearchForm()
+  },
   computed: {
     ...mapGetters({
       defaultWhseId: 'whseId',
@@ -123,7 +165,11 @@ export default {
       this.selectedRows = selectedRows
     },
     resetSearchForm() {
-      this.queryParam = { WhseId: this.defaultWhseId, Keyword: '' }
+      this.queryParam = { WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Keyword: '', RecDateBegin: moment(), RecDateEnd: moment().add(1, 'days'), RecType: '', Status: '' }
+    },
+    onDateChange(dates, dateStrings) {
+      this.queryParam.RecDateBegin = dates[0]
+      this.queryParam.RecDateEnd = dates[1]
     },
     handleDelete(rows) {
       var thisObj = this

@@ -3,7 +3,7 @@
 	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
 	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
 	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
-	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
+	// ${1:$CLIPBOARD}, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
 	// Placeholders with the same ids are connected.
 	// Example:
 	"Giant Web API": {
@@ -12,7 +12,7 @@
 		"body": [
 "import request from '@/utils/request'",
 "/**",
-" * $1 API接口服务",
+" * ${1:$CLIPBOARD} API接口服务",
 " */",
 "export default {",
 "    /**",
@@ -22,7 +22,7 @@
 "     */",
 "    GetPage(parameter) {",
 "        return request({",
-"            url: '/api/$1/GetPage',",
+"            url: '/api/${1:$CLIPBOARD}/GetPage',",
 "            method: 'post',",
 "            data: parameter",
 "        })",
@@ -34,7 +34,7 @@
 "     */",
 "    Get(id) {",
 "        return request({",
-"            url: '/api/$1/Get?id=' + id,",
+"            url: '/api/${1:$CLIPBOARD}/Get?id=' + id,",
 "            method: 'get'",
 "        })",
 "    },",
@@ -45,7 +45,7 @@
 "     */",
 "    Save(data) {",
 "        return request({",
-"            url: '/api/$1/Save',",
+"            url: '/api/${1:$CLIPBOARD}/Save',",
 "            method: 'post',",
 "            data: data",
 "        })",
@@ -57,7 +57,7 @@
 "     */",
 "    Delete(ids) {",
 "        return request({",
-"            url: '/api/$1/Delete',",
+"            url: '/api/${1:$CLIPBOARD}/Delete',",
 "            method: 'delete',",
 "            data: ids",
 "        })",
