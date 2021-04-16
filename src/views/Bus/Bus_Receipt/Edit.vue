@@ -64,6 +64,9 @@
         <template slot="LocId" slot-scope="text, record">
           <LocSelect v-model="record.LocId"></LocSelect>
         </template>
+        <template slot="TrayId" slot-scope="text, record">
+          <TraySelect v-model="record.TrayId"></TraySelect>
+        </template>
         <span slot="action" slot-scope="text, record">
           <template>
             <a v-action:Update @click="handleEdit(record)">修改</a>
@@ -88,6 +91,7 @@ import CommonSelect from '@/components/CF/CommonSelect'
 import LocSelect from '@/components/Bas/LocSelect'
 import SkuSelect from '@/components/Bas/SkuSelect'
 import SkuUomSelect from '@/components/Bas/SkuUomSelect'
+import TraySelect from '@/components/Bas/TraySelect'
 
 const columns = [
   { title: '编号', dataIndex: 'Code', width: 120, fixed: 'left', scopedSlots: { customRender: 'Code' } },
@@ -110,7 +114,8 @@ export default {
     CommonSelect,
     LocSelect,
     SkuSelect,
-    SkuUomSelect
+    SkuUomSelect,
+    TraySelect
   },
   props: {},
   data() {
