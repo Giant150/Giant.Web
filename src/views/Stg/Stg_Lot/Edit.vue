@@ -23,7 +23,7 @@
             <a-checkbox :checked="entity.Lot01RequiredRF" @change="(e)=>{entity.Lot01RequiredRF=e.target.checked}">RF显示</a-checkbox>
           </a-col>
           <a-col :span="5">
-            <a-checkbox :checked="entity.Lot01Auto" @change="(e)=>{entity.Lot01Auto=e.target.checked}">自动计算</a-checkbox>
+            <EnumSelect size="small" code="Stg_Lot_DataType" v-model="entity.Lot01Type"></EnumSelect>
           </a-col>
           <a-col :span="5">
             <a-input size="small" v-model="entity.Lot01Enum" autocomplete="off" placeholder="枚举值" />
@@ -38,7 +38,7 @@
             <a-checkbox :checked="entity.Lot02RequiredRF" @change="(e)=>{entity.Lot02RequiredRF=e.target.checked}">RF显示</a-checkbox>
           </a-col>
           <a-col :span="5">
-            <a-checkbox :checked="entity.Lot02Auto" @change="(e)=>{entity.Lot02Auto=e.target.checked}">自动计算</a-checkbox>
+            <EnumSelect size="small" code="Stg_Lot_DataType" v-model="entity.Lot02Type"></EnumSelect>
           </a-col>
           <a-col :span="5">
             <a-input size="small" v-model="entity.Lot02Enum" autocomplete="off" placeholder="枚举值" />
@@ -53,7 +53,7 @@
             <a-checkbox :checked="entity.Lot03RequiredRF" @change="(e)=>{entity.Lot03RequiredRF=e.target.checked}">RF显示</a-checkbox>
           </a-col>
           <a-col :span="5">
-            <a-checkbox :checked="entity.Lot03Auto" @change="(e)=>{entity.Lot03Auto=e.target.checked}">自动计算</a-checkbox>
+            <EnumSelect size="small" code="Stg_Lot_DataType" v-model="entity.Lot03Type"></EnumSelect>
           </a-col>
           <a-col :span="5">
             <a-input size="small" v-model="entity.Lot03Enum" autocomplete="off" placeholder="枚举值" />
@@ -68,7 +68,7 @@
             <a-checkbox :checked="entity.Lot04RequiredRF" @change="(e)=>{entity.Lot04RequiredRF=e.target.checked}">RF显示</a-checkbox>
           </a-col>
           <a-col :span="5">
-            <a-checkbox :checked="entity.Lot04Auto" @change="(e)=>{entity.Lot04Auto=e.target.checked}">自动计算</a-checkbox>
+            <EnumSelect size="small" code="Stg_Lot_DataType" v-model="entity.Lot04Type"></EnumSelect>
           </a-col>
           <a-col :span="5">
             <a-input size="small" v-model="entity.Lot04Enum" autocomplete="off" placeholder="枚举值" />
@@ -83,7 +83,7 @@
             <a-checkbox :checked="entity.Lot05RequiredRF" @change="(e)=>{entity.Lot05RequiredRF=e.target.checked}">RF显示</a-checkbox>
           </a-col>
           <a-col :span="5">
-            <a-checkbox :checked="entity.Lot05Auto" @change="(e)=>{entity.Lot05Auto=e.target.checked}">自动计算</a-checkbox>
+            <EnumSelect size="small" code="Stg_Lot_DataType" v-model="entity.Lot05Type"></EnumSelect>
           </a-col>
           <a-col :span="5">
             <a-input size="small" v-model="entity.Lot05Enum" autocomplete="off" placeholder="枚举值" />
@@ -98,7 +98,7 @@
             <a-checkbox :checked="entity.Lot06RequiredRF" @change="(e)=>{entity.Lot06RequiredRF=e.target.checked}">RF显示</a-checkbox>
           </a-col>
           <a-col :span="5">
-            <a-checkbox :checked="entity.Lot06Auto" @change="(e)=>{entity.Lot06Auto=e.target.checked}">自动计算</a-checkbox>
+            <EnumSelect size="small" code="Stg_Lot_DataType" v-model="entity.Lot06Type"></EnumSelect>
           </a-col>
           <a-col :span="5">
             <a-input size="small" v-model="entity.Lot06Enum" autocomplete="off" placeholder="枚举值" />
@@ -113,7 +113,7 @@
             <a-checkbox :checked="entity.Lot07RequiredRF" @change="(e)=>{entity.Lot07RequiredRF=e.target.checked}">RF显示</a-checkbox>
           </a-col>
           <a-col :span="5">
-            <a-checkbox :checked="entity.Lot07Auto" @change="(e)=>{entity.Lot07Auto=e.target.checked}">自动计算</a-checkbox>
+            <EnumSelect size="small" code="Stg_Lot_DataType" v-model="entity.Lot07Type"></EnumSelect>
           </a-col>
           <a-col :span="5">
             <a-input size="small" v-model="entity.Lot07Enum" autocomplete="off" placeholder="枚举值" />
@@ -128,7 +128,7 @@
             <a-checkbox :checked="entity.Lot08RequiredRF" @change="(e)=>{entity.Lot08RequiredRF=e.target.checked}">RF显示</a-checkbox>
           </a-col>
           <a-col :span="5">
-            <a-checkbox :checked="entity.Lot08Auto" @change="(e)=>{entity.Lot08Auto=e.target.checked}">自动计算</a-checkbox>
+            <EnumSelect size="small" code="Stg_Lot_DataType" v-model="entity.Lot08Type"></EnumSelect>
           </a-col>
           <a-col :span="5">
             <a-input size="small" v-model="entity.Lot08Enum" autocomplete="off" placeholder="枚举值" />
@@ -143,7 +143,7 @@
             <a-checkbox :checked="entity.Lot09RequiredRF" @change="(e)=>{entity.Lot09RequiredRF=e.target.checked}">RF显示</a-checkbox>
           </a-col>
           <a-col :span="5">
-            <a-checkbox :checked="entity.Lot09Auto" @change="(e)=>{entity.Lot09Auto=e.target.checked}">自动计算</a-checkbox>
+            <EnumSelect size="small" code="Stg_Lot_DataType" v-model="entity.Lot09Type"></EnumSelect>
           </a-col>
           <a-col :span="5">
             <a-input size="small" v-model="entity.Lot09Enum" autocomplete="off" placeholder="枚举值" />
@@ -158,7 +158,7 @@
             <a-checkbox :checked="entity.Lot10RequiredRF" @change="(e)=>{entity.Lot10RequiredRF=e.target.checked}">RF显示</a-checkbox>
           </a-col>
           <a-col :span="5">
-            <a-checkbox :checked="entity.Lot10Auto" @change="(e)=>{entity.Lot10Auto=e.target.checked}">自动计算</a-checkbox>
+            <EnumSelect size="small" code="Stg_Lot_DataType" v-model="entity.Lot10Type"></EnumSelect>
           </a-col>
           <a-col :span="5">
             <a-input size="small" v-model="entity.Lot10Enum" autocomplete="off" placeholder="枚举值" />
@@ -282,7 +282,7 @@ export default {
         Id: '', WhseId: this.defaultWhseId, Code: '', Name: '',
         Lot01Required: false, Lot02Required: false, Lot03Required: false, Lot04Required: false, Lot05Required: false, Lot06Required: false, Lot07Required: false, Lot08Required: false, Lot09Required: false, Lot10Required: false,
         Lot01RequiredRF: false, Lot02RequiredRF: false, Lot03RequiredRF: false, Lot04RequiredRF: false, Lot05RequiredRF: false, Lot06RequiredRF: false, Lot07RequiredRF: false, Lot08RequiredRF: false, Lot09RequiredRF: false, Lot10RequiredRF: false,
-        Lot01Auto: false, Lot02Auto: false, Lot03Auto: false, Lot04Auto: false, Lot05Auto: false, Lot06Auto: false, Lot07Auto: false, Lot08Auto: false, Lot09Auto: false, Lot10Auto: false,
+        Lot01Type: 'String', Lot02Type: 'String', Lot03Type: 'String', Lot04Type: 'String', Lot05Type: 'String', Lot06Type: 'String', Lot07Type: 'String', Lot08Type: 'String', Lot09Type: 'String', Lot10Type: 'String',
         Lot01Enum: '', Lot02Enum: '', Lot03Enum: '', Lot04Enum: '', Lot05Enum: '', Lot06Enum: '', Lot07Enum: '', Lot08Enum: '', Lot09Enum: '', Lot10Enum: ''
       }
       this.$nextTick(() => {

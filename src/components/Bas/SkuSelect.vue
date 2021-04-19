@@ -71,6 +71,8 @@ export default {
     },
     handlerSelect(val) {
       this.$emit('input', val)
+      var sku = this.data.find(w => w.Id === val)
+      this.$emit('select', val, sku)
     }
   }
 }
