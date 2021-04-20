@@ -3,8 +3,8 @@
     <a-list-item slot="renderItem" slot-scope="item">
       <a-card :hoverable="true">
         <a-card-meta>
-          <a slot="title" :href="item.committer.html_url" target="_blank">{{ item.commit.committer.name }}</a>
-          <a-avatar class="card-avatar" slot="avatar" :src="item.committer.avatar_url" size="large" />
+          <a slot="title" :href="item.committer?item.committer.html_url:''" target="_blank">{{ item.commit.committer.name }}</a>
+          <a-avatar class="card-avatar" slot="avatar" :src="item.committer?item.committer.avatar_url:''" size="large" />
           <div class="meta-content" slot="description">
             <h1>{{ item.commit.message }}</h1>
           </div>

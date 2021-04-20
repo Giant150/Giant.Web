@@ -82,7 +82,7 @@ import ListSkuUom from '../Bas_SkuUom/List'
 const columns = [
   { title: '货主', dataIndex: 'Storer.Name', width: 100, fixed: 'left' },
   { title: '编号', dataIndex: 'Code', sorter: true, width: 100, fixed: 'left' },
-  { title: '名称', dataIndex: 'Name', sorter: true, width: 100, fixed: 'left' },
+  { title: '名称', dataIndex: 'Name', sorter: true, width: 150, fixed: 'left' },
   { title: '基本单位', dataIndex: 'BasUom', scopedSlots: { customRender: 'BasUom' } },
   { title: '物料条码', dataIndex: 'Barcode' },
   { title: '物料规格', dataIndex: 'Spec' },
