@@ -1,5 +1,5 @@
 <template>
-  <a-drawer title="收货管理" placement="right" width="70%" :visible="visible" @close="()=>{this.visible=false}">
+  <a-drawer title="收货管理" placement="right" width="70%" :visible="visible" @close="()=>{this.visible=false}" :maskClosable="false" :body-style="{ paddingBottom: '80px' }">
     <a-spin :spinning="loading">
       <a-form-model ref="form" :model="entity" :rules="rules" v-bind="layout">
         <a-row>
@@ -109,6 +109,10 @@
         </span>
       </a-table>
     </a-spin>
+    <div :style="{ position: 'absolute', bottom: 0, right: 0, width: '100%', borderTop: '1px solid #e9e9e9', padding: '10px 16px', background: '#fff', textAlign: 'right', zIndex: 1, }">
+      <a-button :style="{ marginRight: '8px' }" @click="()=>{this.visible=false}"> Cancel </a-button>
+      <a-button type="primary" @click="()=>{this.visible=false}"> Submit </a-button>
+    </div>
   </a-drawer>
 </template>
 
@@ -194,7 +198,10 @@ export default {
     init() {
       this.loading = false
       this.visible = true
-      this.entity = { ReceiptDetail: [], Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', RecType: 'Standard', DocDate: moment(), RecDate: moment(), SupplierId: '', Remark: '', Status: 'Active' }
+      this.entity = {
+        ReceiptDetail: [], Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', RecType: 'Standard',
+        DocDate: moment(), RecDate: moment(), SupplierId: '', Remark: '', Status: 'Active'
+      }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })
