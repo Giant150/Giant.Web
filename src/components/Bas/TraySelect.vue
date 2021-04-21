@@ -1,14 +1,12 @@
 <template>
-  <a-auto-complete v-model="curValue" v-bind="$attrs" @search="handlerSearch" @change="(val)=>{if(!val){this.$emit('input', '')}}" @select="handlerSelect" optionLabelProp="title" :dropdownMenuStyle="{minWidth:'300px'}" :dropdownMatchSelectWidth="false">
-    <template slot="dataSource">
-      <a-select-option v-for="item in data" :key="item.Id" :value="item.Id" :title="item.Code">
-        <a-row>
-          <a-col :span="12">{{ item.Code }}</a-col>
-          <a-col :span="12">{{ item.TrayType.Name }}</a-col>
-        </a-row>
-      </a-select-option>
-    </template>
-  </a-auto-complete>
+  <a-select v-model="curValue" @search="handlerSearch" @change="(val)=>{if(!val){this.$emit('input', '')}}" @select="handlerSelect" optionLabelProp="title" v-bind="$attrs" :showSearch="true" :showArrow="false" :filterOption="false" style="width: 100%" :dropdownMenuStyle="{minWidth:'300px'}" :dropdownMatchSelectWidth="false">
+    <a-select-option v-for="item in data" :key="item.Id" :value="item.Id" :title="item.Code">
+      <a-row>
+        <a-col :span="12">{{ item.Code }}</a-col>
+        <a-col :span="12">{{ item.TrayType.Name }}</a-col>
+      </a-row>
+    </a-select-option>
+  </a-select>
 </template>
 
 <script>
@@ -26,6 +24,7 @@ export default {
   data() {
     return {
       curValue: null,
+      timeout: null,
       keyword: null,
       data: []
     }
@@ -65,11 +64,17 @@ export default {
       })
     },
     handlerSearch(val) {
+      if (this.timeout) {
+        clearTimeout(this.timeout)
+        this.timeout = null
+      }
       this.keyword = val
-      this.loadData()
+      this.timeout = setTimeout(this.loadData, 500)
     },
     handlerSelect(val) {
       this.$emit('input', val)
+      var item = this.data.find(w => w.Id === val)
+      this.$emit('select', val, item)
     }
   }
 }
