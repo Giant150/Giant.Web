@@ -47,16 +47,16 @@
       </div>
       <a-table ref="table" size="small" rowKey="Id" :columns="columns" :data-source="entity.ReceiptDetail" :scroll="{ x: 3000 }">
         <template slot="Code" slot-scope="text, record">
-          <a-input v-model="record.Code" size="small" />
+          <CodeInput code="Bus_ReceiptDetail_Code" v-model="record.Code" :para="{ReceiptCode:entity.Code}" size="small"></CodeInput>
         </template>
         <template slot="SkuId" slot-scope="text, record">
-          <SkuSelect v-model="record.SkuId" :storer="record.StorerId" @select="(val,sku)=>{record.Sku=sku}" size="small"></SkuSelect>
+          <SkuSelect v-model="record.SkuId" :storer="entity.StorerId" @select="(val,sku)=>{record.Sku=sku}" size="small"></SkuSelect>
         </template>
         <template slot="QtyUomExpected" slot-scope="text, record">
           <a-input-number v-model="record.QtyUomExpected" style="width:100%" size="small" />
         </template>
         <template slot="UomCode" slot-scope="text, record">
-          <SkuUomSelect v-model="record.UomCode" :sku="record.SkuId" style="width:100%" size="small"></SkuUomSelect>
+          <SkuUomSelect v-model="record.UomCode" :sku="record.SkuId" @select="(val,uom)=>{handlerUomSelect(record,uom)}" style="width:100%" size="small"></SkuUomSelect>
         </template>
         <template slot="QtyUomReceived" slot-scope="text, record">
           <a-input-number v-model="record.QtyUomReceived" style="width:100%" size="small" />
@@ -65,7 +65,7 @@
           <LocSelect v-model="record.LocId" size="small"></LocSelect>
         </template>
         <template slot="TrayId" slot-scope="text, record">
-          <TraySelect v-model="record.TrayId" size="small"></TraySelect>
+          <TraySelect v-model="record.TrayId" :type="record.Sku?record.Sku.TrayTypeId:''" size="small"></TraySelect>
         </template>
         <template slot="Lot01" slot-scope="text, record">
           <LotInput name="Lot01" :sku="record.Sku" v-model="record.Lot01"></LotInput>
@@ -212,6 +212,12 @@ export default {
         MainSvc.Get(id).then(resJson => {
           this.entity = resJson.Data
         })
+      } else {
+        this.getConfig({ whseId: this.defaultWhseId, code: 'Bus_Receipt_Code_AutoGenerate' }).then(result => {
+          if (result.Val === '1') {
+            this.$refs.codeInput.Generate()
+          }
+        })
       }
     },
     handleAdd() {
@@ -227,6 +233,9 @@ export default {
     },
     cusHeaderTitle(column) {
       return this.enumItems.find(w => w.Code === column)?.Name
+    },
+    handlerUomSelect(record, uom) {
+      console.log('handlerUomSelect', record, uom)
     },
     handleSubmit() {
       this.$refs['form'].validate(valid => {

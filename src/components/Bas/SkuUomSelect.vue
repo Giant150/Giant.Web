@@ -15,7 +15,7 @@ export default {
   data() {
     return {
       curValue: '',
-      listData: {}
+      listData: []
     }
   },
   computed: {
@@ -31,7 +31,7 @@ export default {
         this.getListData()
       }
     },
-    sku(newVal) {
+    sku() {
       this.getListData()
     }
   },
@@ -44,6 +44,19 @@ export default {
     getListData() {
       MainSvc.GetBySku(this.sku).then(result => {
         this.listData = result.Data
+        if (!this.curValue) {
+          var plUom = this.listData.find(w => w.IsTrayUom)
+          if (plUom) {
+            this.curValue = plUom.Uom
+            this.handleSelected(plUom.Uom)
+          } else {
+            var eaUom = this.listData.find(w => w.IsBasUom)
+            if (eaUom) {
+              this.curValue = eaUom.Uom
+              this.handleSelected(eaUom.Uom)
+            }
+          }
+        }
       })
     },
     handleChange(val) {
