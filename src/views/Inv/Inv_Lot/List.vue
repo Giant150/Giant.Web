@@ -18,26 +18,26 @@
       </a-form>
     </div>
 
-    <div class="table-operator">
+    <!-- <div class="table-operator">
       <a-button type="primary" v-action:Add icon="plus" @click="handleAdd">新建</a-button>
       <a-button type="primary" v-action:Delete icon="delete" @click="handleDelete()">批量删除</a-button>
-    </div>
+    </div> -->
 
     <s-table ref="table" size="default" rowKey="Id" :columns="columns" :data="loadData" :rowSelection="rowSelection" showPagination="auto">
-      <span slot="action" slot-scope="text, record">
+      <!-- <span slot="action" slot-scope="text, record">
         <template>
           <a v-action:Update @click="handleEdit(record)">修改</a>
           <a-divider v-action:Delete type="vertical" />
           <a v-action:Delete @click="handleDelete([record])">删除</a>
         </template>
-      </span>
+      </span> -->
     </s-table>
     <EditForm ref="editForm" @Success="()=>{this.$refs.table.refresh()}"></EditForm>
   </a-card>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import moment from 'moment'
 import { STable } from '@/components'
 import MainSvc from '@/api/Inv/Inv_LotSvc'
@@ -47,13 +47,6 @@ import EnumName from '@/components/CF/EnumName'
 import StorerSelect from '@/components/Bas/StorerSelect'
 import SkuSelect from '@/components/Bas/SkuSelect'
 import LocSelect from '@/components/Bas/LocSelect'
-
-const columns = [
-  { title: '编号', dataIndex: 'Code', sorter: true },
-  { title: '名称', dataIndex: 'Name', sorter: true },
-  { title: '修改时间', dataIndex: 'ModifyTime', sorter: true, customRender: (value) => { return moment(value).format('yyyy-MM-DD') } },
-  { title: '操作', dataIndex: 'action', width: '200px', scopedSlots: { customRender: 'action' } }
-]
 
 export default {
   components: {
@@ -67,7 +60,6 @@ export default {
     LocSelect
   },
   data() {
-    this.columns = columns
     return {
       // create model
       visible: false,
@@ -91,12 +83,35 @@ export default {
         return MainSvc.GetPage(requestParameters)
       },
       selectedRowKeys: [],
-      selectedRows: []
+      selectedRows: [],
+      enumItems: [],
+      columns: [
+      { title: '仓库', dataIndex: 'Whse.Name', sorter: true },
+      { title: '货主', dataIndex: 'Storer.Name', sorter: true },
+      { title: '物料', dataIndex: 'Sku.Name', sorter: true },
+      { title: '编号', dataIndex: 'Code', sorter: true },
+      { title: () => { return this.cusHeaderTitle('Lot01') }, dataIndex: 'Lot01', sorter: true },
+      { title: () => { return this.cusHeaderTitle('Lot02') }, dataIndex: 'Lot02', sorter: true },
+      { title: () => { return this.cusHeaderTitle('Lot03') }, dataIndex: 'Lot03', sorter: true },
+      { title: () => { return this.cusHeaderTitle('Lot04') }, dataIndex: 'Lot04', sorter: true },
+      { title: () => { return this.cusHeaderTitle('Lot05') }, dataIndex: 'Lot05', sorter: true },
+      { title: () => { return this.cusHeaderTitle('Lot06') }, dataIndex: 'Lot06', sorter: true },
+      { title: () => { return this.cusHeaderTitle('Lot07') }, dataIndex: 'Lot07', sorter: true },
+      { title: () => { return this.cusHeaderTitle('Lot08') }, dataIndex: 'Lot08', sorter: true },
+      { title: () => { return this.cusHeaderTitle('Lot09') }, dataIndex: 'Lot09', sorter: true },
+      { title: () => { return this.cusHeaderTitle('Lot10') }, dataIndex: 'Lot10', sorter: true },
+      { title: '修改时间', dataIndex: 'ModifyTime', sorter: true, customRender: (value) => { return moment(value).format('yyyy-MM-DD') } },
+      // { title: '操作', dataIndex: 'action', width: '200px', scopedSlots: { customRender: 'action' } }
+      ]
     }
   },
   filters: {
   },
-  created() {},
+  created() {
+    this.getEnum({ whseId: this.defaultWhseId, code: 'Bas_Lot_Field' }).then(result => {
+      this.enumItems = result.EnumItems
+    })
+  },
   computed: {
     ...mapGetters({
       defaultWhseId: 'whseId',
@@ -111,6 +126,10 @@ export default {
   },
   methods: {
     moment,
+    ...mapActions({ getConfig: 'getConfig', getEnum: 'getEnum' }),
+    cusHeaderTitle(column) {
+      return this.enumItems.find(w => w.Code === column)?.Name
+    },
     handleAdd() {
       this.mdl = null
       this.visible = true
