@@ -45,12 +45,12 @@
       <div class="table-operator">
         <a-button type="primary" v-action:Add icon="plus" @click="handleAdd">新建</a-button>
       </div>
-      <a-table ref="table" size="small" rowKey="Id" :columns="columns" :data-source="entity.ReceiptDetail" :scroll="{ x: 3000 }">
+      <a-table ref="table" size="small" rowKey="Id" :columns="columns" :data-source="receiptDetail" :scroll="{ x: 3000 }">
         <template slot="Code" slot-scope="text, record">
           <CodeInput code="Bus_ReceiptDetail_Code" v-model="record.Code" :para="{ReceiptCode:entity.Code}" size="small"></CodeInput>
         </template>
         <template slot="SkuId" slot-scope="text, record">
-          <SkuSelect v-model="record.SkuId" :storer="entity.StorerId" @select="(val,sku)=>{record.Sku=sku}" size="small"></SkuSelect>
+          <SkuSelect v-model="record.SkuId" :storer="entity.StorerId" @select="(val,sku)=>{handleSkuSelect(record,sku)}" size="small"></SkuSelect>
         </template>
         <template slot="QtyUomExpected" slot-scope="text, record">
           <a-input-number v-model="record.QtyUomExpected" style="width:100%" size="small" />
@@ -178,18 +178,35 @@ export default {
         { title: '备注', dataIndex: 'Remark', scopedSlots: { customRender: 'Remark' } },
         { title: '操作', dataIndex: 'action', width: 150, fixed: 'right', scopedSlots: { customRender: 'action' } }
       ],
-      curDetailIndex: 0
+      curDetailIndex: 0,
+      defaultLocId: '' // 默认收货库位
     }
   },
   computed: {
     ...mapGetters({
       defaultWhseId: 'whseId',
       defaultStorerId: 'storerId'
-    })
+    }),
+    receiptDetail() {
+      return this.entity.ReceiptDetail
+    }
+  },
+  watch: {
+    receiptDetail: {
+      handler: function (newval, oldval) {
+        this.entity.ReceiptDetail.forEach(element => {
+          this.handlerDetailChange(element)
+        })
+      },
+      deep: true
+    }
   },
   created() {
     this.getEnum({ whseId: this.defaultWhseId, code: 'Bas_Lot_Field' }).then(result => {
       this.enumItems = result.EnumItems
+    })
+    this.getConfig({ whseId: this.defaultWhseId, code: 'Bus_ReceiptDetail_LocId_Default' }).then(result => {
+      this.defaultLocId = result.Val
     })
   },
   methods: {
@@ -224,7 +241,7 @@ export default {
       this.curDetailIndex += 1
       var detail = {
         Id: `new_${this.curDetailIndex}`, WhseId: this.defaultWhseId, StorerId: this.entity.StorerId, ReceiptId: this.entity.Id, Code: '', SkuId: '', QtyUomExpected: 0, UomCode: '',
-        QtyExpected: 0, QtyUomReceived: 0, QtyReceived: 0, LocId: '', TrayId: '', LotId: '',
+        QtyExpected: 0, QtyUomReceived: 0, QtyReceived: 0, LocId: this.defaultLocId, TrayId: '', LotId: '',
         Lot01: '', Lot02: '', Lot03: '', Lot04: '', Lot05: '', Lot06: '', Lot07: '', Lot08: '', Lot09: '', Lot10: '',
         ReceiptDate: moment(), SkuUomId: '', UomCnt: 0, UnitPrice: 0, TotalAmt: 0, Remark: '', Status: '',
         Sku: null
@@ -234,8 +251,40 @@ export default {
     cusHeaderTitle(column) {
       return this.enumItems.find(w => w.Code === column)?.Name
     },
+    handleSkuSelect(record, sku) {
+      record.Sku = sku
+      record.UnitPrice = sku.Price
+    },
     handlerUomSelect(record, uom) {
-      console.log('handlerUomSelect', record, uom)
+      record.SkuUomId = uom.Id
+      record.UomCnt = uom.UomCnt
+    },
+    handlerDetailChange(record) {
+      // 数量/总价处理
+      record.QtyExpected = record.QtyUomExpected * record.UomCnt
+      record.QtyReceived = record.QtyUomReceived * record.UomCnt
+      record.TotalAmt = record.QtyReceived * record.UnitPrice
+      // 批属性处理
+      if (record.Sku && record.Sku.LotStg) {
+        for (const key in record.Sku.LotStg) {
+          if (key.endsWith('Type') && record.Sku.LotStg[key] === 'Quote') {
+            // (引用)
+            const lotName = key.replace('Type', '')
+            const quoteName = record.Sku.LotStg[`${lotName}Enum`]
+            const colVal = this.entity[quoteName]
+            record[lotName] = colVal
+          } else if (key.endsWith('Type') && record.Sku.LotStg[key] === 'CalcExpiry') {
+            // (计算到期)
+            const lotName = key.replace('Type', '')
+            const calcName = record.Sku.LotStg[`${lotName}Enum`]
+            const sourceVal = record[calcName]
+            if (!sourceVal) continue
+            const calcVal = moment(sourceVal).add('days', record.Sku.ShelfLife).format('YYYY-MM-DD')
+            record[lotName] = calcVal
+          }
+        }
+      }
+      // 批属性处理(计算)
     },
     handleSubmit() {
       this.$refs['form'].validate(valid => {

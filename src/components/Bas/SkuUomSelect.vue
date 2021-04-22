@@ -42,6 +42,7 @@ export default {
   methods: {
     ...mapActions({ getEnum: 'getEnum' }),
     getListData() {
+      if (!this.sku) return
       MainSvc.GetBySku(this.sku).then(result => {
         this.listData = result.Data
         if (!this.curValue) {
