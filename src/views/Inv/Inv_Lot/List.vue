@@ -86,7 +86,7 @@ export default {
       selectedRows: [],
       enumItems: [],
       columns: [
-      { title: '仓库', dataIndex: 'Whse.Name' },
+      // { title: '仓库', dataIndex: 'Whse.Name' },
       { title: '货主', dataIndex: 'Storer.Name' },
       { title: '物料', dataIndex: 'Sku.Name' },
       { title: '编号', dataIndex: 'Code', sorter: true },
