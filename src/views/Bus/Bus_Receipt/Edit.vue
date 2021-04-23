@@ -250,7 +250,7 @@ export default {
         Id: `new_${this.curDetailIndex}`, WhseId: this.defaultWhseId, StorerId: this.entity.StorerId, ReceiptId: this.entity.Id, Code: '', SkuId: '', QtyUomExpected: 0, UomCode: '',
         QtyExpected: 0, QtyUomReceived: 0, QtyUomReceivedMin: 0, QtyReceived: 0, LocId: this.defaultLocId, TrayId: '', LotId: '',
         Lot01: '', Lot02: '', Lot03: '', Lot04: '', Lot05: '', Lot06: '', Lot07: '', Lot08: '', Lot09: '', Lot10: '',
-        ReceiptDate: moment().format('YYYY-MM-DD'), SkuUomId: '', UomCnt: 0, UnitPrice: 0, TotalAmt: 0, Remark: '', Status: '',
+        ReceiptDate: moment().format('YYYY-MM-DD'), SkuUomId: '', UomCnt: 0, UnitPrice: 0, TotalAmt: 0, Remark: '', Status: 'Active',
         Sku: null
       }
       this.entity.ReceiptDetail.push(detail)
@@ -317,6 +317,7 @@ export default {
             }
           }
           detail.Sku = null
+          if (!detail.TrayId) detail.TrayId = null // 如果没有托盘
         })
         if (validMsg.length > 0) {
           this.$message.error((h) => { return (<a-list size="small" split={false}>{validMsg.map(m => { return (<a-list-item>{m}</a-list-item>) })}</a-list>) })
@@ -324,13 +325,14 @@ export default {
         }
         const postData = Object.assign({}, this.entity)
         postData.ReceiptDetail = list
+        if (!postData.SupplierId) postData.SupplierId = null // 如果没有供应商/客户
         console.log('handleSubmit', postData)
         this.loading = true
         MainSvc.Save(postData).then(result => {
           this.loading = false
           if (result.Success) {
             this.$message.success(result.Msg)
-            this.visible = false
+            // this.visible = false
             this.$emit('Success')
           } else {
             this.$message.error(result.Msg)
