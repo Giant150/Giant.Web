@@ -19,7 +19,7 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="6">
-            <a-form-model-item label="供应商" prop="StorerId">
+            <a-form-model-item label="供应商" prop="SupplierId">
               <StorerSelect v-model="entity.SupplierId" :type="['Supplier']"></StorerSelect>
             </a-form-model-item>
           </a-col>
@@ -45,7 +45,7 @@
       <div class="table-operator">
         <a-button type="primary" v-action:Add icon="plus" @click="handleAdd">新建</a-button>
       </div>
-      <a-table ref="table" size="small" rowKey="Id" :columns="columns" :data-source="receiptDetail" :scroll="{ x: 3000 }">
+      <a-table ref="table" size="small" rowKey="Id" :columns="columns" :data-source="receiptDetail" :pagination="false" :scroll="{ x: 3000 }">
         <template slot="Code" slot-scope="text, record">
           <CodeInput code="Bus_ReceiptDetail_Code" v-model="record.Code" :para="{ReceiptCode:entity.Code}" size="small"></CodeInput>
         </template>
@@ -53,19 +53,19 @@
           <SkuSelect v-model="record.SkuId" :storer="entity.StorerId" @select="(val,sku)=>{handleSkuSelect(record,sku)}" size="small"></SkuSelect>
         </template>
         <template slot="QtyUomExpected" slot-scope="text, record">
-          <a-input-number v-model="record.QtyUomExpected" style="width:100%" size="small" />
+          <a-input-number v-model="record.QtyUomExpected" :min="0" style="width:100%" size="small" />
         </template>
         <template slot="UomCode" slot-scope="text, record">
           <SkuUomSelect v-model="record.UomCode" :sku="record.SkuId" @select="(val,uom)=>{handlerUomSelect(record,uom)}" style="width:100%" size="small"></SkuUomSelect>
         </template>
         <template slot="QtyUomReceived" slot-scope="text, record">
-          <a-input-number v-model="record.QtyUomReceived" style="width:100%" size="small" />
+          <a-input-number v-model="record.QtyUomReceived" :min="record.QtyUomReceivedMin" :max="record.QtyUomExpected" style="width:100%" size="small" />
         </template>
         <template slot="LocId" slot-scope="text, record">
           <LocSelect v-model="record.LocId" size="small"></LocSelect>
         </template>
         <template slot="TrayId" slot-scope="text, record">
-          <TraySelect v-model="record.TrayId" :type="record.Sku?record.Sku.TrayTypeId:''" size="small"></TraySelect>
+          <TraySelect v-model="record.TrayId" :type="record.Sku?record.Sku.TrayTypeId:''" size="small" allowClear></TraySelect>
         </template>
         <template slot="Lot01" slot-scope="text, record">
           <LotInput name="Lot01" :sku="record.Sku" v-model="record.Lot01"></LotInput>
@@ -110,8 +110,8 @@
       </a-table>
     </a-spin>
     <div :style="{ position: 'absolute', bottom: 0, right: 0, width: '100%', borderTop: '1px solid #e9e9e9', padding: '10px 16px', background: '#fff', textAlign: 'right', zIndex: 1, }">
-      <a-button :style="{ marginRight: '8px' }" @click="()=>{this.visible=false}"> Cancel </a-button>
-      <a-button type="primary" @click="()=>{this.visible=false}"> Submit </a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleSubmit">保存</a-button>
+      <a-button :style="{ marginRight: '8px' }" @click="()=>{this.visible=false}">关闭</a-button>
     </div>
   </a-drawer>
 </template>
@@ -150,8 +150,11 @@ export default {
       title: '新建',
       layout: { labelCol: { xs: { span: 24 }, sm: { span: 6 } }, wrapperCol: { xs: { span: 24 }, sm: { span: 14 } } },
       rules: {
-        Name: [{ required: true, message: '必填' }],
-        Code: [{ required: true, message: '必填' }]
+        StorerId: [{ required: true, message: '必填' }],
+        RecType: [{ required: true, message: '必填' }],
+        Code: [{ required: true, message: '必填' }],
+        DocDate: [{ required: true, message: '必填' }],
+        RecDate: [{ required: true, message: '必填' }]
       },
       visible: false,
       loading: false,
@@ -217,7 +220,7 @@ export default {
       this.visible = true
       this.entity = {
         ReceiptDetail: [], Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', RecType: 'Standard',
-        DocDate: moment(), RecDate: moment(), SupplierId: '', Remark: '', Status: 'Active'
+        DocDate: moment().format('YYYY-MM-DD'), RecDate: moment().format('YYYY-MM-DD'), SupplierId: '', Remark: '', Status: 'Active'
       }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
@@ -227,7 +230,11 @@ export default {
       this.init()
       if (id) {
         MainSvc.Get(id).then(resJson => {
-          this.entity = resJson.Data
+          const tempData = resJson.Data
+          tempData.ReceiptDetail.forEach(detail => {
+            detail.QtyUomReceivedMin = detail.QtyUomReceived
+          })
+          this.entity = tempData
         })
       } else {
         this.getConfig({ whseId: this.defaultWhseId, code: 'Bus_Receipt_Code_AutoGenerate' }).then(result => {
@@ -241,9 +248,9 @@ export default {
       this.curDetailIndex += 1
       var detail = {
         Id: `new_${this.curDetailIndex}`, WhseId: this.defaultWhseId, StorerId: this.entity.StorerId, ReceiptId: this.entity.Id, Code: '', SkuId: '', QtyUomExpected: 0, UomCode: '',
-        QtyExpected: 0, QtyUomReceived: 0, QtyReceived: 0, LocId: this.defaultLocId, TrayId: '', LotId: '',
+        QtyExpected: 0, QtyUomReceived: 0, QtyUomReceivedMin: 0, QtyReceived: 0, LocId: this.defaultLocId, TrayId: '', LotId: '',
         Lot01: '', Lot02: '', Lot03: '', Lot04: '', Lot05: '', Lot06: '', Lot07: '', Lot08: '', Lot09: '', Lot10: '',
-        ReceiptDate: moment(), SkuUomId: '', UomCnt: 0, UnitPrice: 0, TotalAmt: 0, Remark: '', Status: '',
+        ReceiptDate: moment().format('YYYY-MM-DD'), SkuUomId: '', UomCnt: 0, UnitPrice: 0, TotalAmt: 0, Remark: '', Status: '',
         Sku: null
       }
       this.entity.ReceiptDetail.push(detail)
@@ -289,10 +296,37 @@ export default {
     handleSubmit() {
       this.$refs['form'].validate(valid => {
         if (!valid) {
+          this.$message.error('数据验证失败')
           return
         }
+        const list = this.entity.ReceiptDetail.map(detail => Object.assign({}, detail))
+        const validMsg = []
+        list.forEach(detail => {
+          if (!detail.Code) validMsg.push(`收货明细编号必需输入`)
+          if (!detail.SkuId) validMsg.push(`收货明细${detail.Code}中物料必需选择`)
+          if (detail.QtyUomExpected === 0 && detail.QtyUomReceived === 0) validMsg.push(`收货明细${detail.Code}中 预期数量 和 已收数量 都为0`)
+          const lotStg = Object.assign({}, detail?.Sku?.LotStg)
+          // 批属性验证(必需)
+          for (const key in lotStg) {
+            if (key.endsWith('Required') && !key.endsWith('RFRequired') && lotStg[key]) {
+              const lotName = key.replace('Required', '')
+              const colVal = detail[lotName]
+              if (!colVal) {
+                validMsg.push(`收货明细${detail.Code}中${lotName}为必需`)
+              }
+            }
+          }
+          detail.Sku = null
+        })
+        if (validMsg.length > 0) {
+          this.$message.error((h) => { return (<a-list size="small" split={false}>{validMsg.map(m => { return (<a-list-item>{m}</a-list-item>) })}</a-list>) })
+          return
+        }
+        const postData = Object.assign({}, this.entity)
+        postData.ReceiptDetail = list
+        console.log('handleSubmit', postData)
         this.loading = true
-        MainSvc.Save(this.entity).then(result => {
+        MainSvc.Save(postData).then(result => {
           this.loading = false
           if (result.Success) {
             this.$message.success(result.Msg)
