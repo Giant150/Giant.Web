@@ -26,14 +26,17 @@ export default {
   watch: {
     value(newVal) {
       if (this.curVal !== newVal) {
-        this.curVal = newVal
+        this.curVal = this.value
       }
     },
     curVal(newVal, oldVal) {
-      if (oldVal !== newVal) {
+      if (newVal !== oldVal) {
         this.$emit('input', newVal)
       }
     }
+  },
+  mounted() {
+    this.curVal = this.value
   }
 }
 </script>
