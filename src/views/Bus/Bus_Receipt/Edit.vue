@@ -5,12 +5,12 @@
         <a-row>
           <a-col :span="6">
             <a-form-model-item label="货主" prop="StorerId">
-              <StorerSelect v-model="entity.StorerId" :type="['Storer']"></StorerSelect>
+              <StorerSelect v-model="entity.StorerId" :type="['Storer']" :disabled="isModify"></StorerSelect>
             </a-form-model-item>
           </a-col>
           <a-col :span="6">
             <a-form-model-item label="编码" prop="Code">
-              <CodeInput ref="codeInput" code="Bus_Receipt_Code" v-model="entity.Code" :para="{}"></CodeInput>
+              <CodeInput ref="codeInput" code="Bus_Receipt_Code" v-model="entity.Code" :para="{}" :disabled="isModify"></CodeInput>
             </a-form-model-item>
           </a-col>
           <a-col :span="6">
@@ -43,68 +43,67 @@
         </a-row>
       </a-form-model>
       <div class="table-operator">
-        <a-button type="primary" v-action:Add icon="plus" @click="handleAdd">新建</a-button>
+        <a-button type="primary" v-action:Add icon="plus" @click="handleAdd(null)">新建</a-button>
       </div>
       <a-table ref="table" size="small" rowKey="Id" :columns="columns" :data-source="receiptDetail" :pagination="false" :scroll="{ x: 3000 }">
         <template slot="Code" slot-scope="text, record">
-          <CodeInput code="Bus_ReceiptDetail_Code" v-model="record.Code" :para="{ReceiptCode:entity.Code}" size="small"></CodeInput>
+          <CodeInput code="Bus_ReceiptDetail_Code" v-model="record.Code" :para="{ReceiptCode:entity.Code}" size="small" :disabled="record.LotId"></CodeInput>
         </template>
         <template slot="SkuId" slot-scope="text, record">
-          <SkuSelect v-model="record.SkuId" :storer="entity.StorerId" @select="(val,sku)=>{handleSkuSelect(record,sku)}" size="small"></SkuSelect>
+          <SkuSelect v-model="record.SkuId" :storer="entity.StorerId" @select="(val,sku)=>{handleSkuSelect(record,sku)}" size="small" :disabled="record.LotId"></SkuSelect>
         </template>
         <template slot="QtyUomExpected" slot-scope="text, record">
-          <a-input-number v-model="record.QtyUomExpected" :min="0" style="width:100%" size="small" />
+          <a-input-number v-model="record.QtyUomExpected" :min="0" :disabled="record.LotId" style="width:100%" size="small" />
         </template>
         <template slot="UomCode" slot-scope="text, record">
-          <SkuUomSelect v-model="record.UomCode" :sku="record.SkuId" @select="(val,uom)=>{handlerUomSelect(record,uom)}" style="width:100%" size="small"></SkuUomSelect>
+          <SkuUomSelect v-model="record.UomCode" :sku="record.SkuId" @select="(val,uom)=>{handlerUomSelect(record,uom)}" :disabled="record.LotId" style="width:100%" size="small"></SkuUomSelect>
         </template>
         <template slot="QtyUomReceived" slot-scope="text, record">
-          <a-input-number v-model="record.QtyUomReceived" :min="record.QtyUomReceivedMin" :max="record.QtyUomExpected" style="width:100%" size="small" />
+          <a-input-number v-model="record.QtyUomReceived" :min="record.QtyUomReceivedMin" :disabled="record.LotId" style="width:100%" size="small" />
         </template>
         <template slot="LocId" slot-scope="text, record">
-          <LocSelect v-model="record.LocId" size="small"></LocSelect>
+          <LocSelect v-model="record.LocId" size="small" :disabled="record.LotId"></LocSelect>
         </template>
         <template slot="TrayId" slot-scope="text, record">
-          <TraySelect v-model="record.TrayId" :type="record.Sku?record.Sku.TrayTypeId:''" size="small" allowClear></TraySelect>
+          <TraySelect v-model="record.TrayId" :type="record.Sku?record.Sku.TrayTypeId:''" size="small" allowClear :disabled="record.LotId"></TraySelect>
         </template>
         <template slot="Lot01" slot-scope="text, record">
-          <LotInput name="Lot01" :sku="record.Sku" v-model="record.Lot01"></LotInput>
+          <LotInput name="Lot01" :sku="record.Sku" v-model="record.Lot01" :disabled="record.LotId"></LotInput>
         </template>
         <template slot="Lot02" slot-scope="text, record">
-          <LotInput name="Lot02" :sku="record.Sku" v-model="record.Lot02"></LotInput>
+          <LotInput name="Lot02" :sku="record.Sku" v-model="record.Lot02" :disabled="record.LotId"></LotInput>
         </template>
         <template slot="Lot03" slot-scope="text, record">
-          <LotInput name="Lot03" :sku="record.Sku" v-model="record.Lot03"></LotInput>
+          <LotInput name="Lot03" :sku="record.Sku" v-model="record.Lot03" :disabled="record.LotId"></LotInput>
         </template>
         <template slot="Lot04" slot-scope="text, record">
-          <LotInput name="Lot04" :sku="record.Sku" v-model="record.Lot04"></LotInput>
+          <LotInput name="Lot04" :sku="record.Sku" v-model="record.Lot04" :disabled="record.LotId"></LotInput>
         </template>
         <template slot="Lot05" slot-scope="text, record">
-          <LotInput name="Lot05" :sku="record.Sku" v-model="record.Lot05"></LotInput>
+          <LotInput name="Lot05" :sku="record.Sku" v-model="record.Lot05" :disabled="record.LotId"></LotInput>
         </template>
         <template slot="Lot06" slot-scope="text, record">
-          <LotInput name="Lot06" :sku="record.Sku" v-model="record.Lot06"></LotInput>
+          <LotInput name="Lot06" :sku="record.Sku" v-model="record.Lot06" :disabled="record.LotId"></LotInput>
         </template>
         <template slot="Lot07" slot-scope="text, record">
-          <LotInput name="Lot07" :sku="record.Sku" v-model="record.Lot07"></LotInput>
+          <LotInput name="Lot07" :sku="record.Sku" v-model="record.Lot07" :disabled="record.LotId"></LotInput>
         </template>
         <template slot="Lot08" slot-scope="text, record">
-          <LotInput name="Lot08" :sku="record.Sku" v-model="record.Lot08"></LotInput>
+          <LotInput name="Lot08" :sku="record.Sku" v-model="record.Lot08" :disabled="record.LotId"></LotInput>
         </template>
         <template slot="Lot09" slot-scope="text, record">
-          <LotInput name="Lot09" :sku="record.Sku" v-model="record.Lot09"></LotInput>
+          <LotInput name="Lot09" :sku="record.Sku" v-model="record.Lot09" :disabled="record.LotId"></LotInput>
         </template>
         <template slot="Lot10" slot-scope="text, record">
-          <LotInput name="Lot10" :sku="record.Sku" v-model="record.Lot10"></LotInput>
+          <LotInput name="Lot10" :sku="record.Sku" v-model="record.Lot10" :disabled="record.LotId"></LotInput>
         </template>
         <template slot="Remark" slot-scope="text, record">
           <a-input v-model="record.Remark" size="small" />
         </template>
         <span slot="action" slot-scope="text, record">
           <template>
-            <a v-action:Update @click="handleEdit(record)">修改</a>
-            <a-divider v-action:Delete type="vertical" />
-            <a v-action:Delete @click="handleDelete([record])">删除</a>
+            <a v-action:Update v-if="record.LotId" @click="handleAdd(record)">复制</a>
+            <a v-action:Delete v-if="!record.LotId" @click="handleDelete(record)">删除</a>
           </template>
         </span>
       </a-table>
@@ -179,10 +178,11 @@ export default {
         { title: () => { return this.cusHeaderTitle('Lot09') }, dataIndex: 'Lot09', width: 150, scopedSlots: { customRender: 'Lot09' } },
         { title: () => { return this.cusHeaderTitle('Lot10') }, dataIndex: 'Lot10', width: 150, scopedSlots: { customRender: 'Lot10' } },
         { title: '备注', dataIndex: 'Remark', scopedSlots: { customRender: 'Remark' } },
-        { title: '操作', dataIndex: 'action', width: 150, fixed: 'right', scopedSlots: { customRender: 'action' } }
+        { title: '操作', dataIndex: 'action', width: 100, fixed: 'right', scopedSlots: { customRender: 'action' } }
       ],
       curDetailIndex: 0,
-      defaultLocId: '' // 默认收货库位
+      defaultLocId: '', // 默认收货库位
+      isModify: false // 是否编辑
     }
   },
   computed: {
@@ -218,6 +218,7 @@ export default {
     init() {
       this.loading = false
       this.visible = true
+      this.isModify = false
       this.entity = {
         ReceiptDetail: [], Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', RecType: 'Standard',
         DocDate: moment().format('YYYY-MM-DD'), RecDate: moment().format('YYYY-MM-DD'), SupplierId: '', Remark: '', Status: 'Active'
@@ -229,6 +230,7 @@ export default {
     openForm(id, title) {
       this.init()
       if (id) {
+        this.isModify = true
         MainSvc.Get(id).then(resJson => {
           const tempData = resJson.Data
           tempData.ReceiptDetail.forEach(detail => {
@@ -244,16 +246,30 @@ export default {
         })
       }
     },
-    handleAdd() {
+    handleAdd(record) {
       this.curDetailIndex += 1
       var detail = {
         Id: `new_${this.curDetailIndex}`, WhseId: this.defaultWhseId, StorerId: this.entity.StorerId, ReceiptId: this.entity.Id, Code: '', SkuId: '', QtyUomExpected: 0, UomCode: '',
-        QtyExpected: 0, QtyUomReceived: 0, QtyUomReceivedMin: 0, QtyReceived: 0, LocId: this.defaultLocId, TrayId: '', LotId: '',
+        QtyExpected: 0, QtyUomReceived: 0, QtyUomReceivedMin: 0, QtyReceived: 0, LocId: this.defaultLocId, TrayId: '', LotId: null,
         Lot01: '', Lot02: '', Lot03: '', Lot04: '', Lot05: '', Lot06: '', Lot07: '', Lot08: '', Lot09: '', Lot10: '',
         ReceiptDate: moment().format('YYYY-MM-DD'), SkuUomId: '', UomCnt: 0, UnitPrice: 0, TotalAmt: 0, Remark: '', Status: 'Active',
         Sku: null
       }
+      if (record) {
+        var copyObj = {
+          SkuId: record.SkuId, UomCode: record.UomCode, LocId: record.LocId, TrayId: record.TrayId,
+          Lot01: record.Lot01, Lot02: record.Lot02, Lot03: record.Lot03, Lot04: record.Lot04, Lot05: record.Lot05,
+          Lot06: record.Lot06, Lot07: record.Lot07, Lot08: record.Lot08, Lot09: record.Lot09, Lot10: record.Lot10,
+          SkuUomId: record.SkuUomId, UomCnt: record.UomCnt, UnitPrice: record.UnitPrice,
+          Sku: record.Sku
+        }
+        detail = Object.assign(detail, copyObj)
+      }
       this.entity.ReceiptDetail.push(detail)
+    },
+    handleDelete(record) {
+      var index = this.entity.ReceiptDetail.indexOf(record)
+      this.entity.ReceiptDetail.splice(index, 1)
     },
     cusHeaderTitle(column) {
       return this.enumItems.find(w => w.Code === column)?.Name
