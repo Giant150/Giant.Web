@@ -10,7 +10,16 @@
           </a-col>
           <a-col :md="6" :sm="24">
             <span class="table-page-search-submitButtons">
-              <a-button type="primary" v-action:Query @click="()=>{this.$refs.table.refresh()}">查询</a-button>
+              <a-button
+                type="primary"
+                v-action:Query
+                @click="
+                  () => {
+                    this.$refs.table.refresh()
+                  }
+                "
+                >查询</a-button
+              >
               <a-button style="margin-left: 8px" @click="resetSearchForm()">重置</a-button>
             </span>
           </a-col>
@@ -23,7 +32,15 @@
       <a-button type="primary" v-action:Delete icon="delete" @click="handleDelete()">批量删除</a-button>
     </div>
 
-    <s-table ref="table" size="default" rowKey="Id" :columns="columns" :data="loadData" :rowSelection="rowSelection" showPagination="auto">
+    <s-table
+      ref="table"
+      size="default"
+      rowKey="Id"
+      :columns="columns"
+      :data="loadData"
+      :rowSelection="rowSelection"
+      showPagination="auto"
+    >
       <span slot="action" slot-scope="text, record">
         <template>
           <a v-action:Update @click="handleEdit(record)">修改</a>
@@ -32,7 +49,14 @@
         </template>
       </span>
     </s-table>
-    <EditForm ref="editForm" @Success="()=>{this.$refs.table.refresh()}"></EditForm>
+    <EditForm
+      ref="editForm"
+      @Success="
+        () => {
+          this.$refs.table.refresh()
+        }
+      "
+    ></EditForm>
   </a-card>
 </template>
 
@@ -49,12 +73,19 @@ import SkuSelect from '@/components/Bas/SkuSelect'
 import LocSelect from '@/components/Bas/LocSelect'
 
 const columns = [
-    { title: '台帐类型', dataIndex: 'Type' , sorter: true},
-    { title: '类别', dataIndex: 'Category' , sorter: true},
-  { title: '往来单位', dataIndex: 'Storer.Name' , sorter: true},
+  { title: '台帐类型', dataIndex: 'Type', sorter: true },
+  { title: '类别', dataIndex: 'Category', sorter: true },
+  { title: '往来单位', dataIndex: 'Storer.Name', sorter: true },
   { title: '物料', dataIndex: 'Sku.Name', sorter: true },
   { title: '批次', dataIndex: 'Lot.Code', sorter: true },
-  { title: '修改时间', dataIndex: 'ModifyTime', sorter: true, customRender: (value) => { return moment(value).format('yyyy-MM-DD') } }
+  {
+    title: '修改时间',
+    dataIndex: 'ModifyTime',
+    sorter: true,
+    customRender: (value) => {
+      return moment(value).format('yyyy-MM-DD')
+    },
+  },
 ]
 
 export default {
@@ -66,7 +97,7 @@ export default {
     EditForm,
     StorerSelect,
     SkuSelect,
-    LocSelect
+    LocSelect,
   },
   data() {
     this.columns = columns
@@ -80,7 +111,7 @@ export default {
       // 查询参数
       queryParam: { WhseId: '', Keyword: '' },
       // 加载数据方法 必须为 Promise 对象
-      loadData: parameter => {
+      loadData: (parameter) => {
         this.queryParam.WhseId = this.defaultWhseId
         var _query = Object.assign({}, { ...this.queryParam })
         for (const key in _query) {
@@ -88,28 +119,30 @@ export default {
             _query[key] = _query[key].format('YYYY-MM-DD')
           }
         }
-        const requestParameters = Object.assign({ sortField: 'ModifyTime', sortOrder: 'desc', Search: _query }, parameter)
+        const requestParameters = Object.assign(
+          { sortField: 'ModifyTime', sortOrder: 'desc', Search: _query },
+          parameter
+        )
         console.log('loadData request parameters:', requestParameters)
         return MainSvc.GetPage(requestParameters)
       },
       selectedRowKeys: [],
-      selectedRows: []
+      selectedRows: [],
     }
   },
-  filters: {
-  },
+  filters: {},
   created() {},
   computed: {
     ...mapGetters({
       defaultWhseId: 'whseId',
-      defaultStorerId: 'storerId'
+      defaultStorerId: 'storerId',
     }),
     rowSelection() {
       return {
         selectedRowKeys: this.selectedRowKeys,
-        onChange: this.onSelectChange
+        onChange: this.onSelectChange,
       }
-    }
+    },
   },
   methods: {
     moment,
@@ -132,12 +165,12 @@ export default {
     },
     handleDelete(rows) {
       var thisObj = this
-      var ids = rows.map(value => value.Id)
+      var ids = rows.map((value) => value.Id)
       this.$confirm({
         title: '确认删除吗?',
         onOk() {
           return new Promise((resolve, reject) => {
-            MainSvc.Delete(ids).then(result => {
+            MainSvc.Delete(ids).then((result) => {
               resolve()
               if (result.Success) {
                 thisObj.$message.success('操作成功!')
@@ -147,9 +180,9 @@ export default {
               }
             })
           })
-        }
+        },
       })
-    }
-  }
+    },
+  },
 }
 </script>
