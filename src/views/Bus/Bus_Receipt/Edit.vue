@@ -332,7 +332,7 @@ export default {
           this.loading = false
           if (result.Success) {
             this.$message.success(result.Msg)
-            // this.visible = false
+            this.visible = false
             this.$emit('Success')
           } else {
             this.$message.error(result.Msg)
