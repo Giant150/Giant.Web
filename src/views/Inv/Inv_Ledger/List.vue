@@ -40,6 +40,7 @@
       :data="loadData"
       :rowSelection="rowSelection"
       showPagination="auto"
+      :scroll="{ x: 4500 }"
     >
       <span slot="action" slot-scope="text, record">
         <template>
@@ -75,9 +76,26 @@ import LocSelect from '@/components/Bas/LocSelect'
 const columns = [
   { title: '台帐类型', dataIndex: 'Type', sorter: true },
   { title: '类别', dataIndex: 'Category', sorter: true },
-  { title: '往来单位', dataIndex: 'Storer.Name', sorter: true },
-  { title: '物料', dataIndex: 'Sku.Name', sorter: true },
-  { title: '批次', dataIndex: 'Lot.Code', sorter: true },
+  { title: '货主', dataIndex: 'StoreName', sorter: true },
+  { title: '物料', dataIndex: 'SkuName', sorter: true },
+  { title: '批次', dataIndex: 'LotCode', sorter: true },
+  { title: '原库位', dataIndex: 'FromLocCode', sorter: true },
+  { title: '目标库位', dataIndex: 'ToLocCode', sorter: true },
+  { title: '原托盘', dataIndex: 'FromTrayCode', sorter: true },
+  { title: '目标托盘', dataIndex: 'ToTrayCode', sorter: true },
+  { title: '数量', dataIndex: 'Qty', sorter: true },
+  { title: '来源业务', dataIndex: 'RefTable', sorter: true },
+  { title: '来源业务Id', dataIndex: 'RefId', sorter: true },
+  { title: '批属性01', dataIndex: 'Lot01' },
+  { title: '批属性02', dataIndex: 'Lot02' },
+  { title: '批属性03', dataIndex: 'Lot03' },
+  { title: '批属性04', dataIndex: 'Lot04' },
+  { title: '批属性05', dataIndex: 'Lot05' },
+  { title: '批属性06', dataIndex: 'Lot06' },
+  { title: '批属性07', dataIndex: 'Lot07' },
+  { title: '批属性08', dataIndex: 'Lot08' },
+  { title: '批属性09', dataIndex: 'Lot09' },
+  { title: '批属性10', dataIndex: 'Lot10' },
   {
     title: '修改时间',
     dataIndex: 'ModifyTime',
