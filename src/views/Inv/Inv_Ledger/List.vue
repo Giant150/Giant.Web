@@ -10,16 +10,7 @@
           </a-col>
           <a-col :md="6" :sm="24">
             <span class="table-page-search-submitButtons">
-              <a-button
-                type="primary"
-                v-action:Query
-                @click="
-                  () => {
-                    this.$refs.table.refresh()
-                  }
-                "
-                >查询</a-button
-              >
+              <a-button type="primary" v-action:Query @click="() => {this.$refs.table.refresh()}">查询</a-button>
               <a-button style="margin-left: 8px" @click="resetSearchForm()">重置</a-button>
             </span>
           </a-col>
@@ -62,7 +53,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import moment from 'moment'
 import { STable } from '@/components'
 import MainSvc from '@/api/Inv/Inv_LedgerSvc'
@@ -73,39 +64,6 @@ import StorerSelect from '@/components/Bas/StorerSelect'
 import SkuSelect from '@/components/Bas/SkuSelect'
 import LocSelect from '@/components/Bas/LocSelect'
 
-const columns = [
-  { title: '台帐类型', dataIndex: 'Type', sorter: true },
-  { title: '类别', dataIndex: 'Category', sorter: true },
-  { title: '货主', dataIndex: 'StoreName', sorter: true },
-  { title: '物料', dataIndex: 'SkuName', sorter: true },
-  { title: '批次', dataIndex: 'LotCode', sorter: true },
-  { title: '原库位', dataIndex: 'FromLocCode', sorter: true },
-  { title: '目标库位', dataIndex: 'ToLocCode', sorter: true },
-  { title: '原托盘', dataIndex: 'FromTrayCode', sorter: true },
-  { title: '目标托盘', dataIndex: 'ToTrayCode', sorter: true },
-  { title: '数量', dataIndex: 'Qty', sorter: true },
-  { title: '来源业务', dataIndex: 'RefTable', sorter: true },
-  { title: '来源业务Id', dataIndex: 'RefId', sorter: true },
-  { title: '批属性01', dataIndex: 'Lot01' },
-  { title: '批属性02', dataIndex: 'Lot02' },
-  { title: '批属性03', dataIndex: 'Lot03' },
-  { title: '批属性04', dataIndex: 'Lot04' },
-  { title: '批属性05', dataIndex: 'Lot05' },
-  { title: '批属性06', dataIndex: 'Lot06' },
-  { title: '批属性07', dataIndex: 'Lot07' },
-  { title: '批属性08', dataIndex: 'Lot08' },
-  { title: '批属性09', dataIndex: 'Lot09' },
-  { title: '批属性10', dataIndex: 'Lot10' },
-  {
-    title: '修改时间',
-    dataIndex: 'ModifyTime',
-    sorter: true,
-    customRender: (value) => {
-      return moment(value).format('yyyy-MM-DD')
-    },
-  },
-]
-
 export default {
   components: {
     STable,
@@ -115,10 +73,9 @@ export default {
     EditForm,
     StorerSelect,
     SkuSelect,
-    LocSelect,
+    LocSelect
   },
   data() {
-    this.columns = columns
     return {
       // create model
       visible: false,
@@ -146,24 +103,64 @@ export default {
       },
       selectedRowKeys: [],
       selectedRows: [],
+      enumItems: [],
+      columns: [{ title: '台帐类型', dataIndex: 'Type', sorter: true },
+        { title: '类别', dataIndex: 'Category', sorter: true },
+        { title: '货主', dataIndex: 'StoreName', sorter: true },
+        { title: '物料', dataIndex: 'SkuName', sorter: true },
+        { title: '批次', dataIndex: 'LotCode', sorter: true },
+        { title: '原库位', dataIndex: 'FromLocCode', sorter: true },
+        { title: '目标库位', dataIndex: 'ToLocCode', sorter: true },
+        { title: '原托盘', dataIndex: 'FromTrayCode', sorter: true },
+        { title: '目标托盘', dataIndex: 'ToTrayCode', sorter: true },
+        { title: '数量', dataIndex: 'Qty', sorter: true },
+        { title: '来源业务', dataIndex: 'RefTable', sorter: true },
+        { title: '来源业务Id', dataIndex: 'RefId', sorter: true },
+        { title: () => { return this.cusHeaderTitle('Lot01') }, dataIndex: 'Lot01' },
+        { title: () => { return this.cusHeaderTitle('Lot02') }, dataIndex: 'Lot02' },
+        { title: () => { return this.cusHeaderTitle('Lot03') }, dataIndex: 'Lot03' },
+        { title: () => { return this.cusHeaderTitle('Lot04') }, dataIndex: 'Lot04' },
+        { title: () => { return this.cusHeaderTitle('Lot05') }, dataIndex: 'Lot05' },
+        { title: () => { return this.cusHeaderTitle('Lot06') }, dataIndex: 'Lot06' },
+        { title: () => { return this.cusHeaderTitle('Lot07') }, dataIndex: 'Lot07' },
+        { title: () => { return this.cusHeaderTitle('Lot08') }, dataIndex: 'Lot08' },
+        { title: () => { return this.cusHeaderTitle('Lot09') }, dataIndex: 'Lot09' },
+        { title: () => { return this.cusHeaderTitle('Lot10') }, dataIndex: 'Lot10' },
+        {
+          title: '修改时间',
+          dataIndex: 'ModifyTime',
+          sorter: true,
+          customRender: (value) => {
+            return moment(value).format('yyyy-MM-DD')
+          }
+        }
+      ]
     }
   },
   filters: {},
-  created() {},
+  created() {
+    this.getEnum({ whseId: this.defaultWhseId, code: 'Bas_Lot_Field' }).then((result) => {
+      this.enumItems = result.EnumItems
+    })
+  },
   computed: {
     ...mapGetters({
       defaultWhseId: 'whseId',
-      defaultStorerId: 'storerId',
+      defaultStorerId: 'storerId'
     }),
     rowSelection() {
       return {
         selectedRowKeys: this.selectedRowKeys,
-        onChange: this.onSelectChange,
+        onChange: this.onSelectChange
       }
-    },
+    }
   },
   methods: {
     moment,
+    ...mapActions({ getConfig: 'getConfig', getEnum: 'getEnum' }),
+    cusHeaderTitle(column) {
+      return this.enumItems.find((w) => w.Code === column)?.Name
+    },
     handleAdd() {
       this.mdl = null
       this.visible = true
@@ -198,9 +195,9 @@ export default {
               }
             })
           })
-        },
+        }
       })
-    },
-  },
+    }
+  }
 }
 </script>
