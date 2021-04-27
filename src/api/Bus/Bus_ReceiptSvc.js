@@ -49,5 +49,16 @@ export default {
             method: 'delete',
             data: ids
         })
+    },
+    /**
+     * 生成上架任务
+     * @param {string} id 主键
+     * @returns 实体数据
+     */
+     PutawayTask(id) {
+        return request({
+            url: '/api/Bus_Receipt/PutawayTask?id=' + id,
+            method: 'post'
+        })
     }
 }
