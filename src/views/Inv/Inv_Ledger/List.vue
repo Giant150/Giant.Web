@@ -4,23 +4,102 @@
       <a-form layout="inline">
         <a-row :gutter="48">
           <a-col :md="6" :sm="24">
-            <a-form-item label="关键字">
-              <a-input v-model="queryParam.Keyword" placeholder="关键字" />
+            <a-form-item label="台账类型">
+              <EnumSelect v-model="queryParam.Type" code="Inv_Ledger_Type" aria-placeholder="台帐类型"></EnumSelect>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="24">
+            <a-form-item label="台账类别">
+              <EnumSelect v-model="queryParam.Category" code="Inv_Ledger_Category" aria-placeholder="类别"></EnumSelect>
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="24">
+            <a-form-item label="台账货主">
+              <StorerSelect v-model="queryParam.StorerId" :type="['Storer']" aria-placeholder="货主"></StorerSelect>
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="24">
+            <a-form-item label="台账物料">
+              <SkuSelect v-model="queryParam.SkuId" :storer="queryParam.StorerId" @select="(val,sku)=>{handleSkuSelect(sku)}" aria-placeholder="物料"></SkuSelect>
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="24">
+            <a-form-item label="台账库位">
+              <LocSelect v-model="queryParam.LocId" aria-placeholder="库位"></LocSelect>
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="24">
+            <a-form-item label="模糊查询">
+              <a-input v-model="queryParam.Keyword" placeholder="按货主、物料、台账类型、类别、库位查询" />
+            </a-form-item>
+          </a-col>
+          <template v-if="advanced">
+            <a-col :md="6" :sm="24">
+              <a-form-item :label="cusHeaderTitle('Lot01')">
+                <LotInput v-model="queryParam.Lot01" name="Lot01" :sku="selectSku"></LotInput>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item :label="cusHeaderTitle('Lot02')">
+                <LotInput v-model="queryParam.Lot02" name="Lot02" :sku="selectSku"></LotInput>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item :label="cusHeaderTitle('Lot03')">
+                <LotInput v-model="queryParam.Lot03" name="Lot03" :sku="selectSku"></LotInput>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item :label="cusHeaderTitle('Lot04')">
+                <LotInput v-model="queryParam.Lot04" name="Lot04" :sku="selectSku"></LotInput>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item :label="cusHeaderTitle('Lot05')">
+                <LotInput v-model="queryParam.Lot05" name="Lot05" :sku="selectSku"></LotInput>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item :label="cusHeaderTitle('Lot06')">
+                <LotInput v-model="queryParam.Lot06" name="Lot06" :sku="selectSku"></LotInput>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item :label="cusHeaderTitle('Lot07')">
+                <LotInput v-model="queryParam.Lot07" name="Lot07" :sku="selectSku"></LotInput>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item :label="cusHeaderTitle('Lot08')">
+                <LotInput v-model="queryParam.Lot08" name="Lot08" :sku="selectSku"></LotInput>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item :label="cusHeaderTitle('Lot09')">
+                <LotInput v-model="queryParam.Lot09" name="Lot09" :sku="selectSku"></LotInput>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item :label="cusHeaderTitle('Lot10')">
+                <LotInput v-model="queryParam.Lot10" name="Lot10" :sku="selectSku"></LotInput>
+              </a-form-item>
+            </a-col>
+          </template>
+          <a-col :md="6" :sm="24">
             <span class="table-page-search-submitButtons">
-              <a-button type="primary" v-action:Query @click="() => {this.$refs.table.refresh()}">查询</a-button>
+              <a-button
+                type="primary"
+                v-action:Query
+                @click="() => {this.$refs.table.refresh()}">查询</a-button>
               <a-button style="margin-left: 8px" @click="resetSearchForm()">重置</a-button>
+              <a @click="() => { this.advanced = !this.advanced }" style="margin-left: 8px">
+                {{ advanced ? '收起' : '展开' }}
+                <a-icon :type="advanced ? 'up' : 'down'" />
+              </a>
             </span>
           </a-col>
         </a-row>
       </a-form>
-    </div>
-
-    <div class="table-operator">
-      <a-button type="primary" v-action:Add icon="plus" @click="handleAdd">新建</a-button>
-      <a-button type="primary" v-action:Delete icon="delete" @click="handleDelete()">批量删除</a-button>
     </div>
 
     <s-table
@@ -63,6 +142,7 @@ import EnumName from '@/components/CF/EnumName'
 import StorerSelect from '@/components/Bas/StorerSelect'
 import SkuSelect from '@/components/Bas/SkuSelect'
 import LocSelect from '@/components/Bas/LocSelect'
+import LotInput from '@/components/Stg/LotInput'
 
 export default {
   components: {
@@ -73,7 +153,8 @@ export default {
     EditForm,
     StorerSelect,
     SkuSelect,
-    LocSelect
+    LocSelect,
+    LotInput
   },
   data() {
     return {
@@ -84,7 +165,25 @@ export default {
       // 高级搜索 展开/关闭
       advanced: false,
       // 查询参数
-      queryParam: { WhseId: '', Keyword: '' },
+      queryParam: {
+        WhseId: '',
+        Type: '',
+        Category: '',
+        StorerId: '',
+        SkuId: '',
+        Keyword: '',
+        LocId: '',
+        Lot01: '',
+        Lot02: '',
+        Lot03: '',
+        Lot04: '',
+        Lot05: '',
+        Lot06: '',
+        Lot07: '',
+        Lot08: '',
+        Lot09: '',
+        Lot10: ''
+      },
       // 加载数据方法 必须为 Promise 对象
       loadData: (parameter) => {
         this.queryParam.WhseId = this.defaultWhseId
@@ -101,10 +200,12 @@ export default {
         console.log('loadData request parameters:', requestParameters)
         return MainSvc.GetPage(requestParameters)
       },
+      selectSku: null,
       selectedRowKeys: [],
       selectedRows: [],
       enumItems: [],
-      columns: [{ title: '台帐类型', dataIndex: 'Type', sorter: true },
+      columns: [
+        { title: '台帐类型', dataIndex: 'Type', sorter: true },
         { title: '类别', dataIndex: 'Category', sorter: true },
         { title: '货主', dataIndex: 'StoreName', sorter: true },
         { title: '物料', dataIndex: 'SkuName', sorter: true },
@@ -116,16 +217,66 @@ export default {
         { title: '数量', dataIndex: 'Qty', sorter: true },
         { title: '来源业务', dataIndex: 'RefTable', sorter: true },
         { title: '来源业务Id', dataIndex: 'RefId', sorter: true },
-        { title: () => { return this.cusHeaderTitle('Lot01') }, dataIndex: 'Lot01' },
-        { title: () => { return this.cusHeaderTitle('Lot02') }, dataIndex: 'Lot02' },
-        { title: () => { return this.cusHeaderTitle('Lot03') }, dataIndex: 'Lot03' },
-        { title: () => { return this.cusHeaderTitle('Lot04') }, dataIndex: 'Lot04' },
-        { title: () => { return this.cusHeaderTitle('Lot05') }, dataIndex: 'Lot05' },
-        { title: () => { return this.cusHeaderTitle('Lot06') }, dataIndex: 'Lot06' },
-        { title: () => { return this.cusHeaderTitle('Lot07') }, dataIndex: 'Lot07' },
-        { title: () => { return this.cusHeaderTitle('Lot08') }, dataIndex: 'Lot08' },
-        { title: () => { return this.cusHeaderTitle('Lot09') }, dataIndex: 'Lot09' },
-        { title: () => { return this.cusHeaderTitle('Lot10') }, dataIndex: 'Lot10' },
+        {
+          title: () => {
+            return this.cusHeaderTitle('Lot01')
+          },
+          dataIndex: 'Lot01'
+        },
+        {
+          title: () => {
+            return this.cusHeaderTitle('Lot02')
+          },
+          dataIndex: 'Lot02'
+        },
+        {
+          title: () => {
+            return this.cusHeaderTitle('Lot03')
+          },
+          dataIndex: 'Lot03'
+        },
+        {
+          title: () => {
+            return this.cusHeaderTitle('Lot04')
+          },
+          dataIndex: 'Lot04'
+        },
+        {
+          title: () => {
+            return this.cusHeaderTitle('Lot05')
+          },
+          dataIndex: 'Lot05'
+        },
+        {
+          title: () => {
+            return this.cusHeaderTitle('Lot06')
+          },
+          dataIndex: 'Lot06'
+        },
+        {
+          title: () => {
+            return this.cusHeaderTitle('Lot07')
+          },
+          dataIndex: 'Lot07'
+        },
+        {
+          title: () => {
+            return this.cusHeaderTitle('Lot08')
+          },
+          dataIndex: 'Lot08'
+        },
+        {
+          title: () => {
+            return this.cusHeaderTitle('Lot09')
+          },
+          dataIndex: 'Lot09'
+        },
+        {
+          title: () => {
+            return this.cusHeaderTitle('Lot10')
+          },
+          dataIndex: 'Lot10'
+        },
         {
           title: '修改时间',
           dataIndex: 'ModifyTime',
@@ -170,6 +321,9 @@ export default {
       this.visible = true
       this.mdl = { ...record }
       this.$refs.editForm.openForm(record.Id, '修改')
+    },
+    handleSkuSelect(sku) {
+      this.selectSku = sku
     },
     onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
