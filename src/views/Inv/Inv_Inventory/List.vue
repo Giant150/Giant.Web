@@ -3,12 +3,27 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline">
         <a-row :gutter="48">
-          <a-col :md="6" :sm="24">
-            <a-form-item label="关键字">
-              <a-input v-model="queryParam.Keyword" placeholder="关键字" />
+          <a-col :md="5" :sm="24">
+            <a-form-item label="物料货主">
+              <StorerSelect v-model="queryParam.StorerId" :type="['Storer']" aria-placeholder="货主"></StorerSelect>
             </a-form-item>
           </a-col>
-          <a-col :md="6" :sm="24">
+          <a-col :md="5" :sm="24">
+            <a-form-item label="库存物料">
+              <SkuSelect v-model="queryParam.SkuId" :storer="queryParam.StorerId" @select="(val,sku)=>{handleSkuSelect(sku)}" aria-placeholder="选择物料"></SkuSelect>
+            </a-form-item>
+          </a-col>
+          <a-col :md="5" :sm="24">
+            <a-form-item label="库存库位">
+              <LocSelect v-model="queryParam.LocId" aria-placeholder="库位"></LocSelect>
+            </a-form-item>
+          </a-col>
+          <a-col :md="5" :sm="24">
+            <a-form-item label="模糊查询">
+              <a-input v-model="queryParam.Keyword" placeholder="按货主、物料、库位查询" />
+            </a-form-item>
+          </a-col>
+          <a-col :md="4" :sm="24">
             <span class="table-page-search-submitButtons">
               <a-button type="primary" v-action:Query @click="()=>{this.$refs.table.refresh()}">查询</a-button>
               <a-button style="margin-left: 8px" @click="resetSearchForm()">重置</a-button>
@@ -16,11 +31,6 @@
           </a-col>
         </a-row>
       </a-form>
-    </div>
-
-    <div class="table-operator">
-      <a-button type="primary" v-action:Add icon="plus" @click="handleAdd">新建</a-button>
-      <a-button type="primary" v-action:Delete icon="delete" @click="handleDelete()">批量删除</a-button>
     </div>
 
     <s-table ref="table" size="default" rowKey="Id" :columns="columns" :data="loadData" :rowSelection="rowSelection" showPagination="auto">
@@ -49,8 +59,17 @@ import SkuSelect from '@/components/Bas/SkuSelect'
 import LocSelect from '@/components/Bas/LocSelect'
 
 const columns = [
-  { title: '编号', dataIndex: 'Code', sorter: true },
-  { title: '名称', dataIndex: 'Name', sorter: true },
+  { title: '物料编码', dataIndex: 'SkuCode', sorter: true },
+  { title: '物料', dataIndex: 'SkuName', sorter: true },
+  { title: '批次', dataIndex: 'LotCode', sorter: true },
+  { title: '库位', dataIndex: 'LocCode', sorter: true },
+  { title: '托盘', dataIndex: 'TrayCode', sorter: true },
+  { title: '库存数量', dataIndex: 'Qty', sorter: true },
+  { title: '可用数量', dataIndex: 'QtyAvailable', sorter: true },
+  { title: '已分配', dataIndex: 'QtyAllocated', sorter: true },
+  { title: '已拣货', dataIndex: 'QtyPicked', sorter: true },
+  { title: '库存状态', dataIndex: 'Status', sorter: true, customRender: (value) => { if(value=="Freeze") return "冻结"; else return "正常"; } },
+  { title: '货主', dataIndex: 'StoreName', sorter: true },
   { title: '修改时间', dataIndex: 'ModifyTime', sorter: true, customRender: (value) => { return moment(value).format('yyyy-MM-DD') } },
   { title: '操作', dataIndex: 'action', width: '200px', scopedSlots: { customRender: 'action' } }
 ]
@@ -76,7 +95,7 @@ export default {
       // 高级搜索 展开/关闭
       advanced: false,
       // 查询参数
-      queryParam: { WhseId: '', Keyword: '' },
+      queryParam: { WhseId: '', Keyword: '', StorerId: '', SkuId: '', LocId: '' },
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         this.queryParam.WhseId = this.defaultWhseId
@@ -90,6 +109,7 @@ export default {
         console.log('loadData request parameters:', requestParameters)
         return MainSvc.GetPage(requestParameters)
       },
+      selectSku: null,
       selectedRowKeys: [],
       selectedRows: []
     }
@@ -120,6 +140,9 @@ export default {
       this.visible = true
       this.mdl = { ...record }
       this.$refs.editForm.openForm(record.Id, '修改')
+    },
+    handleSkuSelect(sku) {
+      this.selectSku = sku
     },
     onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
