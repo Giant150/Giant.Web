@@ -68,34 +68,34 @@
           <TraySelect v-model="record.TrayId" :type="record.Sku?record.Sku.TrayTypeId:''" size="small" allowClear :disabled="record.LotId"></TraySelect>
         </template>
         <template slot="Lot01" slot-scope="text, record">
-          <LotInput name="Lot01" :sku="record.Sku" v-model="record.Lot01" :disabled="record.LotId"></LotInput>
+          <LotInput name="Lot01" :sku="record.Sku" v-model="record.Lot01" :disabled="record.LotId" size="small"></LotInput>
         </template>
         <template slot="Lot02" slot-scope="text, record">
-          <LotInput name="Lot02" :sku="record.Sku" v-model="record.Lot02" :disabled="record.LotId"></LotInput>
+          <LotInput name="Lot02" :sku="record.Sku" v-model="record.Lot02" :disabled="record.LotId" size="small"></LotInput>
         </template>
         <template slot="Lot03" slot-scope="text, record">
-          <LotInput name="Lot03" :sku="record.Sku" v-model="record.Lot03" :disabled="record.LotId"></LotInput>
+          <LotInput name="Lot03" :sku="record.Sku" v-model="record.Lot03" :disabled="record.LotId" size="small"></LotInput>
         </template>
         <template slot="Lot04" slot-scope="text, record">
-          <LotInput name="Lot04" :sku="record.Sku" v-model="record.Lot04" :disabled="record.LotId"></LotInput>
+          <LotInput name="Lot04" :sku="record.Sku" v-model="record.Lot04" :disabled="record.LotId" size="small"></LotInput>
         </template>
         <template slot="Lot05" slot-scope="text, record">
-          <LotInput name="Lot05" :sku="record.Sku" v-model="record.Lot05" :disabled="record.LotId"></LotInput>
+          <LotInput name="Lot05" :sku="record.Sku" v-model="record.Lot05" :disabled="record.LotId" size="small"></LotInput>
         </template>
         <template slot="Lot06" slot-scope="text, record">
-          <LotInput name="Lot06" :sku="record.Sku" v-model="record.Lot06" :disabled="record.LotId"></LotInput>
+          <LotInput name="Lot06" :sku="record.Sku" v-model="record.Lot06" :disabled="record.LotId" size="small"></LotInput>
         </template>
         <template slot="Lot07" slot-scope="text, record">
-          <LotInput name="Lot07" :sku="record.Sku" v-model="record.Lot07" :disabled="record.LotId"></LotInput>
+          <LotInput name="Lot07" :sku="record.Sku" v-model="record.Lot07" :disabled="record.LotId" size="small"></LotInput>
         </template>
         <template slot="Lot08" slot-scope="text, record">
-          <LotInput name="Lot08" :sku="record.Sku" v-model="record.Lot08" :disabled="record.LotId"></LotInput>
+          <LotInput name="Lot08" :sku="record.Sku" v-model="record.Lot08" :disabled="record.LotId" size="small"></LotInput>
         </template>
         <template slot="Lot09" slot-scope="text, record">
-          <LotInput name="Lot09" :sku="record.Sku" v-model="record.Lot09" :disabled="record.LotId"></LotInput>
+          <LotInput name="Lot09" :sku="record.Sku" v-model="record.Lot09" :disabled="record.LotId" size="small"></LotInput>
         </template>
         <template slot="Lot10" slot-scope="text, record">
-          <LotInput name="Lot10" :sku="record.Sku" v-model="record.Lot10" :disabled="record.LotId"></LotInput>
+          <LotInput name="Lot10" :sku="record.Sku" v-model="record.Lot10" :disabled="record.LotId" size="small"></LotInput>
         </template>
         <template slot="Remark" slot-scope="text, record">
           <a-input v-model="record.Remark" size="small" />
@@ -109,6 +109,7 @@
       </a-table>
     </a-spin>
     <div :style="{ position: 'absolute', bottom: 0, right: 0, width: '100%', borderTop: '1px solid #e9e9e9', padding: '10px 16px', background: '#fff', textAlign: 'right', zIndex: 1, }">
+      <a-button :style="{ marginRight: '8px' }" type="default" @click="handlePutaway">生成上架任务</a-button>
       <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleSubmit">保存</a-button>
       <a-button :style="{ marginRight: '8px' }" @click="()=>{this.visible=false}">关闭</a-button>
     </div>
@@ -252,7 +253,7 @@ export default {
         Id: `new_${this.curDetailIndex}`, WhseId: this.defaultWhseId, StorerId: this.entity.StorerId, ReceiptId: this.entity.Id, Code: '', SkuId: '', QtyUomExpected: 0, UomCode: '',
         QtyExpected: 0, QtyUomReceived: 0, QtyUomReceivedMin: 0, QtyReceived: 0, LocId: this.defaultLocId, TrayId: '', LotId: null,
         Lot01: '', Lot02: '', Lot03: '', Lot04: '', Lot05: '', Lot06: '', Lot07: '', Lot08: '', Lot09: '', Lot10: '',
-        ReceiptDate: moment().format('YYYY-MM-DD'), SkuUomId: '', UomCnt: 0, UnitPrice: 0, TotalAmt: 0, Remark: '', Status: 'Active',
+        ReceiptDate: moment().format('YYYY-MM-DD'), SkuUomId: '', UomCnt: 0, UnitPrice: 0, TotalAmt: 0, Remark: '', Status: 'Active', HasTask: false,
         Sku: null
       }
       if (record) {
@@ -354,6 +355,26 @@ export default {
             this.$message.error(result.Msg)
           }
         })
+      })
+    },
+    handlePutaway() {
+      var thisObj = this
+      var id = this.entity.Id
+      this.$confirm({
+        title: '确认生成上架任务吗?',
+        onOk() {
+          return new Promise((resolve, reject) => {
+            MainSvc.PutawayTask(id).then(result => {
+              resolve()
+              if (result.Success) {
+                this.visible = false
+                thisObj.$message.success('操作成功!')
+              } else {
+                thisObj.$message.error(result.Msg)
+              }
+            })
+          })
+        }
       })
     }
   }
