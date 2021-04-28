@@ -14,7 +14,7 @@
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="24">
-            <a-form-item label="台账货主">
+            <a-form-item label="物料货主">
               <StorerSelect v-model="queryParam.StorerId" :type="['Storer']" aria-placeholder="货主"></StorerSelect>
             </a-form-item>
           </a-col>
@@ -208,6 +208,7 @@ export default {
         { title: '台帐类型', dataIndex: 'Type', sorter: true },
         { title: '类别', dataIndex: 'Category', sorter: true },
         { title: '货主', dataIndex: 'StoreName', sorter: true },
+        { title: '物料编码', dataIndex: 'SkuCode', sorter: true },
         { title: '物料', dataIndex: 'SkuName', sorter: true },
         { title: '批次', dataIndex: 'LotCode', sorter: true },
         { title: '原库位', dataIndex: 'FromLocCode', sorter: true },

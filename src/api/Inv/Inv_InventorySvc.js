@@ -27,7 +27,7 @@ export default {
         })
     },
     /**
-     * 保存数据
+     * 修改状态状态数据
      * @param {Object} data 要保存的实体
      * @returns 保存是否成功
      */
