@@ -65,11 +65,11 @@ const columns = [
   { title: '库位', dataIndex: 'LocCode', sorter: true },
   { title: '托盘', dataIndex: 'TrayCode', sorter: true },
   { title: '库存数量', dataIndex: 'Qty', sorter: true },
-  { title: '可用数量', dataIndex: 'QtyAvailable', sorter: true },
+  { title: '可用数量', dataIndex: 'QtyAvailable', sorter: false },
   { title: '已分配', dataIndex: 'QtyAllocated', sorter: true },
   { title: '已拣货', dataIndex: 'QtyPicked', sorter: true },
-  { title: '库存状态', dataIndex: 'Status', sorter: true, customRender: (value) => { if(value=="Freeze") return "冻结"; else return "正常"; } },
-  { title: '货主', dataIndex: 'StoreName', sorter: true },
+  { title: '库存状态', dataIndex: 'Status', sorter: true, customRender: (value) => { if (value === 'Freeze') { return '冻结' } else { return '正常' } } },
+  { title: '货主', dataIndex: 'StorerName', sorter: true },
   { title: '修改时间', dataIndex: 'ModifyTime', sorter: true, customRender: (value) => { return moment(value).format('yyyy-MM-DD') } },
   { title: '操作', dataIndex: 'action', width: '200px', scopedSlots: { customRender: 'action' } }
 ]
