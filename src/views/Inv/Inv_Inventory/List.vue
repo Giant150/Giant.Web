@@ -34,15 +34,13 @@
     </div>
 
     <s-table ref="table" size="default" rowKey="Id" :columns="columns" :data="loadData" :rowSelection="rowSelection" showPagination="auto">
-      <span slot="action" slot-scope="text, record">
+      <span slot="Freeze" slot-scope="text, record">
         <template>
-          <a v-action:Update @click="handleEdit(record)">修改</a>
-          <a-divider v-action:Delete type="vertical" />
-          <a v-action:Delete @click="handleDelete([record])">删除</a>
+          <a v-if="record.Status === 'Freeze'" v-action:Update @click="handleNormal(record)">解冻</a>
+          <a v-else v-action:Update @click="handleFreeze(record)">冻结</a>
         </template>
       </span>
     </s-table>
-    <EditForm ref="editForm" @Success="()=>{this.$refs.table.refresh()}"></EditForm>
   </a-card>
 </template>
 
@@ -51,7 +49,6 @@ import { mapGetters } from 'vuex'
 import moment from 'moment'
 import { STable } from '@/components'
 import MainSvc from '@/api/Inv/Inv_InventorySvc'
-import EditForm from './Edit'
 import EnumSelect from '@/components/CF/EnumSelect'
 import EnumName from '@/components/CF/EnumName'
 import StorerSelect from '@/components/Bas/StorerSelect'
@@ -71,7 +68,7 @@ const columns = [
   { title: '库存状态', dataIndex: 'Status', sorter: true, customRender: (value) => { if (value === 'Freeze') { return '冻结' } else { return '正常' } } },
   { title: '货主', dataIndex: 'StorerName', sorter: true },
   { title: '修改时间', dataIndex: 'ModifyTime', sorter: true, customRender: (value) => { return moment(value).format('yyyy-MM-DD') } },
-  { title: '操作', dataIndex: 'action', width: '200px', scopedSlots: { customRender: 'action' } }
+  { title: '操作', dataIndex: 'action', width: '200px', scopedSlots: { customRender: 'Freeze' } }
 ]
 
 export default {
@@ -80,7 +77,6 @@ export default {
     MainSvc,
     EnumSelect,
     EnumName,
-    EditForm,
     StorerSelect,
     SkuSelect,
     LocSelect
@@ -136,10 +132,43 @@ export default {
       this.visible = true
       this.$refs.editForm.openForm(null, '新增')
     },
-    handleEdit(record) {
-      this.visible = true
-      this.mdl = { ...record }
-      this.$refs.editForm.openForm(record.Id, '修改')
+    handleFreeze(record) {
+      var thisObj = this
+      this.$confirm({
+        title: '确认冻结库存吗?',
+        onOk() {
+          return new Promise((resolve, reject) => {
+            MainSvc.Save({ Id: record.Id, Status: 'Freeze' }).then((result) => {
+              resolve()
+              if (result.Success) {
+                thisObj.$message.success('操作成功!')
+                thisObj.$refs.table.refresh()
+              } else {
+                thisObj.$message.error(result.Msg)
+              }
+            })
+          })
+        }
+      })
+    },
+    handleNormal(record) {
+      var thisObj = this
+      this.$confirm({
+        title: '确认解冻库存吗?',
+        onOk() {
+          return new Promise((resolve, reject) => {
+            MainSvc.Save({ Id: record.Id, Status: 'Normal' }).then((result) => {
+              resolve()
+              if (result.Success) {
+                thisObj.$message.success('操作成功!')
+                thisObj.$refs.table.refresh()
+              } else {
+                thisObj.$message.error(result.Msg)
+              }
+            })
+          })
+        }
+      })
     },
     handleSkuSelect(sku) {
       this.selectSku = sku
