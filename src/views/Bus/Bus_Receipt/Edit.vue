@@ -47,55 +47,55 @@
       </div>
       <a-table ref="table" size="small" rowKey="Id" :columns="columns" :data-source="receiptDetail" :pagination="false" :scroll="{ x: 3000 }">
         <template slot="Code" slot-scope="text, record">
-          <CodeInput code="Bus_ReceiptDetail_Code" v-model="record.Code" :para="{ReceiptCode:entity.Code}" size="small" :disabled="record.LotId"></CodeInput>
+          <CodeInput code="Bus_ReceiptDetail_Code" v-model="record.Code" :para="{ReceiptCode:entity.Code}" size="small" :disabled="!!record.LotId"></CodeInput>
         </template>
         <template slot="SkuId" slot-scope="text, record">
-          <SkuSelect v-model="record.SkuId" :storer="entity.StorerId" @select="(val,sku)=>{handleSkuSelect(record,sku)}" size="small" :disabled="record.LotId"></SkuSelect>
+          <SkuSelect v-model="record.SkuId" :storer="entity.StorerId" @select="(val,sku)=>{handleSkuSelect(record,sku)}" size="small" :disabled="!!record.LotId"></SkuSelect>
         </template>
         <template slot="QtyUomExpected" slot-scope="text, record">
-          <a-input-number v-model="record.QtyUomExpected" :min="0" :disabled="record.LotId" style="width:100%" size="small" />
+          <a-input-number v-model="record.QtyUomExpected" :min="0" :disabled="!!record.LotId" style="width:100%" size="small" />
         </template>
         <template slot="UomCode" slot-scope="text, record">
-          <SkuUomSelect v-model="record.UomCode" :sku="record.SkuId" @select="(val,uom)=>{handlerUomSelect(record,uom)}" :disabled="record.LotId" style="width:100%" size="small"></SkuUomSelect>
+          <SkuUomSelect v-model="record.UomCode" :sku="record.SkuId" @select="(val,uom)=>{handlerUomSelect(record,uom)}" :disabled="!!record.LotId" style="width:100%" size="small"></SkuUomSelect>
         </template>
         <template slot="QtyUomReceived" slot-scope="text, record">
-          <a-input-number v-model="record.QtyUomReceived" :min="record.QtyUomReceivedMin" :disabled="record.LotId" style="width:100%" size="small" />
+          <a-input-number v-model="record.QtyUomReceived" :min="record.QtyUomReceivedMin" :disabled="!!record.LotId" style="width:100%" size="small" />
         </template>
         <template slot="LocId" slot-scope="text, record">
-          <LocSelect v-model="record.LocId" size="small" :disabled="record.LotId"></LocSelect>
+          <LocSelect v-model="record.LocId" size="small" :disabled="!!record.LotId"></LocSelect>
         </template>
         <template slot="TrayId" slot-scope="text, record">
-          <TraySelect v-model="record.TrayId" :type="record.Sku?record.Sku.TrayTypeId:''" size="small" allowClear :disabled="record.LotId"></TraySelect>
+          <TraySelect v-model="record.TrayId" :type="record.Sku?record.Sku.TrayTypeId:''" size="small" allowClear :disabled="!!record.LotId"></TraySelect>
         </template>
         <template slot="Lot01" slot-scope="text, record">
-          <LotInput name="Lot01" :sku="record.Sku" v-model="record.Lot01" :disabled="record.LotId" size="small"></LotInput>
+          <LotInput name="Lot01" :sku="record.Sku" v-model="record.Lot01" :disabled="!!record.LotId" size="small"></LotInput>
         </template>
         <template slot="Lot02" slot-scope="text, record">
-          <LotInput name="Lot02" :sku="record.Sku" v-model="record.Lot02" :disabled="record.LotId" size="small"></LotInput>
+          <LotInput name="Lot02" :sku="record.Sku" v-model="record.Lot02" :disabled="!!record.LotId" size="small"></LotInput>
         </template>
         <template slot="Lot03" slot-scope="text, record">
-          <LotInput name="Lot03" :sku="record.Sku" v-model="record.Lot03" :disabled="record.LotId" size="small"></LotInput>
+          <LotInput name="Lot03" :sku="record.Sku" v-model="record.Lot03" :disabled="!!record.LotId" size="small"></LotInput>
         </template>
         <template slot="Lot04" slot-scope="text, record">
-          <LotInput name="Lot04" :sku="record.Sku" v-model="record.Lot04" :disabled="record.LotId" size="small"></LotInput>
+          <LotInput name="Lot04" :sku="record.Sku" v-model="record.Lot04" :disabled="!!record.LotId" size="small"></LotInput>
         </template>
         <template slot="Lot05" slot-scope="text, record">
-          <LotInput name="Lot05" :sku="record.Sku" v-model="record.Lot05" :disabled="record.LotId" size="small"></LotInput>
+          <LotInput name="Lot05" :sku="record.Sku" v-model="record.Lot05" :disabled="!!record.LotId" size="small"></LotInput>
         </template>
         <template slot="Lot06" slot-scope="text, record">
-          <LotInput name="Lot06" :sku="record.Sku" v-model="record.Lot06" :disabled="record.LotId" size="small"></LotInput>
+          <LotInput name="Lot06" :sku="record.Sku" v-model="record.Lot06" :disabled="!!record.LotId" size="small"></LotInput>
         </template>
         <template slot="Lot07" slot-scope="text, record">
-          <LotInput name="Lot07" :sku="record.Sku" v-model="record.Lot07" :disabled="record.LotId" size="small"></LotInput>
+          <LotInput name="Lot07" :sku="record.Sku" v-model="record.Lot07" :disabled="!!record.LotId" size="small"></LotInput>
         </template>
         <template slot="Lot08" slot-scope="text, record">
-          <LotInput name="Lot08" :sku="record.Sku" v-model="record.Lot08" :disabled="record.LotId" size="small"></LotInput>
+          <LotInput name="Lot08" :sku="record.Sku" v-model="record.Lot08" :disabled="!!record.LotId" size="small"></LotInput>
         </template>
         <template slot="Lot09" slot-scope="text, record">
-          <LotInput name="Lot09" :sku="record.Sku" v-model="record.Lot09" :disabled="record.LotId" size="small"></LotInput>
+          <LotInput name="Lot09" :sku="record.Sku" v-model="record.Lot09" :disabled="!!record.LotId" size="small"></LotInput>
         </template>
         <template slot="Lot10" slot-scope="text, record">
-          <LotInput name="Lot10" :sku="record.Sku" v-model="record.Lot10" :disabled="record.LotId" size="small"></LotInput>
+          <LotInput name="Lot10" :sku="record.Sku" v-model="record.Lot10" :disabled="!!record.LotId" size="small"></LotInput>
         </template>
         <template slot="Remark" slot-scope="text, record">
           <a-input v-model="record.Remark" size="small" />
@@ -109,7 +109,7 @@
       </a-table>
     </a-spin>
     <div :style="{ position: 'absolute', bottom: 0, right: 0, width: '100%', borderTop: '1px solid #e9e9e9', padding: '10px 16px', background: '#fff', textAlign: 'right', zIndex: 1, }">
-      <a-button :style="{ marginRight: '8px' }" type="default" @click="handlePutaway">生成上架任务</a-button>
+      <a-button v-if="canPutawayTask" v-action:Putaway :style="{ marginRight: '8px' }" type="default" @click="handlePutaway">生成上架任务</a-button>
       <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleSubmit">保存</a-button>
       <a-button :style="{ marginRight: '8px' }" @click="()=>{this.visible=false}">关闭</a-button>
     </div>
@@ -193,6 +193,9 @@ export default {
     }),
     receiptDetail() {
       return this.entity.ReceiptDetail
+    },
+    canPutawayTask() {
+      return this.entity?.ReceiptDetail?.find(w => w.LotId && !w.HasTask)
     }
   },
   watch: {
@@ -273,7 +276,7 @@ export default {
       this.entity.ReceiptDetail.splice(index, 1)
     },
     cusHeaderTitle(column) {
-      return this.enumItems.find(w => w.Code === column)?.Name
+      return this.enumItems?.find(w => w.Code === column)?.Name
     },
     handleSkuSelect(record, sku) {
       record.Sku = sku
@@ -303,7 +306,7 @@ export default {
             const calcName = record.Sku.LotStg[`${lotName}Enum`]
             const sourceVal = record[calcName]
             if (!sourceVal) continue
-            const calcVal = moment(sourceVal).add('days', record.Sku.ShelfLife).format('YYYY-MM-DD')
+            const calcVal = moment(sourceVal).add(record.Sku.ShelfLife, 'days').format('YYYY-MM-DD')
             record[lotName] = calcVal
           }
         }
@@ -367,8 +370,9 @@ export default {
             MainSvc.PutawayTask(id).then(result => {
               resolve()
               if (result.Success) {
-                this.visible = false
+                thisObj.visible = false
                 thisObj.$message.success('操作成功!')
+                thisObj.$router.push({ path: '/Inv/Inv_Task', query: { RefTable: 'Bus_Receipt', RefId: thisObj.entity.Id } })
               } else {
                 thisObj.$message.error(result.Msg)
               }
