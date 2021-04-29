@@ -10,12 +10,12 @@
           </a-col>
           <a-col :md="4" :sm="24">
             <a-form-item label="货主">
-              <StorerSelect v-model="queryParam.StorerId" :type="['Storer']"></StorerSelect>
+              <StorerSelect v-model="queryParam.StorerId" :type="['Storer']" placeholder="货主"></StorerSelect>
             </a-form-item>
           </a-col>
           <a-col :md="4" :sm="24">
             <a-form-item label="物料分类">
-              <TreeSelect table="Bas_SkuType" v-model="queryParam.SkuTypeId"></TreeSelect>
+              <TreeSelect table="Bas_SkuType" v-model="queryParam.SkuTypeId" placeholder="物料分类"></TreeSelect>
             </a-form-item>
           </a-col>
           <a-col :md="4" :sm="24">
@@ -129,7 +129,7 @@ export default {
       // 高级搜索 展开/关闭
       advanced: false,
       // 查询参数
-      queryParam: { WhseId: '', Keyword: '', StorerId: '', SkuTypeId: '' },
+      queryParam: { WhseId: '', Keyword: '', StorerId: undefined, SkuTypeId: undefined },
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         this.queryParam.WhseId = this.defaultWhseId

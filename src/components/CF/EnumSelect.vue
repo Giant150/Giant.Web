@@ -1,5 +1,5 @@
 <template>
-  <a-select allowClear v-model="curValue" :placeholder="enumData.Name" @change="handleChange" @select="handleSelected" v-bind="$attrs">
+  <a-select v-model="curValue" :placeholder="enumData.Name" @change="handleChange" @select="handleSelected" v-bind="$attrs">
     <a-select-option v-for="item in enumData.EnumItems" :key="item.Code" :value="item.Code">{{ item.Name }}</a-select-option>
   </a-select>
 </template>
@@ -8,12 +8,12 @@
 import { mapGetters, mapActions } from 'vuex'
 export default {
   props: {
-    code: { type: String, required: true },
-    value: { type: String, required: false, default: '' }
+    code: String,
+    value: String
   },
   data() {
     return {
-      curValue: '',
+      curValue: undefined,
       enumData: {}
     }
   },
@@ -38,7 +38,7 @@ export default {
     ...mapActions({ getEnum: 'getEnum' }),
     handleChange(val) {
       if (!val) {
-        this.$emit('input', '')
+        this.$emit('input', undefined)
       }
     },
     handleSelected(val) {

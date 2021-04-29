@@ -9,10 +9,10 @@
           <a-input v-model="entity.Name" autocomplete="off" />
         </a-form-model-item>
         <a-form-model-item label="类型" prop="Type">
-          <EnumSelect code="Bas_Storer_Type" v-model="entity.Type" autocomplete="off"></EnumSelect>
+          <EnumSelect code="Bas_Storer_Type" v-model="entity.Type"></EnumSelect>
         </a-form-model-item>
         <a-form-model-item label="状态" prop="Status">
-          <EnumSelect code="State" v-model="entity.Status" autocomplete="off"></EnumSelect>
+          <EnumSelect code="State" v-model="entity.Status"></EnumSelect>
         </a-form-model-item>
       </a-form-model>
     </a-spin>
@@ -37,7 +37,8 @@ export default {
       layout: { labelCol: { xs: { span: 24 }, sm: { span: 6 } }, wrapperCol: { xs: { span: 24 }, sm: { span: 14 } } },
       rules: {
         Name: [{ required: true, message: '必填' }],
-        Code: [{ required: true, message: '必填' }]
+        Code: [{ required: true, message: '必填' }],
+        Type: [{ required: true, message: '必填' }]
       },
       visible: false,
       loading: false,
@@ -56,7 +57,7 @@ export default {
     init() {
       this.loading = false
       this.visible = true
-      this.entity = { Id: '', WhseId: this.defaultWhseId, Code: '', Name: '', Type: 'Storer', Status: 'Enable' }
+      this.entity = { Id: '', WhseId: this.defaultWhseId, Code: '', Name: '', Type: undefined, Status: 'Enable' }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })

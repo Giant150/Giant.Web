@@ -31,7 +31,8 @@ export default {
       layout: { labelCol: { xs: { span: 24 }, sm: { span: 6 } }, wrapperCol: { xs: { span: 24 }, sm: { span: 14 } } },
       rules: {
         Name: [{ required: true, message: '必填' }],
-        Code: [{ required: true, message: '必填' }]
+        Code: [{ required: true, message: '必填' }],
+        Type: [{ required: true, message: '必填' }]
       },
       visible: false,
       loading: false,
@@ -43,7 +44,7 @@ export default {
     init() {
       this.loading = false
       this.visible = true
-      this.entity = { Id: '', Code: '', Name: '', Type: '', Status: 'Enable' }
+      this.entity = { Id: '', Code: '', Name: '', Type: undefined, Status: 'Enable' }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })

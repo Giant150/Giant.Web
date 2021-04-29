@@ -9,7 +9,7 @@
 	"Giant Web Tag Storer": {
 		"prefix": "gstorer",
 		"body": [
-"<StorerSelect v-model=\"${1:entity.StorerId}\" :type=\"['${2|Storer,Consignee,Customer,Supplier,Other|}']\"></StorerSelect>$0"
+"<StorerSelect v-model=\"${1:entity.StorerId}\" :type=\"['${2|Storer,Consignee,Customer,Supplier,Other|}']\" placeholder=\"${3|货主,收货人,客户,供应商,其它|}\"></StorerSelect>$0"
 		],
 		"description": "Giant Web Tag Storer"
 	}

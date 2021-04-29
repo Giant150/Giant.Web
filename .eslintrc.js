@@ -12,7 +12,7 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'generator-star-spacing': 'off',
     'no-mixed-operators': 0,
-    'object-property-newline':'off',
+    'object-property-newline': 'off',
     'vue/max-attributes-per-line': [
       10,
       {
@@ -33,6 +33,7 @@ module.exports = {
     'vue/no-use-v-if-with-v-for': 0,
     'vue/html-closing-bracket-newline': 0,
     'vue/no-parsing-error': 0,
+    'vue/require-default-prop': 0,
     'no-tabs': 0,
     'quotes': [
       2,

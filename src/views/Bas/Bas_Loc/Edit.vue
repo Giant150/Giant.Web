@@ -5,7 +5,7 @@
         <a-row>
           <a-col :span="8">
             <a-form-model-item label="编号" prop="Code">
-              <a-input v-model="entity.Code" autocomplete="off" />
+              <a-input v-model="entity.Code" placeholder="编号" />
             </a-form-model-item>
           </a-col>
           <a-col :span="8">
@@ -22,34 +22,34 @@
         <a-row>
           <a-col :span="8">
             <a-form-model-item label="拣货路顺" prop="AllocCode">
-              <a-input v-model="entity.AllocCode" autocomplete="off" />
+              <a-input v-model="entity.AllocCode" placeholder="拣货路顺" />
             </a-form-model-item>
           </a-col>
           <a-col :span="8">
             <a-form-model-item label="上架路顺" prop="PutawayCode">
-              <a-input v-model="entity.PutawayCode" autocomplete="off" />
+              <a-input v-model="entity.PutawayCode" placeholder="上架路顺" />
             </a-form-model-item>
           </a-col>
           <a-col :span="8">
             <a-form-model-item label="工作区域" prop="WorkZone">
-              <a-input v-model="entity.WorkZone" autocomplete="off" />
+              <a-input v-model="entity.WorkZone" placeholder="工作区域" />
             </a-form-model-item>
           </a-col>
         </a-row>
         <a-row>
           <a-col :span="8">
             <a-form-model-item label="上架区域" prop="PutawayZoneId">
-              <CommonSelect v-model="entity.PutawayZoneId" table="Bas_PutawayZone"></CommonSelect>
+              <CommonSelect v-model="entity.PutawayZoneId" table="Bas_PutawayZone" placeholder="上架区域"></CommonSelect>
             </a-form-model-item>
           </a-col>
           <a-col :span="8">
             <a-form-model-item label="托盘类型" prop="TrayTypeId">
-              <CommonSelect v-model="entity.TrayTypeId" table="Bas_TrayType"></CommonSelect>
+              <CommonSelect v-model="entity.TrayTypeId" table="Bas_TrayType" placeholder="托盘类型"></CommonSelect>
             </a-form-model-item>
           </a-col>
           <a-col :span="8">
             <a-form-model-item label="巷道" prop="LanewayId">
-              <CommonSelect v-model="entity.LanewayId" table="Bas_Laneway"></CommonSelect>
+              <CommonSelect v-model="entity.LanewayId" table="Bas_Laneway" placeholder="巷道"></CommonSelect>
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -117,8 +117,12 @@ export default {
       title: '新建',
       layout: { labelCol: { xs: { span: 24 }, sm: { span: 6 } }, wrapperCol: { xs: { span: 24 }, sm: { span: 14 } } },
       rules: {
-        Name: [{ required: true, message: '必填' }],
-        Code: [{ required: true, message: '必填' }]
+        Code: [{ required: true, message: '必填' }],
+        AllocCode: [{ required: true, message: '必填' }],
+        PutawayCode: [{ required: true, message: '必填' }],
+        PutawayZoneId: [{ required: true, message: '必填' }],
+        Type: [{ required: true, message: '必填' }],
+        Flag: [{ required: true, message: '必填' }]
       },
       visible: false,
       loading: false,
@@ -160,7 +164,7 @@ export default {
     init() {
       this.loading = false
       this.visible = true
-      this.entity = { Id: '', WhseId: this.defaultWhseId, Code: '', Name: '', Type: 'Standard', Flag: 'None', AllocCode: '', PutawayCode: '', PutawayZoneId: null, TrayTypeId: null, LanewayId: null, WorkZone: '', ABC: 'B', MaxCapacity: 0, MaxWeight: 0, CommingleSku: true, CommingleLot: true, Status: 'Enable' }
+      this.entity = { Id: '', WhseId: this.defaultWhseId, Code: '', Name: '', Type: 'Standard', Flag: 'None', AllocCode: '', PutawayCode: '', PutawayZoneId: undefined, TrayTypeId: undefined, LanewayId: undefined, WorkZone: '', ABC: 'B', MaxCapacity: 0, MaxWeight: 0, CommingleSku: true, CommingleLot: true, Status: 'Enable' }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })
@@ -180,9 +184,6 @@ export default {
           return
         }
         this.loading = true
-        if (!this.entity.TrayTypeId) {
-          this.entity.TrayTypeId = null
-        }
         MainSvc.Save(this.entity).then(result => {
           this.loading = false
           if (result.Success) {

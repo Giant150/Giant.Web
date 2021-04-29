@@ -1,6 +1,7 @@
 {
   "rules": {
     "space-before-function-paren": 0,
-    "object-property-newline":"off"
+    "object-property-newline":"off",
+    "vue/require-default-prop":"off"
   }
 }

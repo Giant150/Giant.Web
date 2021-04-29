@@ -5,12 +5,12 @@
         <a-row :gutter="48">
           <a-col :md="6" :sm="24">
             <a-form-item label="台账类型">
-              <EnumSelect v-model="queryParam.Type" code="Inv_Ledger_Type" aria-placeholder="台帐类型"></EnumSelect>
+              <EnumSelect v-model="queryParam.Type" code="Inv_Ledger_Type"></EnumSelect>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="24">
             <a-form-item label="台账类别">
-              <EnumSelect v-model="queryParam.Category" code="Inv_Ledger_Category" aria-placeholder="类别"></EnumSelect>
+              <EnumSelect v-model="queryParam.Category" code="Inv_Ledger_Category"></EnumSelect>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="24">
@@ -167,8 +167,8 @@ export default {
       // 查询参数
       queryParam: {
         WhseId: '',
-        Type: '',
-        Category: '',
+        Type: undefined,
+        Category: undefined,
         StorerId: '',
         SkuId: '',
         Keyword: '',

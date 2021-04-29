@@ -9,12 +9,12 @@ import { mapGetters, mapActions } from 'vuex'
 import MainSvc from '@/api/Bas/Bas_SkuUomSvc'
 export default {
   props: {
-    sku: { type: String, required: true },
-    value: { type: String, required: false, default: '' }
+    sku: String,
+    value: String
   },
   data() {
     return {
-      curValue: '',
+      curValue: undefined,
       listData: []
     }
   },
@@ -62,7 +62,7 @@ export default {
     },
     handleChange(val) {
       if (!val) {
-        this.$emit('input', '')
+        this.$emit('input', undefined)
       }
     },
     handleSelected(val) {

@@ -99,7 +99,7 @@ export default {
       // 高级搜索 展开/关闭
       advanced: false,
       // 查询参数
-      queryParam: { WhseId: '', Keyword: '', Type: '' },
+      queryParam: { WhseId: '', Keyword: '', Type: undefined },
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         this.queryParam.WhseId = this.defaultWhseId
@@ -143,7 +143,7 @@ export default {
       this.selectedRows = selectedRows
     },
     resetSearchForm() {
-      this.queryParam = { WhseId: this.defaultWhseId, Keyword: '', Type: '' }
+      this.queryParam = { WhseId: this.defaultWhseId, Keyword: '', Type: undefined }
     },
     handleDelete(rows) {
       var thisObj = this

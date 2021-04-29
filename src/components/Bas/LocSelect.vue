@@ -1,12 +1,13 @@
 <template>
-  <a-select v-model="curValue" @search="handlerSearch" @change="(val)=>{if(!val){this.$emit('input', '')}}" @select="handlerSelect" optionLabelProp="title" v-bind="$attrs" :showSearch="true" :showArrow="false" :filterOption="false" style="width: 100%" :dropdownMenuStyle="{minWidth:'300px'}" :dropdownMatchSelectWidth="false">
+  <a-select v-model="curValue" @search="handlerSearch" @change="(val)=>{if(!val){this.$emit('input', undefined)}}" @select="handlerSelect" optionLabelProp="title" v-bind="$attrs" :showSearch="true" :showArrow="false" :filterOption="false" style="width: 100%" :dropdownMenuStyle="{minWidth:'300px'}" :dropdownMatchSelectWidth="false">
     <a-select-option v-for="item in data" :key="item.Id" :value="item.Id" :title="item.Code">
       <a-row>
-        <a-col :span="8">{{ item.Code }}</a-col>
-        <a-col :span="8">{{ item.PutawayZone.Name }}</a-col>
-        <a-col :span="8">
+        <a-col :span="6">{{ item.Code }}</a-col>
+        <a-col :span="6">{{ item.PutawayZone.Name }}</a-col>
+        <a-col :span="6">
           <EnumName code="Bas_Loc_Type" :value="item.Type"></EnumName>
         </a-col>
+        <a-col :span="6">{{ item.IsEmpty?'空':'实' }}/{{ item.HasTray?'托盘':'无托' }}</a-col>
       </a-row>
     </a-select-option>
   </a-select>
@@ -21,15 +22,15 @@ export default {
     EnumName
   },
   props: {
-    value: { type: String, required: true },
-    type: { type: String, required: false, default: '' },
-    zone: { type: String, required: false, default: '' }
+    value: String,
+    type: String,
+    zone: String
   },
   data() {
     return {
-      curValue: null,
-      timeout: null,
-      keyword: null,
+      curValue: undefined,
+      timeout: undefined,
+      keyword: undefined,
       data: []
     }
   },

@@ -7,12 +7,12 @@ import { mapGetters } from 'vuex'
 export default {
   components: {},
   props: {
-    value: { type: String, required: true, default: '' },
-    table: { type: String, required: true }
+    value: String,
+    table: String
   },
   data() {
     return {
-      curVal: '',
+      curVal: undefined,
       treeData: [],
       replaceFields: { children: 'Children', title: 'Name', key: 'Id', value: 'Id' }
     }

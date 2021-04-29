@@ -10,7 +10,7 @@
           </a-col>
           <a-col :md="6" :sm="24">
             <a-form-item label="类型">
-              <EnumSelect code="Bas_Storer_Type" v-model="queryParam.Type[0]" placeholder="关键字"></EnumSelect>
+              <EnumSelect code="Bas_Storer_Type" v-model="queryParam.Type[0]"></EnumSelect>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="24">

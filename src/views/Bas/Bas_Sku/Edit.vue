@@ -5,24 +5,24 @@
         <a-row>
           <a-col :span="8">
             <a-form-model-item label="货主" prop="StorerId">
-              <StorerSelect v-model="entity.StorerId" :type="['Storer']"></StorerSelect>
+              <StorerSelect v-model="entity.StorerId" :type="['Storer']" placeholder="货主"></StorerSelect>
             </a-form-model-item>
           </a-col>
           <a-col :span="8">
             <a-form-model-item label="物料分类" prop="SkuTypeId">
-              <TreeSelect table="Bas_SkuType" v-model="entity.SkuTypeId" @select="handleSkuTypeSelect"></TreeSelect>
+              <TreeSelect table="Bas_SkuType" v-model="entity.SkuTypeId" @select="handleSkuTypeSelect" placeholder="物料分类"></TreeSelect>
             </a-form-model-item>
           </a-col>
           <a-col :span="8">
             <a-form-model-item label="编号" prop="Code">
-              <CodeInput code="Bas_Sku_Code" v-model="entity.Code" :para="{SkuType:this.skuType}"></CodeInput>
+              <CodeInput code="Bas_Sku_Code" v-model="entity.Code" :para="{SkuType:this.skuType}" placeholder="编号"></CodeInput>
             </a-form-model-item>
           </a-col>
         </a-row>
         <a-row>
           <a-col :span="8">
             <a-form-model-item label="名称" prop="Name">
-              <a-input v-model="entity.Name" autocomplete="off" />
+              <a-input v-model="entity.Name" placeholder="名称" />
             </a-form-model-item>
           </a-col>
           <a-col :span="8">
@@ -32,24 +32,24 @@
           </a-col>
           <a-col :span="8">
             <a-form-model-item label="物料条码" prop="Barcode">
-              <a-input v-model="entity.Barcode" autocomplete="off" />
+              <a-input v-model="entity.Barcode" placeholder="物料条码" />
             </a-form-model-item>
           </a-col>
         </a-row>
         <a-row>
           <a-col :span="8">
             <a-form-model-item label="物料规格" prop="Spec">
-              <a-input v-model="entity.Spec" autocomplete="off" />
+              <a-input v-model="entity.Spec" placeholder="物料规格" />
             </a-form-model-item>
           </a-col>
           <a-col :span="8">
             <a-form-model-item label="助记码" prop="PinYin">
-              <a-input v-model="entity.PinYin" autocomplete="off" />
+              <a-input v-model="entity.PinYin" placeholder="助记码" />
             </a-form-model-item>
           </a-col>
           <a-col :span="8">
             <a-form-model-item label="供应商" prop="SupplierId">
-              <StorerSelect v-model="entity.SupplierId" :type="['Supplier']"></StorerSelect>
+              <StorerSelect v-model="entity.SupplierId" :type="['Supplier']" placeholder="供应商"></StorerSelect>
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -73,12 +73,12 @@
         <a-row>
           <a-col :span="8">
             <a-form-model-item label="批次策略" prop="LotStgId">
-              <CommonSelect table="Stg_Lot" v-model="entity.LotStgId"></CommonSelect>
+              <CommonSelect table="Stg_Lot" v-model="entity.LotStgId" placeholder="批次策略"></CommonSelect>
             </a-form-model-item>
           </a-col>
           <a-col :span="8">
             <a-form-model-item label="托盘类型" prop="TrayTypeId">
-              <CommonSelect table="Bas_TrayType" v-model="entity.TrayTypeId"></CommonSelect>
+              <CommonSelect table="Bas_TrayType" v-model="entity.TrayTypeId" allowClear placeholder="托盘类型"></CommonSelect>
             </a-form-model-item>
           </a-col>
           <a-col :span="8">
@@ -112,12 +112,12 @@
           </a-col>
           <a-col :span="8">
             <a-form-model-item label="上架区域" prop="PutawayZoneId">
-              <CommonSelect table="Bas_PutawayZone" v-model="entity.PutawayZoneId" :allowClear="true"></CommonSelect>
+              <CommonSelect table="Bas_PutawayZone" v-model="entity.PutawayZoneId" allowClear placeholder="上架区域"></CommonSelect>
             </a-form-model-item>
           </a-col>
           <a-col :span="8">
             <a-form-model-item label="上架库位" prop="PutawayLocId">
-              <LocSelect v-model="entity.PutawayLocId" :zone="entity.PutawayZoneId" :allowClear="true"></LocSelect>
+              <LocSelect v-model="entity.PutawayLocId" :zone="entity.PutawayZoneId" allowClear placeholder="上架库位"></LocSelect>
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -168,6 +168,8 @@ export default {
       title: '新建',
       layout: { labelCol: { xs: { span: 24 }, sm: { span: 6 } }, wrapperCol: { xs: { span: 24 }, sm: { span: 14 } } },
       rules: {
+        StorerId: [{ required: true, message: '必填' }],
+        SkuTypeId: [{ required: true, message: '必填' }],
         Name: [{ required: true, message: '必填' }],
         Code: [{ required: true, message: '必填' }]
       },
@@ -189,7 +191,7 @@ export default {
     init() {
       this.loading = false
       this.visible = true
-      this.entity = { Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', Name: '', BasUom: 'EA', Barcode: '', Spec: '', PinYin: '', SupplierId: '', ShelfLife: 0, SkuTypeId: '', Price: 0, LotStgId: '', AllocStgId: '', RotateBy: 'Code', RotateType: 'FIFO', PutawayStgId: '', PutawayZoneId: '', PutawayLocId: '', ABC: 'A', ReOrderPoint: 0, ReOrderQty: 0, RackLife: 0, TrayTypeId: '', Status: 'Enable' }
+      this.entity = { Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', Name: '', BasUom: 'EA', Barcode: '', Spec: '', PinYin: '', SupplierId: undefined, ShelfLife: 0, SkuTypeId: null, Price: 0, LotStgId: '', AllocStgId: '', RotateBy: 'Code', RotateType: 'FIFO', PutawayStgId: '', PutawayZoneId: undefined, PutawayLocId: undefined, ABC: 'A', ReOrderPoint: 0, ReOrderQty: 0, RackLife: 0, TrayTypeId: undefined, Status: 'Enable' }
       this.getConfig({ whseId: this.defaultWhseId, code: 'Bas_Sku_LotStgId_Default' }).then(result => {
         this.entity.LotStgId = result.Val
       })
@@ -222,18 +224,6 @@ export default {
           return
         }
         this.loading = true
-        if (!this.entity.PutawayLocId) {
-          this.entity.PutawayLocId = null
-        }
-        if (!this.entity.PutawayZoneId) {
-          this.entity.PutawayZoneId = null
-        }
-        if (!this.entity.SupplierId) {
-          this.entity.SupplierId = null
-        }
-        if (!this.entity.TrayTypeId) {
-          this.entity.TrayTypeId = null
-        }
         MainSvc.Save(this.entity).then(result => {
           this.loading = false
           if (result.Success) {

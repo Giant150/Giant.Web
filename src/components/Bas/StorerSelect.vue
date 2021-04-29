@@ -1,5 +1,5 @@
 <template>
-  <a-select allowClear v-model="curValue" @search="handlerSearch" @change="(val)=>{if(!val){this.$emit('input', '')}}" @select="handlerSelect" optionLabelProp="title" v-bind="$attrs" :showSearch="true" :showArrow="false" :filterOption="false" style="width: 100%" :dropdownMenuStyle="{minWidth:'300px'}" :dropdownMatchSelectWidth="false">
+  <a-select v-model="curValue" @search="handlerSearch" @change="(val)=>{if(!val){this.$emit('input', undefined)}}" @select="handlerSelect" optionLabelProp="title" v-bind="$attrs" :showSearch="true" :showArrow="false" :filterOption="false" style="width: 100%" :dropdownMenuStyle="{minWidth:'300px'}" :dropdownMatchSelectWidth="false">
     <a-select-option v-for="item in data" :key="item.Id" :value="item.Id" :title="item.Name+'('+item.Code+')'">
       <a-row>
         <a-col :span="8">{{ item.Name }}</a-col>
@@ -21,14 +21,14 @@ export default {
     EnumName
   },
   props: {
-    value: { type: String, required: true, default: '' },
+    value: String,
     type: { type: Array, required: false, default: () => { return [] } }
   },
   data() {
     return {
-      curValue: null,
-      timeout: null,
-      keyword: null,
+      curValue: undefined,
+      timeout: undefined,
+      keyword: undefined,
       data: []
     }
   },

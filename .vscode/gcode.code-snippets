@@ -9,7 +9,7 @@
 	"Giant Web Tag Code": {
 		"prefix": "gcode",
 		"body": [
-"<CodeInput ref=\"codeInput\" code=\"$1\" v-model=\"${2:entity.Code}\" :para=\"{}\"></CodeInput>$0"
+"<CodeInput ref=\"codeInput\" code=\"$1\" v-model=\"${2:entity.Code}\" :para=\"{}\" placeholder=\"${3:编号}\"></CodeInput>$0"
 		],
 		"description": "Giant Web Tag Code"
 	}
