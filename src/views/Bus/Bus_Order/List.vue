@@ -4,14 +4,40 @@
       <a-form layout="inline">
         <a-row :gutter="48">
           <a-col :md="6" :sm="24">
-            <a-form-item label="关键字">
-              <a-input v-model="queryParam.Keyword" placeholder="关键字" />
+            <a-form-item label="货主">
+              <StorerSelect v-model="queryParam.StorerId" :type="['Storer']" placeholder="货主"></StorerSelect>
             </a-form-item>
           </a-col>
+          <a-col :md="6" :sm="24">
+            <a-form-item label="编号">
+              <a-input v-model="queryParam.Keyword" placeholder="编号/关联编号" />
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="24">
+            <a-form-item label="收货日期">
+              <a-range-picker :value="[queryParam.OrderDateStart,queryParam.OrderDateEnd]" format="YYYY-MM-DD" @change="onDateChange" />
+            </a-form-item>
+          </a-col>
+          <template v-if="advanced">
+            <a-col :md="6" :sm="24">
+              <a-form-item label="类型">
+                <EnumSelect code="Bus_Order_Type" v-model="queryParam.Type"></EnumSelect>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item label="状态">
+                <EnumSelect code="Bus_Order_Status" v-model="queryParam.Status"></EnumSelect>
+              </a-form-item>
+            </a-col>
+          </template>
           <a-col :md="6" :sm="24">
             <span class="table-page-search-submitButtons">
               <a-button type="primary" v-action:Query @click="()=>{this.$refs.table.refresh()}">查询</a-button>
               <a-button style="margin-left: 8px" @click="resetSearchForm()">重置</a-button>
+              <a @click="()=>{this.advanced=!this.advanced}" style="margin-left: 8px">
+                {{ advanced ? '收起' : '展开' }}
+                <a-icon :type="advanced ? 'up' : 'down'" />
+              </a>
             </span>
           </a-col>
         </a-row>
@@ -24,6 +50,12 @@
     </div>
 
     <s-table ref="table" size="default" rowKey="Id" :columns="columns" :data="loadData" :rowSelection="rowSelection" showPagination="auto">
+      <template slot="Type" slot-scope="text">
+        <EnumName code="Bus_Order_Type" :value="text"></EnumName>
+      </template>
+      <template slot="Status" slot-scope="text">
+        <EnumName code="Bus_Order_Status" :value="text"></EnumName>
+      </template>
       <span slot="action" slot-scope="text, record">
         <template>
           <a v-action:Update @click="handleEdit(record)">修改</a>
@@ -49,8 +81,12 @@ import SkuSelect from '@/components/Bas/SkuSelect'
 import LocSelect from '@/components/Bas/LocSelect'
 
 const columns = [
-  { title: '编号', dataIndex: 'Code', sorter: true },
-  { title: '名称', dataIndex: 'Name', sorter: true },
+  { title: '货主', dataIndex: 'Storer.Name' },
+  { title: '编码', dataIndex: 'Code', sorter: true },
+  { title: '类型', dataIndex: 'Type', scopedSlots: { customRender: 'Type' } },
+  { title: '状态', dataIndex: 'Status', scopedSlots: { customRender: 'Status' } },
+  { title: '单据日期', dataIndex: 'DocDate', sorter: true, customRender: (value) => { return moment(value).format('yyyy-MM-DD') } },
+  { title: '订单日期', dataIndex: 'OrderDate', sorter: true, customRender: (value) => { return moment(value).format('yyyy-MM-DD') } },
   { title: '修改时间', dataIndex: 'ModifyTime', sorter: true, customRender: (value) => { return moment(value).format('yyyy-MM-DD') } },
   { title: '操作', dataIndex: 'action', width: '200px', scopedSlots: { customRender: 'action' } }
 ]
@@ -76,7 +112,7 @@ export default {
       // 高级搜索 展开/关闭
       advanced: false,
       // 查询参数
-      queryParam: { WhseId: '', Keyword: '' },
+      queryParam: { WhseId: '', StorerId: '', Keyword: '', Type: '', OrderDateStart: null, OrderDateEnd: null, Status: '' },
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         this.queryParam.WhseId = this.defaultWhseId
@@ -96,7 +132,9 @@ export default {
   },
   filters: {
   },
-  created() {},
+  created() {
+    this.resetSearchForm()
+  },
   computed: {
     ...mapGetters({
       defaultWhseId: 'whseId',
@@ -125,8 +163,12 @@ export default {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
     },
+    onDateChange(dates, dateStrings) {
+      this.queryParam.OrderDateStart = dates[0]
+      this.queryParam.OrderDateEnd = dates[1]
+    },
     resetSearchForm() {
-      this.queryParam = { WhseId: this.defaultWhseId, Keyword: '' }
+      this.queryParam = { WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Keyword: '', Type: '', OrderDateStart: moment(), OrderDateEnd: moment().add(1, 'days'), Status: '' }
     },
     handleDelete(rows) {
       var thisObj = this
