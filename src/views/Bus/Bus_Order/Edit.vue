@@ -55,7 +55,7 @@
               <SkuSelect v-model="record.SkuId" :storer="entity.StorerId" @select="(val,sku)=>{handleSkuSelect(record,sku)}" size="small"></SkuSelect>
             </template>
             <template slot="QtyUom" slot-scope="text, record">
-              <a-input-number v-model="record.QtyUom" @change="(val)=>{ record.Qty = val * record.UomCnt }" :min="0" style="width:100%" size="small" />
+              <a-input-number v-model="record.QtyUom" @change="(val)=>{ record.Qty = val * record.UomCnt;record.TotalAmt = record.Qty * record.UnitPrice }" :min="0" style="width:100%" size="small" />
             </template>
             <template slot="UomCode" slot-scope="text, record">
               <SkuUomSelect v-model="record.UomCode" :sku="record.SkuId" @select="(val,uom)=>{handlerUomSelect(record,uom)}" style="width:100%" size="small"></SkuUomSelect>
@@ -220,7 +220,7 @@ export default {
       this.loading = false
       this.visible = true
       this.isModify = false
-      this.entity = { OrderDetail: [], Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', RefCode: '', Type: '', DocDate: moment(), OrderDate: moment(), ConsigneeId: null, Remark: '', Status: 'Active' }
+      this.entity = { OrderDetail: [], Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', RefCode: '', Type: 'Standard', DocDate: moment().format('YYYY-MM-DD'), OrderDate: moment().format('YYYY-MM-DD'), ConsigneeId: undefined, Remark: '', Status: 'Active' }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })
@@ -229,8 +229,15 @@ export default {
       this.title = title || (id ? '新建' : '修改')
       this.init()
       if (id) {
+        this.isModify = true
         MainSvc.Get(id).then(resJson => {
           this.entity = resJson.Data
+        })
+      } else {
+        this.getConfig({ whseId: this.defaultWhseId, code: 'Bus_Order_Code_AutoGenerate' }).then(result => {
+          if (result.Val === '1') {
+            this.$refs.codeInput.Generate()
+          }
         })
       }
     },
@@ -266,14 +273,30 @@ export default {
       // record.SkuUomId = uom.Id
       record.UomCnt = uom.UomCnt
       record.Qty = record.QtyUom * record.UomCnt
+      record.TotalAmt = record.Qty * record.UnitPrice
     },
     handleSubmit() {
       this.$refs['form'].validate(valid => {
         if (!valid) {
+          this.$message.error('数据验证失败')
           return
         }
+        const list = this.entity.OrderDetail.map(detail => Object.assign({}, detail))
+        const validMsg = []
+        list.forEach(detail => {
+          if (!detail.Code) validMsg.push(`收货明细编号必需输入`)
+          if (!detail.SkuId) validMsg.push(`收货明细${detail.Code}中物料必需选择`)
+          if (detail.QtyUom === 0) validMsg.push(`收货明细${detail.Code}中物料数量为0`)
+          detail.Sku = null
+        })
+        if (validMsg.length > 0) {
+          this.$message.error((h) => { return (<a-list size="small" split={false}>{validMsg.map(m => { return (<a-list-item>{m}</a-list-item>) })}</a-list>) })
+          return
+        }
+        const postData = Object.assign({}, this.entity)
+        postData.OrderDetail = list
         this.loading = true
-        MainSvc.Save(this.entity).then(result => {
+        MainSvc.Save(postData).then(result => {
           this.loading = false
           if (result.Success) {
             this.$message.success(result.Msg)
