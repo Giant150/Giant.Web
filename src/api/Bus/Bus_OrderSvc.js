@@ -49,5 +49,16 @@ export default {
             method: 'delete',
             data: ids
         })
+    },
+    /**
+     * 配货
+     * @param {String} id 主键
+     * @returns 配货是否成功
+     */
+    Allocate(id) {
+        return request({
+            url: '/api/Bus_Order/Allocate?id=' + id,
+            method: 'post'
+        })
     }
 }

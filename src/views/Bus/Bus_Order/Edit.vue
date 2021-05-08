@@ -322,6 +322,17 @@ export default {
           }
         })
       })
+    },
+    handleAllocate() {
+      this.loading = true
+      MainSvc.Allocate(this.entity.Id).then(result => {
+        this.loading = false
+        if (result.Success) {
+          this.$message.success(result.Msg)
+        } else {
+          this.$message.error(result.Msg)
+        }
+      })
     }
   }
 }
