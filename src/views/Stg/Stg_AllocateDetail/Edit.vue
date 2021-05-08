@@ -8,8 +8,8 @@
         <a-form-model-item label="名称" prop="Name">
           <a-input v-model="entity.Name" autocomplete="off" />
         </a-form-model-item>
-        <a-form-model-item label="配货单位" prop="AllocUom">
-          <EnumSelect code="Unit" v-model="entity.AllocUom"></EnumSelect>
+        <a-form-model-item label="单位级别" prop="UomLevel">
+          <EnumSelect code="UnitLevel" v-model="entity.UomLevel"></EnumSelect>
         </a-form-model-item>
         <a-form-model-item label="配货代码" prop="PickBusCode">
           <EnumSelect code="Stg_AllocateDetail_PickBusCode" v-model="entity.PickBusCode"></EnumSelect>
@@ -69,7 +69,7 @@ export default {
       this.loading = false
       this.visible = true
       // 这里的ParentId为具体业务主表Id
-      this.entity = { Id: '', WhseId: this.defaultWhseId, AllocateStgId: this.parentEntity.Id, Code: '', Name: '', AllocUom: 'EA', PickBusCode: 'Default', LocType: '' }
+      this.entity = { Id: '', WhseId: this.defaultWhseId, AllocateStgId: this.parentEntity.Id, Code: '', Name: '', UomLevel: 'UL1', PickBusCode: 'Default', LocType: '' }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })

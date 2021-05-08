@@ -120,6 +120,10 @@
       </a-tabs>
     </a-spin>
     <div :style="{ position: 'absolute', bottom: 0, right: 0, width: '100%', borderTop: '1px solid #e9e9e9', padding: '10px 16px', background: '#fff', textAlign: 'right', zIndex: 1, }">
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleAllocate">配货</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleAllocate">释放拣货任务</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleAllocate">拣货确认</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleAllocate">发货确认</a-button>
       <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleSubmit">保存</a-button>
       <a-button :style="{ marginRight: '8px' }" @click="()=>{this.visible=false}">关闭</a-button>
     </div>
@@ -130,6 +134,8 @@
 import moment from 'moment'
 import { mapActions, mapGetters } from 'vuex'
 import MainSvc from '@/api/Bus/Bus_OrderSvc'
+import DetailSvc from '@/api/Bus/Bus_OrderDetailSvc'
+import PickSvc from '@/api/Bus/Bus_PickDetailSvc'
 import EnumSelect from '@/components/CF/EnumSelect'
 import CodeInput from '@/components/CF/CodeInput'
 import StorerSelect from '@/components/Bas/StorerSelect'
@@ -142,7 +148,7 @@ import TraySelect from '@/components/Bas/TraySelect'
 import LotInput from '@/components/Stg/LotInput'
 export default {
   components: {
-    MainSvc,
+    PickSvc,
     CodeInput,
     EnumSelect,
     StorerSelect,
@@ -172,17 +178,17 @@ export default {
       activeKey: 'OrderDetail',
       isModify: false, // 是否编辑
       orderDetailColumn: [
-        { title: '编号', dataIndex: 'Code', width: 120, fixed: 'left', scopedSlots: { customRender: 'Code' } },
-        { title: '物料', dataIndex: 'SkuId', width: 250, fixed: 'left', scopedSlots: { customRender: 'SkuId' } },
-        { title: '订单数量', dataIndex: 'QtyUom', width: 120, fixed: 'left', scopedSlots: { customRender: 'QtyUom' } },
-        { title: '单位', dataIndex: 'UomCode', width: 120, fixed: 'left', scopedSlots: { customRender: 'UomCode' } },
+        { title: '编号', dataIndex: 'Code', width: 100, fixed: 'left', scopedSlots: { customRender: 'Code' } },
+        { title: '物料', dataIndex: 'SkuId', width: 200, fixed: 'left', scopedSlots: { customRender: 'SkuId' } },
+        { title: '订单数量', dataIndex: 'QtyUom', width: 80, fixed: 'left', scopedSlots: { customRender: 'QtyUom' } },
+        { title: '单位', dataIndex: 'UomCode', width: 80, fixed: 'left', scopedSlots: { customRender: 'UomCode' } },
         { title: '物料数量', dataIndex: 'Qty', width: 80 },
         { title: '已分配', dataIndex: 'QtyAllocated', width: 80 },
         { title: '已拣货', dataIndex: 'QtyPicked', width: 80 },
         { title: '循环规则', dataIndex: 'RotateBy', width: 120, scopedSlots: { customRender: 'RotateBy' } },
         { title: '优先规则', dataIndex: 'RotateType', width: 120, scopedSlots: { customRender: 'RotateType' } },
         { title: '发货策略', dataIndex: 'AllocStgId', width: 120, scopedSlots: { customRender: 'AllocStgId' } },
-        { title: '货架寿命', dataIndex: 'RackLife', width: 120, scopedSlots: { customRender: 'RackLife' } },
+        { title: '货架寿命', dataIndex: 'RackLife', width: 80, scopedSlots: { customRender: 'RackLife' } },
         { title: '指定库位', dataIndex: 'LocId', width: 120, scopedSlots: { customRender: 'LocId' } },
         { title: '指定托盘', dataIndex: 'TrayId', width: 120, scopedSlots: { customRender: 'TrayId' } },
         // { title: '指定批次', dataIndex: 'LotId', width: 120, scopedSlots: { customRender: 'LotId' } },
@@ -259,6 +265,15 @@ export default {
           Sku: undefined
         }
         this.entity.OrderDetail.push(detail)
+      }
+    },
+    handleDelete(record) {
+      if (this.activeKey === 'OrderDetail') {
+        if (!record.Id.startsWith('new_')) {
+          DetailSvc.Delete([record.Id])
+        }
+        var index = this.entity.OrderDetail.indexOf(record)
+        this.entity.OrderDetail.splice(index, 1)
       }
     },
     handleSkuSelect(record, sku) {

@@ -9,6 +9,9 @@
       <template slot="Uom" slot-scope="text">
         <EnumName code="Unit" :value="text"></EnumName>
       </template>
+      <template slot="UomLevel" slot-scope="text">
+        <EnumName code="UnitLevel" :value="text"></EnumName>
+      </template>
       <template slot="BarcodeType" slot-scope="text">
         <EnumName code="Bas_SkuUom_BarcodeType" :value="text"></EnumName>
       </template>
@@ -36,6 +39,7 @@ import EnumName from '@/components/CF/EnumName'
 const columns = [
   { title: '名称', dataIndex: 'Name', sorter: true },
   { title: '包装单位', dataIndex: 'Uom', scopedSlots: { customRender: 'Uom' } },
+  { title: '单位级别', dataIndex: 'UomLevel', scopedSlots: { customRender: 'UomLevel' } },
   { title: '转换率', dataIndex: 'UomCnt', sorter: true },
   { title: '基本单位', dataIndex: 'IsBasUom', customRender: (value, row, index) => { return value ? '是' : '否' } },
   { title: '托盘单位', dataIndex: 'IsTrayUom', customRender: (value, row, index) => { return value ? '是' : '否' } },

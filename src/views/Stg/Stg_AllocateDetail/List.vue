@@ -6,8 +6,8 @@
     </div>
 
     <s-table ref="table" size="default" rowKey="Id" :columns="columns" :data="loadData" :rowSelection="rowSelection" showPagination="auto">
-      <template slot="AllocUom" slot-scope="text">
-        <EnumName code="Unit" :value="text"></EnumName>
+      <template slot="UomLevel" slot-scope="text">
+        <EnumName code="UnitLevel" :value="text"></EnumName>
       </template>
       <template slot="PickBusCode" slot-scope="text">
         <EnumName code="Stg_AllocateDetail_PickBusCode" :value="text"></EnumName>
@@ -39,7 +39,7 @@ import EnumName from '@/components/CF/EnumName'
 const columns = [
   { title: '编号', dataIndex: 'Code', sorter: true },
   { title: '名称', dataIndex: 'Name', sorter: true },
-  { title: '配货单位', dataIndex: 'AllocUom', scopedSlots: { customRender: 'AllocUom' } },
+  { title: '配货单位', dataIndex: 'UomLevel', scopedSlots: { customRender: 'UomLevel' } },
   { title: '配货代码', dataIndex: 'PickBusCode', scopedSlots: { customRender: 'PickBusCode' } },
   { title: '库位类型', dataIndex: 'LocType', scopedSlots: { customRender: 'LocType' } },
   { title: '操作', dataIndex: 'action', width: '200px', scopedSlots: { customRender: 'action' } }

@@ -8,6 +8,9 @@
         <a-form-model-item label="名称" prop="Name">
           <a-input v-model="entity.Name" autocomplete="off" />
         </a-form-model-item>
+        <a-form-model-item label="单位级别" prop="UomLevel">
+          <EnumSelect code="UnitLevel" v-model="entity.UomLevel"></EnumSelect>
+        </a-form-model-item>
         <a-form-model-item label="转换率" prop="UomCnt">
           <a-input-number v-model="entity.UomCnt" style="width:100%" />
         </a-form-model-item>
@@ -73,7 +76,7 @@ export default {
       this.loading = false
       this.visible = true
       // 这里的ParentId为具体业务主表Id
-      this.entity = { Id: '', WhseId: this.defaultWhseId, StorerId: this.parentEntity.StorerId, SkuId: this.parentEntity.Id, Name: '默认', Uom: 'EA', UomCnt: 1, IsBasUom: false, IsTrayUom: false, Barcode: '', BarcodeType: '' }
+      this.entity = { Id: '', WhseId: this.defaultWhseId, StorerId: this.parentEntity.StorerId, SkuId: this.parentEntity.Id, Name: '默认', Uom: 'EA', UomLevel: 'UL1', UomCnt: 1, IsBasUom: false, IsTrayUom: false, Barcode: '', BarcodeType: '' }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })
