@@ -47,72 +47,72 @@
           <a-button type="primary" v-action:Add icon="plus" @click="handleAdd">新建</a-button>
         </div>
         <a-tab-pane key="OrderDetail" tab="收货明细">
-          <a-table ref="table" size="small" rowKey="Id" :columns="orderDetailColumn" :data-source="entity.OrderDetail" :pagination="false" :scroll="{ x: 3500 }">
+          <a-table ref="table" size="small" rowKey="Id" :columns="orderDetailColumn" :data-source="entity.OrderDetail" :rowSelection="orderRowSelection" :pagination="false" :scroll="{ x: 3500 }">
             <template slot="Code" slot-scope="text, record">
-              <CodeInput code="Bus_OrderDetail_Code" v-model="record.Code" :para="{OrderCode:entity.Code}" size="small"></CodeInput>
+              <CodeInput code="Bus_OrderDetail_Code" v-model="record.Code" :para="{OrderCode:entity.Code}" size="small" :disabled="record.Status!=='Active'"></CodeInput>
             </template>
             <template slot="SkuId" slot-scope="text, record">
-              <SkuSelect v-model="record.SkuId" :storer="entity.StorerId" @select="(val,sku)=>{handleSkuSelect(record,sku)}" size="small"></SkuSelect>
+              <SkuSelect v-model="record.SkuId" :storer="entity.StorerId" @select="(val,sku)=>{handleSkuSelect(record,sku)}" size="small" :disabled="record.Status!=='Active'"></SkuSelect>
             </template>
             <template slot="QtyUom" slot-scope="text, record">
-              <a-input-number v-model="record.QtyUom" @change="(val)=>{ record.Qty = val * record.UomCnt;record.TotalAmt = record.Qty * record.UnitPrice }" :min="0" style="width:100%" size="small" />
+              <a-input-number v-model="record.QtyUom" @change="(val)=>{ record.Qty = val * record.UomCnt;record.TotalAmt = record.Qty * record.UnitPrice }" :min="record.Status==='Active'?0:record.QtyUom" style="width:100%" size="small" :disabled="!(record.Status==='Active' || record.Status==='Allocate' || record.Status==='Allocated')" />
             </template>
             <template slot="UomCode" slot-scope="text, record">
-              <SkuUomSelect v-model="record.UomCode" :sku="record.SkuId" @select="(val,uom)=>{handlerUomSelect(record,uom)}" style="width:100%" size="small"></SkuUomSelect>
+              <SkuUomSelect v-model="record.UomCode" :sku="record.SkuId" @select="(val,uom)=>{handlerUomSelect(record,uom)}" style="width:100%" size="small" :disabled="record.Status!=='Active'"></SkuUomSelect>
             </template>
             <template slot="RotateBy" slot-scope="text, record">
-              <EnumSelect code="Bas_Lot_Field" v-model="record.RotateBy" style="width:100%" size="small"></EnumSelect>
+              <EnumSelect code="Bas_Lot_Field" v-model="record.RotateBy" style="width:100%" size="small" :disabled="record.Status!=='Active'"></EnumSelect>
             </template>
             <template slot="RotateType" slot-scope="text, record">
-              <EnumSelect code="Rotation" v-model="record.RotateType" style="width:100%" size="small"></EnumSelect>
+              <EnumSelect code="Rotation" v-model="record.RotateType" style="width:100%" size="small" :disabled="record.Status!=='Active'"></EnumSelect>
             </template>
             <template slot="AllocStgId" slot-scope="text, record">
-              <CommonSelect table="Stg_Allocate" v-model="record.AllocStgId" size="small"></CommonSelect>
+              <CommonSelect table="Stg_Allocate" v-model="record.AllocStgId" size="small" :disabled="record.Status!=='Active'"></CommonSelect>
             </template>
             <template slot="RackLife" slot-scope="text, record">
-              <a-input-number v-model="record.RackLife" :min="0" style="width:100%" size="small" />
+              <a-input-number v-model="record.RackLife" :min="0" style="width:100%" size="small" :disabled="record.Status!=='Active'"/>
             </template>
             <template slot="LocId" slot-scope="text, record">
-              <LocSelect v-model="record.LocId" size="small" allowClear></LocSelect>
+              <LocSelect v-model="record.LocId" size="small" allowClear :disabled="record.Status!=='Active'"></LocSelect>
             </template>
             <template slot="TrayId" slot-scope="text, record">
-              <TraySelect v-model="record.TrayId" :type="record.Sku?record.Sku.TrayTypeId:''" size="small" allowClear></TraySelect>
+              <TraySelect v-model="record.TrayId" :type="record.Sku?record.Sku.TrayTypeId:''" size="small" allowClear :disabled="record.Status!=='Active'"></TraySelect>
             </template>
             <template slot="Lot01" slot-scope="text, record">
-              <LotInput name="Lot01" :sku="record.Sku" v-model="record.Lot01" size="small"></LotInput>
+              <LotInput name="Lot01" :sku="record.Sku" v-model="record.Lot01" size="small" :disabled="record.Status!=='Active'"></LotInput>
             </template>
             <template slot="Lot02" slot-scope="text, record">
-              <LotInput name="Lot02" :sku="record.Sku" v-model="record.Lot02" size="small"></LotInput>
+              <LotInput name="Lot02" :sku="record.Sku" v-model="record.Lot02" size="small" :disabled="record.Status!=='Active'"></LotInput>
             </template>
             <template slot="Lot03" slot-scope="text, record">
-              <LotInput name="Lot03" :sku="record.Sku" v-model="record.Lot03" size="small"></LotInput>
+              <LotInput name="Lot03" :sku="record.Sku" v-model="record.Lot03" size="small" :disabled="record.Status!=='Active'"></LotInput>
             </template>
             <template slot="Lot04" slot-scope="text, record">
-              <LotInput name="Lot04" :sku="record.Sku" v-model="record.Lot04" size="small"></LotInput>
+              <LotInput name="Lot04" :sku="record.Sku" v-model="record.Lot04" size="small" :disabled="record.Status!=='Active'"></LotInput>
             </template>
             <template slot="Lot05" slot-scope="text, record">
-              <LotInput name="Lot05" :sku="record.Sku" v-model="record.Lot05" size="small"></LotInput>
+              <LotInput name="Lot05" :sku="record.Sku" v-model="record.Lot05" size="small" :disabled="record.Status!=='Active'"></LotInput>
             </template>
             <template slot="Lot06" slot-scope="text, record">
-              <LotInput name="Lot06" :sku="record.Sku" v-model="record.Lot06" size="small"></LotInput>
+              <LotInput name="Lot06" :sku="record.Sku" v-model="record.Lot06" size="small" :disabled="record.Status!=='Active'"></LotInput>
             </template>
             <template slot="Lot07" slot-scope="text, record">
-              <LotInput name="Lot07" :sku="record.Sku" v-model="record.Lot07" size="small"></LotInput>
+              <LotInput name="Lot07" :sku="record.Sku" v-model="record.Lot07" size="small" :disabled="record.Status!=='Active'"></LotInput>
             </template>
             <template slot="Lot08" slot-scope="text, record">
-              <LotInput name="Lot08" :sku="record.Sku" v-model="record.Lot08" size="small"></LotInput>
+              <LotInput name="Lot08" :sku="record.Sku" v-model="record.Lot08" size="small" :disabled="record.Status!=='Active'"></LotInput>
             </template>
             <template slot="Lot09" slot-scope="text, record">
-              <LotInput name="Lot09" :sku="record.Sku" v-model="record.Lot09" size="small"></LotInput>
+              <LotInput name="Lot09" :sku="record.Sku" v-model="record.Lot09" size="small" :disabled="record.Status!=='Active'"></LotInput>
             </template>
             <template slot="Lot10" slot-scope="text, record">
-              <LotInput name="Lot10" :sku="record.Sku" v-model="record.Lot10" size="small"></LotInput>
+              <LotInput name="Lot10" :sku="record.Sku" v-model="record.Lot10" size="small" :disabled="record.Status!=='Active'"></LotInput>
             </template>
             <template slot="Remark" slot-scope="text, record">
               <a-input v-model="record.Remark" size="small" />
             </template>
             <template slot="action" slot-scope="text, record">
-              <a v-action:Delete @click="handleDelete(record)">删除</a>
+              <a v-action:Delete v-if="record.Status==='Active'" @click="handleDelete(record)">删除</a>
             </template>
           </a-table>
         </a-tab-pane>
@@ -146,6 +146,7 @@ import SkuSelect from '@/components/Bas/SkuSelect'
 import SkuUomSelect from '@/components/Bas/SkuUomSelect'
 import TraySelect from '@/components/Bas/TraySelect'
 import LotInput from '@/components/Stg/LotInput'
+import LotSelect from '@/components/Inv/LotSelect'
 export default {
   components: {
     PickSvc,
@@ -158,7 +159,8 @@ export default {
     SkuSelect,
     SkuUomSelect,
     TraySelect,
-    LotInput
+    LotInput,
+    LotSelect
   },
   props: {},
   data() {
@@ -177,6 +179,16 @@ export default {
       curDetailIndex: 0,
       activeKey: 'OrderDetail',
       isModify: false, // 是否编辑
+      selectedOrderDetail: null,
+      orderRowSelection: {
+        columnWidth: 20,
+        type: 'radio',
+        hideDefaultSelections: true,
+        onChange: (keys, rows) => {
+          console.log(rows)
+          this.selectedOrderDetail = rows[0]
+        }
+      },
       orderDetailColumn: [
         { title: '编号', dataIndex: 'Code', width: 100, fixed: 'left', scopedSlots: { customRender: 'Code' } },
         { title: '物料', dataIndex: 'SkuId', width: 200, fixed: 'left', scopedSlots: { customRender: 'SkuId' } },
@@ -205,14 +217,30 @@ export default {
         { title: '备注', dataIndex: 'Remark', scopedSlots: { customRender: 'Remark' } },
         { title: '操作', dataIndex: 'action', width: 100, fixed: 'right', scopedSlots: { customRender: 'action' } }
       ],
-      pickDetailColumn: []
+      pickDetailColumn: [
+        { title: '编号', dataIndex: 'Code', width: 100, fixed: 'left', scopedSlots: { customRender: 'Code' } },
+        { title: '物料', dataIndex: 'SkuId', width: 200, fixed: 'left', scopedSlots: { customRender: 'SkuId' } },
+        { title: '批次', dataIndex: 'LotId', width: 200, fixed: 'left', scopedSlots: { customRender: 'LotId' } },
+        { title: '库位', dataIndex: 'LocId', width: 120, scopedSlots: { customRender: 'LocId' } },
+        { title: '托盘', dataIndex: 'TrayId', width: 120, scopedSlots: { customRender: 'TrayId' } },
+        { title: '拣货数量', dataIndex: 'QtyUom', width: 120, scopedSlots: { customRender: 'QtyUom' } },
+        { title: '单位', dataIndex: 'UomCode', width: 120, scopedSlots: { customRender: 'UomCode' } },
+        { title: '数量', dataIndex: 'Qty', width: 120, scopedSlots: { customRender: 'Qty' } },
+        { title: '至库位', dataIndex: 'ToLocId', width: 120, scopedSlots: { customRender: 'ToLocId' } },
+        { title: '状态', dataIndex: 'Status', width: 120, scopedSlots: { customRender: 'Status' } },
+        { title: '备注', dataIndex: 'Remark', width: 120, scopedSlots: { customRender: 'Remark' } },
+        { title: '操作', dataIndex: 'action', width: 100, fixed: 'right', scopedSlots: { customRender: 'action' } }
+      ]
     }
   },
   computed: {
     ...mapGetters({
       defaultWhseId: 'whseId',
       defaultStorerId: 'storerId'
-    })
+    }),
+    pickDetail() {
+      return this.selectedOrderDetail?.PickDetail
+    }
   },
   created() {
     this.getEnum({ whseId: this.defaultWhseId, code: 'Bas_Lot_Field' }).then(result => {
