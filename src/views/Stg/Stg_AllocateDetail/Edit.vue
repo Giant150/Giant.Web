@@ -9,7 +9,7 @@
           <a-input v-model="entity.Name" autocomplete="off" />
         </a-form-model-item>
         <a-form-model-item label="单位级别" prop="UomLevel">
-          <EnumSelect code="UnitLevel" v-model="entity.UomLevel"></EnumSelect>
+          <EnumSelect code="Stg_AllocateDetail_UomLevel" v-model="entity.UomLevel"></EnumSelect>
         </a-form-model-item>
         <a-form-model-item label="配货代码" prop="PickBusCode">
           <EnumSelect code="Stg_AllocateDetail_PickBusCode" v-model="entity.PickBusCode"></EnumSelect>

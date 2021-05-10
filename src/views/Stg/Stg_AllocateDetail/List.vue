@@ -7,7 +7,7 @@
 
     <s-table ref="table" size="default" rowKey="Id" :columns="columns" :data="loadData" :rowSelection="rowSelection" showPagination="auto">
       <template slot="UomLevel" slot-scope="text">
-        <EnumName code="UnitLevel" :value="text"></EnumName>
+        <EnumName code="Stg_AllocateDetail_UomLevel" :value="text"></EnumName>
       </template>
       <template slot="PickBusCode" slot-scope="text">
         <EnumName code="Stg_AllocateDetail_PickBusCode" :value="text"></EnumName>
@@ -37,8 +37,8 @@ import EnumSelect from '@/components/CF/EnumSelect'
 import EnumName from '@/components/CF/EnumName'
 
 const columns = [
-  { title: '编号', dataIndex: 'Code', sorter: true },
-  { title: '名称', dataIndex: 'Name', sorter: true },
+  { title: '编号', dataIndex: 'Code' },
+  { title: '名称', dataIndex: 'Name' },
   { title: '配货单位', dataIndex: 'UomLevel', scopedSlots: { customRender: 'UomLevel' } },
   { title: '配货代码', dataIndex: 'PickBusCode', scopedSlots: { customRender: 'PickBusCode' } },
   { title: '库位类型', dataIndex: 'LocType', scopedSlots: { customRender: 'LocType' } },
@@ -67,7 +67,7 @@ export default {
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         this.queryParam.WhseId = this.defaultWhseId
-        const requestParameters = Object.assign({ sortField: 'ModifyTime', sortOrder: 'desc', Search: { ...this.queryParam } }, parameter)
+        const requestParameters = Object.assign({ sortField: 'Code', sortOrder: 'asc', Search: { ...this.queryParam } }, parameter)
         console.log('loadData request parameters:', requestParameters)
         return MainSvc.GetPage(requestParameters)
       },
@@ -98,8 +98,8 @@ export default {
       // 这里的ParentId具体业务主表字段Id
       this.queryParam.AllocateStgId = record.Id
       this.visible = true
-      this.nextTick(() => {
-        this.refs.table.refresh()
+      this.$nextTick(() => {
+        this.$refs.table.refresh()
       })
     },
     handleAdd() {
