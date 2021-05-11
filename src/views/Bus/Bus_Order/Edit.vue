@@ -44,9 +44,9 @@
       </a-form-model>
       <a-tabs :defaultActiveKey="activeKey" size="small" @change="handlerTabsChange" :animated="false" :tabBarStyle="{marginBottom:0}">
         <div slot="tabBarExtraContent">
-          <a-button type="primary" v-action:Add icon="plus" @click="handleAdd">新建</a-button>
+          <a-button type="primary" v-action:Add icon="plus" @click="handleAdd" v-if="entity.Status==='Active' || entity.Status==='Allocate' || entity.Status==='Allocated'">新建</a-button>
         </div>
-        <a-tab-pane key="OrderDetail" tab="收货明细">
+        <a-tab-pane key="OrderDetail" tab="收货明细" forceRender>
           <a-table ref="table" size="small" rowKey="Id" :columns="orderDetailColumn" :data-source="entity.OrderDetail" :rowSelection="orderRowSelection" :pagination="false" :scroll="{ x: 3500 }">
             <template slot="Code" slot-scope="text, record">
               <CodeInput code="Bus_OrderDetail_Code" v-model="record.Code" :para="{OrderCode:entity.Code}" size="small" :disabled="record.Status!=='Active'"></CodeInput>
@@ -116,10 +116,10 @@
             </template>
           </a-table>
         </a-tab-pane>
-        <a-tab-pane key="PickDetail" tab="拣货明细">
+        <a-tab-pane key="PickDetail" tab="拣货明细" forceRender v-if="entity.Id">
           <a-table ref="table" size="small" rowKey="Id" :columns="pickDetailColumn" :data-source="pickDetail" :pagination="false" :scroll="{ x: 3500 }">
             <template slot="Code" slot-scope="text, record">
-              <CodeInput code="Bus_PickDetail_Code" v-model="record.Code" :para="{DetailCode:selectedOrderDetail.Code}" size="small" :disabled="!record.Id.startsWith('new_')"></CodeInput>
+              <CodeInput code="Bus_PickDetail_Code" v-model="record.Code" :para="{DetailCode:selectedOrderDetail.Id}" size="small" :disabled="!record.Id.startsWith('new_')"></CodeInput>
             </template>
             <template slot="LocId" slot-scope="text, record">
               <LocSelect v-model="record.LocId" size="small" :disabled="!record.Id.startsWith('new_')"></LocSelect>
@@ -149,20 +149,20 @@
               <a-input v-model="record.Remark" size="small" :disabled="!record.Id.startsWith('new_')" />
             </template>
             <template slot="action" slot-scope="text, record">
-              <a v-action:Add @click="handleDelete(record)" v-if="record.Id.startsWith('new_')">保存</a>
+              <a v-action:Add v-if="record.Id.startsWith('new_')">保存</a>
               <a-divider v-action:Delete type="vertical" v-if="record.Status==='Active'" />
-              <a v-action:Delete @click="handleDelete(record)" v-if="record.Status==='Active'">删除</a>
+              <a v-action:Delete v-if="record.Status==='Active'">删除</a>
             </template>
           </a-table>
         </a-tab-pane>
       </a-tabs>
     </a-spin>
     <div :style="{ position: 'absolute', bottom: 0, right: 0, width: '100%', borderTop: '1px solid #e9e9e9', padding: '10px 16px', background: '#fff', textAlign: 'right', zIndex: 1, }">
-      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleAllocate">配货</a-button>
-      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleRelease">释放拣货任务</a-button>
-      <a-button :style="{ marginRight: '8px' }" type="primary">拣货确认</a-button>
-      <a-button :style="{ marginRight: '8px' }" type="primary">发货确认</a-button>
-      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleSubmit">保存</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleAllocate" v-if="entity.Id && (entity.Status==='Active' || entity.Status==='Allocate')">配货</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleRelease" v-if="entity.Status==='Allocated'">释放拣货任务</a-button>
+      <!-- <a-button :style="{ marginRight: '8px' }" type="primary">拣货确认</a-button> -->
+      <a-button :style="{ marginRight: '8px' }" type="primary" v-if="entity.Status==='Picked'">发货确认</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleSubmit" v-if="entity.Status==='Active' || entity.Status==='Allocate' || entity.Status==='Allocated'">保存</a-button>
       <a-button :style="{ marginRight: '8px' }" @click="()=>{this.visible=false}">关闭</a-button>
     </div>
   </a-drawer>
