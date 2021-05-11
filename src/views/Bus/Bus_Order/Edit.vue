@@ -70,7 +70,7 @@
               <CommonSelect table="Stg_Allocate" v-model="record.AllocStgId" size="small" :disabled="record.Status!=='Active'"></CommonSelect>
             </template>
             <template slot="RackLife" slot-scope="text, record">
-              <a-input-number v-model="record.RackLife" :min="0" style="width:100%" size="small" :disabled="record.Status!=='Active'"/>
+              <a-input-number v-model="record.RackLife" :min="0" style="width:100%" size="small" :disabled="record.Status!=='Active'" />
             </template>
             <template slot="LocId" slot-scope="text, record">
               <LocSelect v-model="record.LocId" size="small" allowClear :disabled="record.Status!=='Active'"></LocSelect>
@@ -116,14 +116,52 @@
             </template>
           </a-table>
         </a-tab-pane>
-        <a-tab-pane key="PickDetail" tab="拣货明细"></a-tab-pane>
+        <a-tab-pane key="PickDetail" tab="拣货明细">
+          <a-table ref="table" size="small" rowKey="Id" :columns="pickDetailColumn" :data-source="pickDetail" :pagination="false" :scroll="{ x: 3500 }">
+            <template slot="Code" slot-scope="text, record">
+              <CodeInput code="Bus_PickDetail_Code" v-model="record.Code" :para="{DetailCode:selectedOrderDetail.Code}" size="small" :disabled="!record.Id.startsWith('new_')"></CodeInput>
+            </template>
+            <template slot="LocId" slot-scope="text, record">
+              <LocSelect v-model="record.LocId" size="small" :disabled="!record.Id.startsWith('new_')"></LocSelect>
+            </template>
+            <template slot="TrayId" slot-scope="text, record">
+              <TraySelect v-model="record.TrayId" size="small" allowClear :disabled="!record.Id.startsWith('new_')"></TraySelect>
+            </template>
+            <template slot="SkuId" slot-scope="text, record">
+              <SkuSelect v-model="record.SkuId" :storer="record.StorerId" size="small" :disabled="!record.Id.startsWith('new_')"></SkuSelect>
+            </template>
+            <template slot="Qty" slot-scope="text, record">
+              <a-input-number v-model="record.Qty" style="width:100%" size="small" :disabled="!record.Id.startsWith('new_')" />
+            </template>
+            <template slot="Status" slot-scope="text">
+              <EnumName code="Bus_PickDetail_Status" :value="text"></EnumName>
+            </template>
+            <template slot="ToLocId" slot-scope="text, record">
+              <LocSelect v-model="record.ToLocId" size="small" :disabled="!record.Id.startsWith('new_')"></LocSelect>
+            </template>
+            <template slot="QtyUom" slot-scope="text, record">
+              <a-input-number v-model="record.QtyUom" style="width:100%" size="small" :disabled="!record.Id.startsWith('new_')" />
+            </template>
+            <template slot="UomCode" slot-scope="text, record">
+              <SkuUomSelect v-model="record.UomCode" :sku="record.SkuId" style="width:100%" size="small" :disabled="!record.Id.startsWith('new_')"></SkuUomSelect>
+            </template>
+            <template slot="Remark" slot-scope="text, record">
+              <a-input v-model="record.Remark" size="small" :disabled="!record.Id.startsWith('new_')" />
+            </template>
+            <template slot="action" slot-scope="text, record">
+              <a v-action:Add @click="handleDelete(record)" v-if="record.Id.startsWith('new_')">保存</a>
+              <a-divider v-action:Delete type="vertical" v-if="record.Status==='Active'" />
+              <a v-action:Delete @click="handleDelete(record)" v-if="record.Status==='Active'">删除</a>
+            </template>
+          </a-table>
+        </a-tab-pane>
       </a-tabs>
     </a-spin>
     <div :style="{ position: 'absolute', bottom: 0, right: 0, width: '100%', borderTop: '1px solid #e9e9e9', padding: '10px 16px', background: '#fff', textAlign: 'right', zIndex: 1, }">
       <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleAllocate">配货</a-button>
-      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleAllocate">释放拣货任务</a-button>
-      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleAllocate">拣货确认</a-button>
-      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleAllocate">发货确认</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleRelease">释放拣货任务</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary">拣货确认</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary">发货确认</a-button>
       <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleSubmit">保存</a-button>
       <a-button :style="{ marginRight: '8px' }" @click="()=>{this.visible=false}">关闭</a-button>
     </div>
@@ -137,6 +175,7 @@ import MainSvc from '@/api/Bus/Bus_OrderSvc'
 import DetailSvc from '@/api/Bus/Bus_OrderDetailSvc'
 import PickSvc from '@/api/Bus/Bus_PickDetailSvc'
 import EnumSelect from '@/components/CF/EnumSelect'
+import EnumName from '@/components/CF/EnumName'
 import CodeInput from '@/components/CF/CodeInput'
 import StorerSelect from '@/components/Bas/StorerSelect'
 import TreeSelect from '@/components/CF/TreeSelect'
@@ -152,6 +191,7 @@ export default {
     PickSvc,
     CodeInput,
     EnumSelect,
+    EnumName,
     StorerSelect,
     TreeSelect,
     CommonSelect,
@@ -218,17 +258,26 @@ export default {
         { title: '操作', dataIndex: 'action', width: 100, fixed: 'right', scopedSlots: { customRender: 'action' } }
       ],
       pickDetailColumn: [
-        { title: '编号', dataIndex: 'Code', width: 100, fixed: 'left', scopedSlots: { customRender: 'Code' } },
-        { title: '物料', dataIndex: 'SkuId', width: 200, fixed: 'left', scopedSlots: { customRender: 'SkuId' } },
-        { title: '批次', dataIndex: 'LotId', width: 200, fixed: 'left', scopedSlots: { customRender: 'LotId' } },
+        { title: '编号', dataIndex: 'Code', width: 120, fixed: 'left', scopedSlots: { customRender: 'Code' } },
         { title: '库位', dataIndex: 'LocId', width: 120, scopedSlots: { customRender: 'LocId' } },
         { title: '托盘', dataIndex: 'TrayId', width: 120, scopedSlots: { customRender: 'TrayId' } },
-        { title: '拣货数量', dataIndex: 'QtyUom', width: 120, scopedSlots: { customRender: 'QtyUom' } },
-        { title: '单位', dataIndex: 'UomCode', width: 120, scopedSlots: { customRender: 'UomCode' } },
-        { title: '数量', dataIndex: 'Qty', width: 120, scopedSlots: { customRender: 'Qty' } },
-        { title: '至库位', dataIndex: 'ToLocId', width: 120, scopedSlots: { customRender: 'ToLocId' } },
+        { title: '物料', dataIndex: 'SkuId', width: 200, scopedSlots: { customRender: 'SkuId' } },
+        { title: '数量', dataIndex: 'Qty', width: 80, scopedSlots: { customRender: 'Qty' } },
         { title: '状态', dataIndex: 'Status', width: 120, scopedSlots: { customRender: 'Status' } },
-        { title: '备注', dataIndex: 'Remark', width: 120, scopedSlots: { customRender: 'Remark' } },
+        { title: '至库位', dataIndex: 'ToLocId', width: 120, scopedSlots: { customRender: 'ToLocId' } },
+        { title: () => { return this.cusHeaderTitle('Lot01') }, dataIndex: 'Lot.Lot01', width: 150 },
+        { title: () => { return this.cusHeaderTitle('Lot02') }, dataIndex: 'Lot.Lot02', width: 150 },
+        { title: () => { return this.cusHeaderTitle('Lot03') }, dataIndex: 'Lot.Lot03', width: 150 },
+        { title: () => { return this.cusHeaderTitle('Lot04') }, dataIndex: 'Lot.Lot04', width: 150 },
+        { title: () => { return this.cusHeaderTitle('Lot05') }, dataIndex: 'Lot.Lot05', width: 150 },
+        { title: () => { return this.cusHeaderTitle('Lot06') }, dataIndex: 'Lot.Lot06', width: 150 },
+        { title: () => { return this.cusHeaderTitle('Lot07') }, dataIndex: 'Lot.Lot07', width: 150 },
+        { title: () => { return this.cusHeaderTitle('Lot08') }, dataIndex: 'Lot.Lot08', width: 150 },
+        { title: () => { return this.cusHeaderTitle('Lot09') }, dataIndex: 'Lot.Lot09', width: 150 },
+        { title: () => { return this.cusHeaderTitle('Lot10') }, dataIndex: 'Lot.Lot10', width: 150 },
+        { title: '拣货数量', dataIndex: 'QtyUom', width: 80, scopedSlots: { customRender: 'QtyUom' } },
+        { title: '拣货单位', dataIndex: 'UomCode', width: 120, scopedSlots: { customRender: 'UomCode' } },
+        { title: '备注', dataIndex: 'Remark', scopedSlots: { customRender: 'Remark' } },
         { title: '操作', dataIndex: 'action', width: 100, fixed: 'right', scopedSlots: { customRender: 'action' } }
       ]
     }
@@ -357,6 +406,22 @@ export default {
         this.loading = false
         if (result.Success) {
           this.$message.success(result.Msg)
+          this.visible = false
+          this.$emit('Success')
+        } else {
+          this.$message.error(result.Msg)
+        }
+      })
+    },
+    handleRelease() {
+      this.loading = true
+      MainSvc.Release(this.entity.Id).then(result => {
+        this.loading = false
+        if (result.Success) {
+          this.$router.push({ path: '/Inv/Inv_Task', query: { RefTable: 'Bus_Order', RefId: this.entity.Id } })
+          this.$message.success(result.Msg)
+          this.visible = false
+          this.$emit('Success')
         } else {
           this.$message.error(result.Msg)
         }

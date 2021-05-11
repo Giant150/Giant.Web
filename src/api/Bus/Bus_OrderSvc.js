@@ -60,5 +60,16 @@ export default {
             url: '/api/Bus_Order/Allocate?id=' + id,
             method: 'post'
         })
+    },
+    /**
+     * 释放拣货任务
+     * @param {String} id 主键
+     * @returns 释放拣货任务是否成功
+     */
+     Release(id) {
+        return request({
+            url: '/api/Bus_Order/Release?id=' + id,
+            method: 'post'
+        })
     }
 }
