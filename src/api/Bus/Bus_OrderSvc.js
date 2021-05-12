@@ -71,5 +71,16 @@ export default {
             url: '/api/Bus_Order/Release?id=' + id,
             method: 'post'
         })
+    },
+    /**
+     * 发货确认
+     * @param {String} id 主键
+     * @returns 发货确认是否成功
+     */
+     Shipping(id) {
+        return request({
+            url: '/api/Bus_Order/Shipping?id=' + id,
+            method: 'post'
+        })
     }
 }

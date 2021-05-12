@@ -161,7 +161,7 @@
       <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleAllocate" v-if="entity.Id && (entity.Status==='Active' || entity.Status==='Allocate')">配货</a-button>
       <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleRelease" v-if="entity.Status==='Allocated'">释放拣货任务</a-button>
       <!-- <a-button :style="{ marginRight: '8px' }" type="primary">拣货确认</a-button> -->
-      <a-button :style="{ marginRight: '8px' }" type="primary" v-if="entity.Status==='Picked'">发货确认</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleShipping" v-if="entity.Status==='Picked'">发货确认</a-button>
       <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleSubmit" v-if="entity.Status==='Active' || entity.Status==='Allocate' || entity.Status==='Allocated'">保存</a-button>
       <a-button :style="{ marginRight: '8px' }" @click="()=>{this.visible=false}">关闭</a-button>
     </div>
@@ -419,6 +419,19 @@ export default {
         this.loading = false
         if (result.Success) {
           this.$router.push({ path: '/Inv/Inv_Task', query: { RefTable: 'Bus_Order', RefId: this.entity.Id } })
+          this.$message.success(result.Msg)
+          this.visible = false
+          this.$emit('Success')
+        } else {
+          this.$message.error(result.Msg)
+        }
+      })
+    },
+    handleShipping() {
+      this.loading = true
+      MainSvc.Shipping(this.entity.Id).then(result => {
+        this.loading = false
+        if (result.Success) {
           this.$message.success(result.Msg)
           this.visible = false
           this.$emit('Success')
