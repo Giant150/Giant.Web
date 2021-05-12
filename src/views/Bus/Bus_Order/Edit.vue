@@ -1,5 +1,5 @@
 <template>
-  <a-drawer title="收货管理" placement="right" width="70%" :visible="visible" @close="()=>{this.visible=false}" :maskClosable="false" :body-style="{ paddingBottom: '80px' }">
+  <a-drawer title="发货管理" placement="right" width="70%" :visible="visible" @close="()=>{this.visible=false}" :maskClosable="false" :body-style="{ paddingBottom: '80px' }">
     <a-spin :spinning="loading">
       <a-form-model ref="form" :model="entity" :rules="rules" v-bind="layout">
         <a-row>
@@ -46,7 +46,7 @@
         <div slot="tabBarExtraContent">
           <a-button type="primary" v-action:Add icon="plus" @click="handleAdd" v-if="entity.Status==='Active' || entity.Status==='Allocate' || entity.Status==='Allocated'">新建</a-button>
         </div>
-        <a-tab-pane key="OrderDetail" tab="收货明细" forceRender>
+        <a-tab-pane key="OrderDetail" tab="发货明细" forceRender>
           <a-table ref="table" size="small" rowKey="Id" :columns="orderDetailColumn" :data-source="entity.OrderDetail" :rowSelection="orderRowSelection" :pagination="false" :scroll="{ x: 3500 }">
             <template slot="Code" slot-scope="text, record">
               <CodeInput code="Bus_OrderDetail_Code" v-model="record.Code" :para="{OrderCode:entity.Code}" size="small" :disabled="record.Status!=='Active'"></CodeInput>
@@ -237,6 +237,7 @@ export default {
         { title: '物料数量', dataIndex: 'Qty', width: 80 },
         { title: '已分配', dataIndex: 'QtyAllocated', width: 80 },
         { title: '已拣货', dataIndex: 'QtyPicked', width: 80 },
+        { title: '已发货', dataIndex: 'QtyShipped', width: 80 },
         { title: '循环规则', dataIndex: 'RotateBy', width: 120, scopedSlots: { customRender: 'RotateBy' } },
         { title: '优先规则', dataIndex: 'RotateType', width: 120, scopedSlots: { customRender: 'RotateType' } },
         { title: '发货策略', dataIndex: 'AllocStgId', width: 120, scopedSlots: { customRender: 'AllocStgId' } },
