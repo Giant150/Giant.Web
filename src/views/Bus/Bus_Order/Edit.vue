@@ -119,7 +119,7 @@
         <a-tab-pane key="PickDetail" tab="拣货明细" forceRender v-if="entity.Id">
           <a-table ref="table" size="small" rowKey="Id" :columns="pickDetailColumn" :data-source="pickDetail" :pagination="false" :scroll="{ x: 3500 }">
             <template slot="Code" slot-scope="text, record">
-              <CodeInput code="Bus_PickDetail_Code" v-model="record.Code" :para="{DetailCode:selectedOrderDetail.Id}" size="small" :disabled="!record.Id.startsWith('new_')"></CodeInput>
+              <CodeInput code="Bus_PickDetail_Code" v-model="record.Code" :para="{DetailCode:selectedOrderDetail.Code,DetailId:selectedOrderDetail.Id}" size="small" :disabled="!record.Id.startsWith('new_')"></CodeInput>
             </template>
             <template slot="LocId" slot-scope="text, record">
               <LocSelect v-model="record.LocId" size="small" :disabled="!record.Id.startsWith('new_')"></LocSelect>
