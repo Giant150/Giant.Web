@@ -46,7 +46,7 @@
 
     <div class="table-operator">
       <a-button type="primary" v-action:Add icon="plus" @click="handleAdd">新建</a-button>
-      <a-button type="primary" v-action:Delete icon="delete" @click="handleDelete()">批量删除</a-button>
+      <!-- <a-button type="primary" v-action:Delete icon="delete" @click="handleDelete()">批量删除</a-button> -->
     </div>
 
     <s-table ref="table" size="default" rowKey="Id" :columns="columns" :data="loadData" :rowSelection="rowSelection" showPagination="auto">
@@ -58,7 +58,14 @@
       </template>
       <span slot="action" slot-scope="text, record">
         <template>
-          <a v-action:Update @click="handleEdit(record)">修改</a>
+          <a v-action:Query @click="handleEdit(record)">查看</a>
+          <a-divider type="vertical" />
+          <a-dropdown class="ant-dropdown-link" placement="bottomCenter">
+            <a class="ant-dropdown-link" @click="e => e.preventDefault()">操作</a>
+            <a-menu slot="overlay" @click="(e)=>{handleActionClick(e.key,record)}">
+              <a-menu-item v-action:Putaway key="Putaway">生成上架任务</a-menu-item>
+            </a-menu>
+          </a-dropdown>
           <a-divider v-action:Delete type="vertical" />
           <a v-action:Delete @click="handleDelete([record])">删除</a>
         </template>
@@ -170,6 +177,19 @@ export default {
     onDateChange(dates, dateStrings) {
       this.queryParam.RecDateBegin = dates[0]
       this.queryParam.RecDateEnd = dates[1]
+    },
+    handleActionClick(key, row) {
+      console.log(key, row)
+      if (key === 'Putaway') {
+        MainSvc.PutawayTask(row.Id).then(result => {
+          if (result.Success) {
+            this.$message.success('操作成功!')
+            this.$router.push({ path: '/Inv/Inv_Task', query: { RefTable: 'Bus_Receipt', RefId: row.Id } })
+          } else {
+            this.$message.error(result.Msg)
+          }
+        })
+      }
     },
     handleDelete(rows) {
       var thisObj = this
