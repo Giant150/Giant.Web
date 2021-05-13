@@ -14,9 +14,9 @@ export default {
     EnumSelect
   },
   props: {
-    name: { type: String, required: true },
-    sku: { type: Object, required: true },
-    value: { type: String, required: true, default: '' }
+    name: String,
+    sku: Object,
+    value: String
   },
   data() {
     return {

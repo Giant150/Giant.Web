@@ -102,7 +102,7 @@
         </template>
         <span slot="action" slot-scope="text, record">
           <template>
-            <a v-action:Update v-if="record.LotId" @click="handleAdd(record)">复制</a>
+            <a v-action:Add v-if="record.LotId" @click="handleAdd(record)">复制</a>
             <a v-action:Delete v-if="!record.LotId" @click="handleDelete(record)">删除</a>
           </template>
         </span>
@@ -110,7 +110,7 @@
     </a-spin>
     <div :style="{ position: 'absolute', bottom: 0, right: 0, width: '100%', borderTop: '1px solid #e9e9e9', padding: '10px 16px', background: '#fff', textAlign: 'right', zIndex: 1, }">
       <a-button v-if="canPutawayTask" v-action:Putaway :style="{ marginRight: '8px' }" type="default" @click="handlePutaway">生成上架任务</a-button>
-      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleSubmit">保存</a-button>
+      <a-button v-action:Update :style="{ marginRight: '8px' }" type="primary" @click="handleSubmit">保存</a-button>
       <a-button :style="{ marginRight: '8px' }" @click="()=>{this.visible=false}">关闭</a-button>
     </div>
   </a-drawer>

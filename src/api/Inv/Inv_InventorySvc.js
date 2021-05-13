@@ -17,7 +17,7 @@ export default {
     },
     /**
      * 获取单个实体数据
-     * @param {string} id 主键
+     * @param {String} id 主键
      * @returns 实体数据
      */
     Get(id) {
@@ -27,26 +27,15 @@ export default {
         })
     },
     /**
-     * 修改状态状态数据
-     * @param {Object} data 要保存的实体
-     * @returns 保存是否成功
+     * 冻结/解冻库存
+     * @param {String} status None/Hold
+     * @param {Array<String>} ids ids
+     * @returns 冻结/解冻
      */
-    Save(data) {
+    UpdateStatus(status, ids) {
         return request({
-            url: '/api/Inv_Inventory/Save',
+            url: '/api/Inv_Inventory/UpdateStatus?status=' + status,
             method: 'post',
-            data: data
-        })
-    },
-    /**
-     * 删除实体数据
-     * @param {Array<String>} ids 要删除的实体主键
-     * @returns 删除是否成功
-     */
-    Delete(ids) {
-        return request({
-            url: '/api/Inv_Inventory/Delete',
-            method: 'delete',
             data: ids
         })
     }

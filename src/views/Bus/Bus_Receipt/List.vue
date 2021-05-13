@@ -66,8 +66,8 @@
               <a-menu-item v-action:Putaway key="Putaway">生成上架任务</a-menu-item>
             </a-menu>
           </a-dropdown>
-          <a-divider v-action:Delete type="vertical" />
-          <a v-action:Delete @click="handleDelete([record])">删除</a>
+          <a-divider v-action:Delete v-if="record.Status==='Active'" type="vertical" />
+          <a v-action:Delete v-if="record.Status==='Active'" @click="handleDelete([record])">删除</a>
         </template>
       </span>
     </s-table>

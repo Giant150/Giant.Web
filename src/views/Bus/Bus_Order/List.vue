@@ -58,9 +58,18 @@
       </template>
       <span slot="action" slot-scope="text, record">
         <template>
-          <a v-action:Update @click="handleEdit(record)">修改</a>
-          <a-divider v-action:Delete type="vertical" />
-          <a v-action:Delete @click="handleDelete([record])">删除</a>
+          <a v-action:Query @click="handleEdit(record)">查看</a>
+          <a-divider type="vertical" />
+          <a-dropdown class="ant-dropdown-link" placement="bottomCenter">
+            <a class="ant-dropdown-link" @click="e => e.preventDefault()">操作</a>
+            <a-menu slot="overlay" @click="(e)=>{handleActionClick(e.key,record)}">
+              <a-menu-item v-action:Allocate key="Allocate" v-if="record.Status==='Active' || record.Status==='Allocate'">配货</a-menu-item>
+              <a-menu-item v-action:Release key="Release" v-if="record.Status==='Allocated'">释放拣货任务</a-menu-item>
+              <a-menu-item v-action:Shipping key="Shipping" v-if="record.Status==='Picked'">发货确认</a-menu-item>
+            </a-menu>
+          </a-dropdown>
+          <a-divider v-action:Delete v-if="record.Status==='Active'" type="vertical" />
+          <a v-action:Delete v-if="record.Status==='Active'" @click="handleDelete([record])">删除</a>
         </template>
       </span>
     </s-table>
@@ -169,6 +178,37 @@ export default {
     },
     resetSearchForm() {
       this.queryParam = { WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Keyword: '', Type: '', OrderDateStart: moment(), OrderDateEnd: moment().add(1, 'days'), Status: '' }
+    },
+    handleActionClick(key, row) {
+      console.log(key, row)
+      if (key === 'Allocate') {
+        MainSvc.Allocate(row.Id).then(result => {
+          if (result.Success) {
+            this.$message.success('操作成功!')
+          } else {
+            this.$message.error(result.Msg)
+          }
+        })
+      }
+      if (key === 'Release') {
+        MainSvc.Release(row.Id).then(result => {
+          if (result.Success) {
+            this.$message.success('操作成功!')
+            this.$router.push({ path: '/Inv/Inv_Task', query: { RefTable: 'Bus_Order', RefId: row.Id } })
+          } else {
+            this.$message.error(result.Msg)
+          }
+        })
+      }
+      if (key === 'Shipping') {
+        MainSvc.Shipping(row.Id).then(result => {
+          if (result.Success) {
+            this.$message.success('操作成功!')
+          } else {
+            this.$message.error(result.Msg)
+          }
+        })
+      }
     },
     handleDelete(rows) {
       var thisObj = this
