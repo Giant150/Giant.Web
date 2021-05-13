@@ -183,7 +183,7 @@ export default {
         { title: '物料', dataIndex: 'SkuId', sorter: true, width: 200, fixed: 'left', customRender: (value, record) => { return `${record.Sku.Name}(${record.Sku.Code})` } },
         { title: '批次', dataIndex: 'LotId', sorter: true, width: 120, customRender: (value, record) => { return record.Lot.Code } },
         { title: '库位', dataIndex: 'LocId', sorter: true, width: 120, customRender: (value, record) => { return record.Loc.Code } },
-        { title: '托盘', dataIndex: 'TrayId', sorter: true, width: 120, customRender: (value, record) => { return record.Tray.Code } },
+        { title: '托盘', dataIndex: 'TrayId', sorter: true, width: 120, customRender: (value, record) => { return record?.Tray?.Code } },
         { title: '库存数量', dataIndex: 'Qty', sorter: true, width: 120 },
         { title: '可用数量', width: 100, customRender: (value, record) => { return record.Status === 'Hold' ? 0 : (record.Qty - record.QtyAllocated - record.QtyPicked) } },
         { title: '已分配', dataIndex: 'QtyAllocated', width: 100 },
@@ -244,6 +244,7 @@ export default {
       this.selectedRows = selectedRows
     },
     resetSearchForm() {
+      this.querySku = undefined
       this.queryParam = {
         WhseId: this.defaultWhseId, Keyword: '', StorerId: this.defaultStorerId, SkuId: '', LotId: '', LocId: '', TrayId: '', Status: '',
         Lot01: '', Lot02: '', Lot03: '', Lot04: '', Lot05: '', Lot06: '', Lot07: '', Lot08: '', Lot09: '', Lot10: ''

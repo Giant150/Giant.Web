@@ -24,7 +24,7 @@ export default {
   menu: {
     locale: true
   },
-  title: 'Giant Admin',
+  title: 'ZEQP WMS',
   pwa: false,
   iconfontUrl: '',
   production: process.env.NODE_ENV === 'production' && process.env.VUE_APP_PREVIEW !== 'true'

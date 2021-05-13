@@ -185,6 +185,7 @@ export default {
         MainSvc.Allocate(row.Id).then(result => {
           if (result.Success) {
             this.$message.success('操作成功!')
+            this.$refs.table.refresh()
           } else {
             this.$message.error(result.Msg)
           }
@@ -194,6 +195,7 @@ export default {
         MainSvc.Release(row.Id).then(result => {
           if (result.Success) {
             this.$message.success('操作成功!')
+            this.$refs.table.refresh()
             this.$router.push({ path: '/Inv/Inv_Task', query: { RefTable: 'Bus_Order', RefId: row.Id } })
           } else {
             this.$message.error(result.Msg)
@@ -204,6 +206,7 @@ export default {
         MainSvc.Shipping(row.Id).then(result => {
           if (result.Success) {
             this.$message.success('操作成功!')
+            this.$refs.table.refresh()
           } else {
             this.$message.error(result.Msg)
           }

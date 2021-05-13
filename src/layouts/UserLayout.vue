@@ -10,10 +10,10 @@
           <div class="header">
             <a href="/">
               <img src="~@/assets/logo.svg" class="logo" alt="logo">
-              <span class="title">Giant Admin</span>
+              <span class="title">ZEQP WMS</span>
             </a>
           </div>
-          <div class="desc">一个通用的前后端框架</div>
+          <div class="desc">中南智能仓库管理系统</div>
         </div>
 
         <router-view />
