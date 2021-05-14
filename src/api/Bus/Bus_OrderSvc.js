@@ -62,6 +62,17 @@ export default {
         })
     },
     /**
+     * 撤销配货
+     * @param {String} id 主键
+     * @returns 撤销配货是否成功
+     */
+     RejectAllocate(id) {
+        return request({
+            url: '/api/Bus_Order/RejectAllocate?id=' + id,
+            method: 'post'
+        })
+    },
+    /**
      * 释放拣货任务
      * @param {String} id 主键
      * @returns 释放拣货任务是否成功

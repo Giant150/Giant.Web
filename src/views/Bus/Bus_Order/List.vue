@@ -64,6 +64,7 @@
             <a class="ant-dropdown-link" @click="e => e.preventDefault()">操作</a>
             <a-menu slot="overlay" @click="(e)=>{handleActionClick(e.key,record)}">
               <a-menu-item v-action:Allocate key="Allocate" v-if="record.Status==='Active' || record.Status==='Allocate'">配货</a-menu-item>
+              <a-menu-item v-action:Allocate key="RejectAllocate" v-if="record.Status==='Allocate' || record.Status==='Allocated'">撤销配货</a-menu-item>
               <a-menu-item v-action:Release key="Release" v-if="record.Status==='Allocated'">释放拣货任务</a-menu-item>
               <a-menu-item v-action:Shipping key="Shipping" v-if="record.Status==='Picked'">发货确认</a-menu-item>
             </a-menu>
@@ -204,6 +205,16 @@ export default {
       }
       if (key === 'Shipping') {
         MainSvc.Shipping(row.Id).then(result => {
+          if (result.Success) {
+            this.$message.success('操作成功!')
+            this.$refs.table.refresh()
+          } else {
+            this.$message.error(result.Msg)
+          }
+        })
+      }
+      if (key === 'RejectAllocate') {
+        MainSvc.RejectAllocate(row.Id).then(result => {
           if (result.Success) {
             this.$message.success('操作成功!')
             this.$refs.table.refresh()

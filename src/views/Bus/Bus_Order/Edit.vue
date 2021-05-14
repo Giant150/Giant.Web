@@ -113,6 +113,7 @@
             </template>
             <template slot="action" slot-scope="text, record">
               <a v-action:Delete v-if="record.Status==='Active'" @click="handleDelete(record)">删除</a>
+              <a v-action:Allocate v-if="record.Status==='Allocate' || record.Status==='Allocated'" @click="handleRejectAllocate(record.Id,'OrderDetail')">撤销配货</a>
             </template>
           </a-table>
         </a-tab-pane>
@@ -158,11 +159,12 @@
       </a-tabs>
     </a-spin>
     <div :style="{ position: 'absolute', bottom: 0, right: 0, width: '100%', borderTop: '1px solid #e9e9e9', padding: '10px 16px', background: '#fff', textAlign: 'right', zIndex: 1, }">
-      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleAllocate" v-if="entity.Id && (entity.Status==='Active' || entity.Status==='Allocate')">配货</a-button>
-      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleRelease" v-if="entity.Status==='Allocated'">释放拣货任务</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleAllocate" v-action:Allocate v-if="entity.Id && (entity.Status==='Active' || entity.Status==='Allocate')">配货</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleRejectAllocate(entity.Id,'Order')" v-action:Allocate v-if="entity.Status==='Allocate' || entity.Status==='Allocated'">撤销配货</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleRelease" v-action:Release v-if="entity.Status==='Allocated'">释放拣货任务</a-button>
       <!-- <a-button :style="{ marginRight: '8px' }" type="primary">拣货确认</a-button> -->
-      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleShipping" v-if="entity.Status==='Picked'">发货确认</a-button>
-      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleSubmit" v-if="entity.Status==='Active' || entity.Status==='Allocate' || entity.Status==='Allocated'">保存</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleShipping" v-action:Shipping v-if="entity.Status==='Picked'">发货确认</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleSubmit" v-action:Update v-if="entity.Status==='Active' || entity.Status==='Allocate' || entity.Status==='Allocated'">保存</a-button>
       <a-button :style="{ marginRight: '8px' }" @click="()=>{this.visible=false}">关闭</a-button>
     </div>
   </a-drawer>
@@ -352,6 +354,34 @@ export default {
         }
         var index = this.entity.OrderDetail.indexOf(record)
         this.entity.OrderDetail.splice(index, 1)
+      }
+    },
+    handleRejectAllocate(id, type) {
+      if (type === 'OrderDetail') {
+        this.loading = true
+        DetailSvc.RejectAllocate(id).then(result => {
+          this.loading = false
+          if (result.Success) {
+            this.$message.success(result.Msg)
+            this.visible = false
+            this.$emit('Success')
+          } else {
+            this.$message.error(result.Msg)
+          }
+        })
+      }
+      if (type === 'Order') {
+        this.loading = true
+        MainSvc.RejectAllocate(id).then(result => {
+          this.loading = false
+          if (result.Success) {
+            this.$message.success(result.Msg)
+            this.visible = false
+            this.$emit('Success')
+          } else {
+            this.$message.error(result.Msg)
+          }
+        })
       }
     },
     handleSkuSelect(record, sku) {
