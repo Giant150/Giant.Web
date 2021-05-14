@@ -87,7 +87,9 @@ export default {
     openForm(codeTypeId) {
       this.visible = true
       this.queryParam.CodeTypeId = codeTypeId
-      this.$refs.table.refresh()
+      this.$nextTick(() => {
+        this.$refs.table.refresh()
+      })
     },
     handleAdd() {
       this.mdl = null

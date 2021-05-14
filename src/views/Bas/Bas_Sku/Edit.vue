@@ -191,7 +191,12 @@ export default {
     init() {
       this.loading = false
       this.visible = true
-      this.entity = { Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', Name: '', BasUom: 'EA', Barcode: '', Spec: '', PinYin: '', SupplierId: undefined, ShelfLife: 0, SkuTypeId: null, Price: 0, LotStgId: '', AllocStgId: '', RotateBy: 'Code', RotateType: 'FIFO', PutawayStgId: '', PutawayZoneId: undefined, PutawayLocId: undefined, ABC: 'A', ReOrderPoint: 0, ReOrderQty: 0, RackLife: 0, TrayTypeId: undefined, Status: 'Enable' }
+      this.entity = {
+        Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', Name: '', BasUom: 'EA', Barcode: '',
+        Spec: '', PinYin: '', SupplierId: undefined, ShelfLife: 0, SkuTypeId: null, Price: 0, LotStgId: '', AllocStgId: '', RotateBy: 'Code', RotateType: 'FIFO',
+        PutawayStgId: '', PutawayZoneId: undefined, PutawayLocId: undefined, ABC: 'A', ReOrderPoint: 0, ReOrderQty: 0,
+        RackLife: 0, TrayTypeId: undefined, Status: 'Enable'
+      }
       this.getConfig({ whseId: this.defaultWhseId, code: 'Bas_Sku_LotStgId_Default' }).then(result => {
         this.entity.LotStgId = result.Val
       })

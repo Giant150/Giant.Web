@@ -104,6 +104,8 @@
           <template>
             <a v-action:Add v-if="record.LotId" @click="handleAdd(record)">复制</a>
             <a v-action:Delete v-if="!record.LotId" @click="handleDelete(record)">删除</a>
+            <a-divider v-action:Adjust v-if="record.LotId" type="vertical" />
+            <a v-action:Adjust v-if="record.LotId" @click="handleAdjust(record)">回转</a>
           </template>
         </span>
       </a-table>
@@ -120,6 +122,7 @@
 import moment from 'moment'
 import { mapActions, mapGetters } from 'vuex'
 import MainSvc from '@/api/Bus/Bus_ReceiptSvc'
+import DetailSvc from '@/api/Bus/Bus_ReceiptDetailSvc'
 import EnumSelect from '@/components/CF/EnumSelect'
 import CodeInput from '@/components/CF/CodeInput'
 import StorerSelect from '@/components/Bas/StorerSelect'
@@ -274,6 +277,26 @@ export default {
     handleDelete(record) {
       var index = this.entity.ReceiptDetail.indexOf(record)
       this.entity.ReceiptDetail.splice(index, 1)
+    },
+    handleAdjust(record) {
+      var thisObj = this
+      var id = record.Id
+      this.$confirm({
+        title: '确认要进行收货回转?',
+        onOk() {
+          return new Promise((resolve, reject) => {
+            DetailSvc.Adjustment(id).then(result => {
+              resolve()
+              if (result.Success) {
+                thisObj.visible = false
+                thisObj.$message.success('操作成功!')
+              } else {
+                thisObj.$message.error(result.Msg)
+              }
+            })
+          })
+        }
+      })
     },
     cusHeaderTitle(column) {
       return this.enumItems?.find(w => w.Code === column)?.Name

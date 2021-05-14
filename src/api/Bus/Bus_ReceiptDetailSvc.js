@@ -49,5 +49,16 @@ export default {
             method: 'delete',
             data: ids
         })
+    },
+    /**
+     * 收货回转
+     * @param {String} id 收货明细Id
+     * @returns 收货回转是否成功
+     */
+    Adjustment(id) {
+        return request({
+            url: '/api/Bus_ReceiptDetail/Adjustment?id=' + id,
+            method: 'post'
+        })
     }
 }
