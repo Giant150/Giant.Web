@@ -186,6 +186,7 @@ export default {
       ],
       curDetailIndex: 0,
       defaultLocId: '', // 默认收货库位
+      defaultProductDateLot: 'Lot01', // 默认的生产日期的批次字段
       isModify: false // 是否编辑
     }
   },
@@ -217,6 +218,9 @@ export default {
     })
     this.getConfig({ whseId: this.defaultWhseId, code: 'Bus_ReceiptDetail_LocId_Default' }).then(result => {
       this.defaultLocId = result.Val
+    })
+    this.getConfig({ whseId: this.defaultWhseId, code: 'Stg_Lot_ProductionDate_Default' }).then(result => {
+      this.defaultProductDateLot = result.Val
     })
   },
   methods: {
@@ -326,8 +330,8 @@ export default {
           } else if (key.endsWith('Type') && record.Sku.LotStg[key] === 'CalcExpiry') {
             // (计算到期)
             const lotName = key.replace('Type', '')
-            const calcName = record.Sku.LotStg[`${lotName}Enum`]
-            const sourceVal = record[calcName]
+            // const calcName = record.Sku.LotStg[`${lotName}Enum`]
+            const sourceVal = record[this.defaultProductDateLot]
             if (!sourceVal) continue
             const calcVal = moment(sourceVal).add(record.Sku.ShelfLife, 'days').format('YYYY-MM-DD')
             record[lotName] = calcVal
