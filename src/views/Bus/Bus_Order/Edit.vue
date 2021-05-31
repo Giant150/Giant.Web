@@ -155,6 +155,7 @@
               <a v-action:Delete v-if="record.Status==='Active'">删除</a>
             </template>
           </a-table>
+          <InvChoose type="radio" ref="invChoose" @choose="handlerInvChoose"></InvChoose>
         </a-tab-pane>
       </a-tabs>
     </a-spin>
@@ -188,6 +189,7 @@ import SkuUomSelect from '@/components/Bas/SkuUomSelect'
 import TraySelect from '@/components/Bas/TraySelect'
 import LotInput from '@/components/Stg/LotInput'
 import LotSelect from '@/components/Inv/LotSelect'
+import InvChoose from '@/components/Inv/InvChoose'
 export default {
   components: {
     PickSvc,
@@ -202,7 +204,8 @@ export default {
     SkuUomSelect,
     TraySelect,
     LotInput,
-    LotSelect
+    LotSelect,
+    InvChoose
   },
   props: {},
   data() {
@@ -222,6 +225,7 @@ export default {
       activeKey: 'OrderDetail',
       isModify: false, // 是否编辑
       selectedOrderDetail: null,
+      defaultPickToLocId: '',
       orderRowSelection: {
         columnWidth: 20,
         type: 'radio',
@@ -298,6 +302,9 @@ export default {
     this.getEnum({ whseId: this.defaultWhseId, code: 'Bas_Lot_Field' }).then(result => {
       this.enumItems = result.EnumItems
     })
+    this.getConfig({ whseId: this.defaultWhseId, code: 'Bas_PutawayZone_PickToLocId_Default' }).then(result => {
+      this.defaultPickToLocId = result.Val
+    })
   },
   methods: {
     moment,
@@ -334,8 +341,8 @@ export default {
       return this.enumItems?.find(w => w.Code === column)?.Name
     },
     handleAdd() {
-      this.curDetailIndex += 1
       if (this.activeKey === 'OrderDetail') {
+        this.curDetailIndex += 1
         var detail = {
           Id: `new_${this.curDetailIndex}`, WhseId: this.defaultWhseId, OrderId: this.entity.Id, StorerId: this.entity.StorerId, Code: '',
           SkuId: '', QtyUom: 0, UomCode: '', UomCnt: 1, Qty: 0, QtyAllocated: 0, QtyPicked: 0, RotateBy: '', RotateType: '', AllocStgId: '', RackLife: 0,
@@ -346,6 +353,31 @@ export default {
         }
         this.entity.OrderDetail.push(detail)
       }
+      if (this.activeKey === 'PickDetail') {
+        this.$refs.invChoose.choose({
+          StorerId: this.selectedOrderDetail.StorerId,
+          SkuId: this.selectedOrderDetail.SkuId
+        })
+      }
+    },
+    handlerInvChoose(selectRows) {
+      if (selectRows.length === 0) return
+      var inv = selectRows[0]
+      console.log('handlerInvChoose', inv)
+      if (inv.StorerId !== this.selectedOrderDetail.StorerId || inv.SkuId !== this.selectedOrderDetail.SkuId) {
+        this.$message.error('选择的物料不匹配')
+        return
+      }
+      this.curDetailIndex += 1
+      var detail = {
+        Id: `new_${this.curDetailIndex}`, WhseId: this.defaultWhseId, OrderId: this.entity.Id, OrderDetailId: this.selectedOrderDetail.Id,
+        StorerId: inv.StorerId, Code: '', SkuId: inv.SkuId, LotId: inv.LotId, LocId: inv.LocId, TrayId: inv.TrayId,
+        QtyUom: inv.Qty, UomCode: 'EA', UomCnt: 1, Qty: inv.Qty, ToLocId: this.defaultPickToLocId,
+        Status: 'Active', AllocateLocId: inv.LocId, InventoryId: inv.Id,
+        Lot: inv.Lot, Sku: inv.Sku
+      }
+      console.log(detail)
+      this.selectedOrderDetail.PickDetail.push(detail)
     },
     handleDelete(record) {
       if (this.activeKey === 'OrderDetail') {
@@ -411,6 +443,8 @@ export default {
           if (!detail.SkuId) validMsg.push(`收货明细${detail.Code}中物料必需选择`)
           if (detail.QtyUom === 0) validMsg.push(`收货明细${detail.Code}中物料数量为0`)
           detail.Sku = null
+          detail.PickDetail = null
+          detail.Lot = null
         })
         if (validMsg.length > 0) {
           this.$message.error((h) => { return (<a-list size="small" split={false}>{validMsg.map(m => { return (<a-list-item>{m}</a-list-item>) })}</a-list>) })

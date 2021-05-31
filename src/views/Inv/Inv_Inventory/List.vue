@@ -103,7 +103,7 @@
         </a-row>
       </a-form>
     </div>
-    <div class="table-operator">
+    <div class="table-operator" v-if="!choose">
       <a-button type="primary" v-action:Update icon="edit" @click="handleUpdateStatus('Hold',selectedRowKeys)">批量冻结</a-button>
       <a-button type="primary" v-action:Update icon="edit" @click="handleUpdateStatus('None',selectedRowKeys)">批量解冻</a-button>
     </div>
@@ -113,7 +113,7 @@
       </template>
       <span slot="action" slot-scope="text, record">
         <template>
-          <a v-action:Update @click="handleUpdateStatus(record.Status==='None'?'Hold':'None',[record.Id])">{{ record.Status==='None'?'冻结':'解冻' }}</a>
+          <a v-if="!choose" v-action:Update @click="handleUpdateStatus(record.Status==='None'?'Hold':'None',[record.Id])">{{ record.Status==='None'?'冻结':'解冻' }}</a>
         </template>
       </span>
     </s-table>
@@ -146,6 +146,11 @@ export default {
     LotSelect,
     TraySelect,
     LotInput
+  },
+  props: {
+    choose: { type: Boolean, required: false, default: false },
+    type: { type: String, required: false, default: 'checkbox' },
+    query: { type: Object, required: false, default: () => { return {} } }
   },
   data() {
     return {
@@ -204,11 +209,18 @@ export default {
       ]
     }
   },
+  watch: {
+    query(newVal) {
+      Object.assign(this.queryParam, newVal)
+      this.$refs.table.refresh()
+    }
+  },
   filters: {
   },
   created() {
     this.queryParam.WhseId = this.defaultWhseId
     this.queryParam.StorerId = this.defaultStorerId
+    Object.assign(this.queryParam, this.query)
     this.getEnum({ whseId: this.defaultWhseId, code: 'Bas_Lot_Field' }).then(result => {
       this.enumItems = result.EnumItems
     })
@@ -221,7 +233,8 @@ export default {
     rowSelection() {
       return {
         selectedRowKeys: this.selectedRowKeys,
-        onChange: this.onSelectChange
+        onChange: this.onSelectChange,
+        type: this.type
       }
     }
   },
