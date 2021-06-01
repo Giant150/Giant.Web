@@ -60,6 +60,9 @@
             <template slot="UomCode" slot-scope="text, record">
               <SkuUomSelect v-model="record.UomCode" :sku="record.SkuId" @select="(val,uom)=>{handlerUomSelect(record,uom)}" style="width:100%" size="small" :disabled="record.Status!=='Active'"></SkuUomSelect>
             </template>
+            <template slot="Status" slot-scope="text">
+              <EnumName code="Bus_Order_Status" :value="text"></EnumName>
+            </template>
             <template slot="RotateBy" slot-scope="text, record">
               <EnumSelect code="Bas_Lot_Field" v-model="record.RotateBy" style="width:100%" size="small" :disabled="record.Status!=='Active'"></EnumSelect>
             </template>
@@ -241,6 +244,7 @@ export default {
         { title: '订单数量', dataIndex: 'QtyUom', width: 80, fixed: 'left', scopedSlots: { customRender: 'QtyUom' } },
         { title: '单位', dataIndex: 'UomCode', width: 80, fixed: 'left', scopedSlots: { customRender: 'UomCode' } },
         { title: '物料数量', dataIndex: 'Qty', width: 80 },
+        { title: '状态', dataIndex: 'Status', width: 120, scopedSlots: { customRender: 'Status' } },
         { title: '已分配', dataIndex: 'QtyAllocated', width: 80 },
         { title: '已拣货', dataIndex: 'QtyPicked', width: 80 },
         { title: '已发货', dataIndex: 'QtyShipped', width: 80 },
@@ -445,6 +449,7 @@ export default {
               pick[key] = result.Data[key]
             }
           }
+          this.loadData(this.entity.Id)
         } else {
           this.$message.error(result.Msg)
         }
