@@ -150,9 +150,9 @@
               <a-input v-model="record.Remark" size="small" :disabled="!record.Id.startsWith('new_')" />
             </template>
             <template slot="action" slot-scope="text, record">
-              <a v-action:Add v-if="record.Id.startsWith('new_')">保存</a>
+              <a v-action:Add v-if="record.Id.startsWith('new_')" @click="handlePickSave(record)">保存</a>
               <a-divider v-action:Delete type="vertical" v-if="record.Status==='Active'" />
-              <a v-action:Delete v-if="record.Status==='Active'">删除</a>
+              <a v-action:Delete v-if="record.Status==='Active'" @click="handlePickDelete(record)">{{ record.Id.startsWith('new_')?'删除':'撤销配货' }}</a>
             </template>
           </a-table>
           <InvChoose type="radio" ref="invChoose" @choose="handlerInvChoose"></InvChoose>
@@ -231,7 +231,7 @@ export default {
         type: 'radio',
         hideDefaultSelections: true,
         onChange: (keys, rows) => {
-          console.log(rows)
+          console.log('orderRowSelection', keys)
           this.selectedOrderDetail = rows[0]
         }
       },
@@ -323,9 +323,7 @@ export default {
       this.init()
       if (id) {
         this.isModify = true
-        MainSvc.Get(id).then(resJson => {
-          this.entity = resJson.Data
-        })
+        this.loadData(id)
       } else {
         this.getConfig({ whseId: this.defaultWhseId, code: 'Bus_Order_Code_AutoGenerate' }).then(result => {
           if (result.Val === '1') {
@@ -333,6 +331,11 @@ export default {
           }
         })
       }
+    },
+    loadData(id) {
+      MainSvc.Get(id).then(resJson => {
+        this.entity = resJson.Data
+      })
     },
     handlerTabsChange(key) {
       this.activeKey = key
@@ -429,6 +432,37 @@ export default {
       record.UomCnt = uom.UomCnt
       record.Qty = record.QtyUom * record.UomCnt
       record.TotalAmt = record.Qty * record.UnitPrice
+    },
+    handlePickSave(pick) {
+      var postData = Object.assign({}, pick)
+      postData.Sku = null
+      postData.Lot = null
+      PickSvc.Add(postData).then(result => {
+        if (result.Success) {
+          this.$message.success(result.Msg)
+          for (const key in pick) {
+            if (Object.hasOwnProperty.call(result.Data, key)) {
+              pick[key] = result.Data[key]
+            }
+          }
+        } else {
+          this.$message.error(result.Msg)
+        }
+      })
+    },
+    handlePickDelete(pick) {
+      if (!pick.Id.startsWith('new_')) {
+        PickSvc.RejectAllocate(pick.Id).then(result => {
+          if (result.Success) {
+            this.$message.success(result.Msg)
+            this.loadData(this.entity.Id)
+          } else {
+            this.$message.error(result.Msg)
+          }
+        })
+      }
+      var index = this.selectedOrderDetail.PickDetail.indexOf(pick)
+      this.selectedOrderDetail.PickDetail.splice(index, 1)
     },
     handleSubmit() {
       this.$refs['form'].validate(valid => {

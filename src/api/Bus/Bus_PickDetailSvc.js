@@ -49,5 +49,28 @@ export default {
             method: 'delete',
             data: ids
         })
+    },
+    /**
+     * 新增拣货明细
+     * @param {Object} data 要新增的实体
+     * @returns 新增是否成功
+     */
+     Add(data) {
+        return request({
+            url: '/api/Bus_PickDetail/Add',
+            method: 'post',
+            data: data
+        })
+    },
+    /**
+     * 撤销配货
+     * @param {String} id 数据主键
+     * @returns 撤销配货是否成功
+     */
+     RejectAllocate(id) {
+        return request({
+            url: `/api/Bus_PickDetail/RejectAllocate?id=${id}`,
+            method: 'delete'
+        })
     }
 }
