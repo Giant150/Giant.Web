@@ -60,5 +60,16 @@ export default {
             url: '/api/Bus_Receipt/PutawayTask?id=' + id,
             method: 'post'
         })
+    },
+    /**
+     * 打印收货单
+     * @param {string} id 主键
+     * @returns 收货单PDF
+     */
+     Print(id) {
+        return request({
+            url: '/api/Bus_Receipt/Print?id=' + id,
+            method: 'get'
+        })
     }
 }

@@ -111,6 +111,7 @@
       </a-table>
     </a-spin>
     <div :style="{ position: 'absolute', bottom: 0, right: 0, width: '100%', borderTop: '1px solid #e9e9e9', padding: '10px 16px', background: '#fff', textAlign: 'right', zIndex: 1, }">
+      <a-button :style="{ marginRight: '8px' }" v-if="isModify" type="default" @click="handlePrint">打印收货单</a-button>
       <a-button v-if="canPutawayTask" v-action:Putaway :style="{ marginRight: '8px' }" type="default" @click="handlePutaway">生成上架任务</a-button>
       <a-button v-action:Update :style="{ marginRight: '8px' }" type="primary" @click="handleSubmit">保存</a-button>
       <a-button :style="{ marginRight: '8px' }" @click="()=>{this.visible=false}">关闭</a-button>
@@ -120,6 +121,7 @@
 
 <script>
 import moment from 'moment'
+import print from 'print-js'
 import { mapActions, mapGetters } from 'vuex'
 import MainSvc from '@/api/Bus/Bus_ReceiptSvc'
 import DetailSvc from '@/api/Bus/Bus_ReceiptDetailSvc'
@@ -256,6 +258,16 @@ export default {
           }
         })
       }
+    },
+    handlePrint() {
+      MainSvc.Print(this.entity.Id).then(result => {
+        if (result.Success) {
+          var filePath = `${process.env.VUE_APP_API_BASE_URL}${result.Data}`
+          print(filePath)
+        } else {
+          this.$message.error(result.Msg)
+        }
+      })
     },
     handleAdd(record) {
       this.curDetailIndex += 1
