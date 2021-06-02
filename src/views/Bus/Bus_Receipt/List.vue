@@ -63,6 +63,7 @@
           <a-dropdown class="ant-dropdown-link" placement="bottomCenter">
             <a class="ant-dropdown-link" @click="e => e.preventDefault()">操作</a>
             <a-menu slot="overlay" @click="(e)=>{handleActionClick(e.key,record)}">
+              <a-menu-item key="Print">打印收货单</a-menu-item>
               <a-menu-item v-action:Putaway key="Putaway">生成上架任务</a-menu-item>
             </a-menu>
           </a-dropdown>
@@ -78,6 +79,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import moment from 'moment'
+import print from 'print-js'
 import { STable } from '@/components'
 import MainSvc from '@/api/Bus/Bus_ReceiptSvc'
 import EditForm from './Edit'
@@ -185,6 +187,15 @@ export default {
           if (result.Success) {
             this.$message.success('操作成功!')
             this.$router.push({ path: '/Inv/Inv_Task', query: { RefTable: 'Bus_Receipt', RefId: row.Id } })
+          } else {
+            this.$message.error(result.Msg)
+          }
+        })
+      } else if (key === 'Print') {
+        MainSvc.Print(row.Id).then(result => {
+          if (result.Success) {
+            var filePath = `${process.env.VUE_APP_API_BASE_URL}${result.Data}`
+            print(filePath)
           } else {
             this.$message.error(result.Msg)
           }
