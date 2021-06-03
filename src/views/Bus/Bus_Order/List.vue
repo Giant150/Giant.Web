@@ -68,6 +68,7 @@
               <a-menu-item v-action:Release key="Release" v-if="record.Status==='Allocated'">释放拣货任务</a-menu-item>
               <a-menu-item v-action:Release key="PickPrint">打印拣货单</a-menu-item>
               <a-menu-item v-action:Shipping key="Shipping" v-if="record.Status==='Picked'">发货确认</a-menu-item>
+              <a-menu-item v-action:Shipping key="ShipPrint" v-if="record.Status==='Shipped'">打印送货单</a-menu-item>
             </a-menu>
           </a-dropdown>
           <a-divider v-action:Delete v-if="record.Status==='Active'" type="vertical" />
@@ -227,6 +228,16 @@ export default {
       }
       if (key === 'PickPrint') {
         MainSvc.PickPrint(row.Id).then(result => {
+          if (result.Success) {
+            var filePath = `${process.env.VUE_APP_API_BASE_URL}${result.Data}`
+            print(filePath)
+          } else {
+            this.$message.error(result.Msg)
+          }
+        })
+      }
+      if (key === 'ShipPrint') {
+        MainSvc.ShipPrint(row.Id).then(result => {
           if (result.Success) {
             var filePath = `${process.env.VUE_APP_API_BASE_URL}${result.Data}`
             print(filePath)

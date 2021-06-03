@@ -166,9 +166,10 @@
       <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleAllocate" v-action:Allocate v-if="entity.Id && (entity.Status==='Active' || entity.Status==='Allocate')">配货</a-button>
       <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleRejectAllocate(entity.Id,'Order')" v-action:Allocate v-if="entity.Status==='Allocate' || entity.Status==='Allocated'">撤销配货</a-button>
       <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleRelease" v-action:Release v-if="entity.Status==='Allocated'">释放拣货任务</a-button>
-      <a-button :style="{ marginRight: '8px' }" @click="handlePickPrint">打印拣货单</a-button>
+      <a-button :style="{ marginRight: '8px' }" v-action:Release @click="handlePickPrint">打印拣货单</a-button>
       <!-- <a-button :style="{ marginRight: '8px' }" type="primary">拣货确认</a-button> -->
       <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleShipping" v-action:Shipping v-if="entity.Status==='Picked'">发货确认</a-button>
+      <a-button :style="{ marginRight: '8px' }" @click="handleShipPrint" v-action:Shipping v-if="entity.Status==='Shipped'">打印送货单</a-button>
       <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleSubmit" v-action:Update v-if="entity.Status==='Active' || entity.Status==='Allocate' || entity.Status==='Allocated'">保存</a-button>
       <a-button :style="{ marginRight: '8px' }" @click="()=>{this.visible=false}">关闭</a-button>
     </div>
@@ -535,6 +536,16 @@ export default {
     },
     handlePickPrint() {
       MainSvc.PickPrint(this.entity.Id).then(result => {
+        if (result.Success) {
+          var filePath = `${process.env.VUE_APP_API_BASE_URL}${result.Data}`
+          print(filePath)
+        } else {
+          this.$message.error(result.Msg)
+        }
+      })
+    },
+    handleShipPrint() {
+      MainSvc.ShipPrint(this.entity.Id).then(result => {
         if (result.Success) {
           var filePath = `${process.env.VUE_APP_API_BASE_URL}${result.Data}`
           print(filePath)
