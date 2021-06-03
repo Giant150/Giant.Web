@@ -93,5 +93,16 @@ export default {
             url: '/api/Bus_Order/Shipping?id=' + id,
             method: 'post'
         })
+    },
+    /**
+     * 打印拣货单
+     * @param {string} id 主键
+     * @returns 打印拣货单
+     */
+     PickPrint(id) {
+        return request({
+            url: '/api/Bus_Order/PickPrint?id=' + id,
+            method: 'get'
+        })
     }
 }
