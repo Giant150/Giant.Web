@@ -67,8 +67,8 @@
               <a-menu-item v-action:Allocate key="RejectAllocate" v-if="record.Status==='Allocate' || record.Status==='Allocated'">撤销配货</a-menu-item>
               <a-menu-item v-action:Release key="Release" v-if="record.Status==='Allocated'">释放拣货任务</a-menu-item>
               <a-menu-item v-action:Release key="PickPrint">打印拣货单</a-menu-item>
-              <a-menu-item v-action:Shipping key="Shipping" v-if="record.Status==='Picked'">发货确认</a-menu-item>
-              <a-menu-item v-action:Shipping key="ShipPrint" v-if="record.Status==='Shipped'">打印送货单</a-menu-item>
+              <a-menu-item v-action:Shipping key="Shipping" v-if="record.Status==='Picked' || record.Status==='Picking'">发货确认</a-menu-item>
+              <a-menu-item v-action:Shipping key="ShipPrint" v-if="record.Status==='Shipped' || record.Status==='Shipping'">打印送货单</a-menu-item>
             </a-menu>
           </a-dropdown>
           <a-divider v-action:Delete v-if="record.Status==='Active'" type="vertical" />
