@@ -114,9 +114,12 @@
       <span slot="action" slot-scope="text, record">
         <template>
           <a v-if="!choose" v-action:Update @click="handleUpdateStatus(record.Status==='None'?'Hold':'None',[record.Id])">{{ record.Status==='None'?'冻结':'解冻' }}</a>
+          <a-divider v-if="!choose" v-action:Move type="vertical" />
+          <a v-if="!choose" v-action:Move @click="handleMove(record)">移动</a>
         </template>
       </span>
     </s-table>
+    <MoveForm ref="moveForm" @success="$refs.table.refresh()"></MoveForm>
   </a-card>
 </template>
 
@@ -133,7 +136,7 @@ import LocSelect from '@/components/Bas/LocSelect'
 import LotSelect from '@/components/Inv/LotSelect'
 import TraySelect from '@/components/Bas/TraySelect'
 import LotInput from '@/components/Stg/LotInput'
-
+import MoveForm from './Move'
 export default {
   components: {
     STable,
@@ -145,7 +148,8 @@ export default {
     LocSelect,
     LotSelect,
     TraySelect,
-    LotInput
+    LotInput,
+    MoveForm
   },
   props: {
     choose: { type: Boolean, required: false, default: false },
@@ -205,7 +209,7 @@ export default {
         { title: () => { return this.cusHeaderTitle('Lot09') }, dataIndex: 'Lot.Lot09' },
         { title: () => { return this.cusHeaderTitle('Lot10') }, dataIndex: 'Lot.Lot10' },
         { title: '修改时间', dataIndex: 'ModifyTime', width: 120, sorter: true, customRender: (value) => { return moment(value).format('YYYY-MM-DD') } },
-        { title: '操作', dataIndex: 'action', width: 80, fixed: 'right', scopedSlots: { customRender: 'action' } }
+        { title: '操作', dataIndex: 'action', width: 120, fixed: 'right', scopedSlots: { customRender: 'action' } }
       ]
     }
   },
@@ -272,6 +276,9 @@ export default {
           this.$message.error(result.Msg)
         }
       })
+    },
+    handleMove(record) {
+      this.$refs.moveForm.openForm(record.Id)
     }
   }
 }

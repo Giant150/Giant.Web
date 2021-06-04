@@ -38,5 +38,17 @@ export default {
             method: 'post',
             data: ids
         })
+    },
+    /**
+     * 冻结/解冻库存
+     * @param {Object} data None/Hold
+     * @returns 冻结/解冻
+     */
+    Move(data) {
+        return request({
+            url: '/api/Inv_Inventory/Move',
+            method: 'post',
+            data: data
+        })
     }
 }
