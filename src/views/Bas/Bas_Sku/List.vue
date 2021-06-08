@@ -33,7 +33,7 @@
       <a-button type="primary" v-action:Delete icon="delete" @click="handleDelete()">批量删除</a-button>
     </div>
 
-    <s-table ref="table" size="default" rowKey="Id" :columns="columns" :data="loadData" :rowSelection="rowSelection" showPagination="auto" :scroll="{ x: 3000 }">
+    <s-table ref="table" size="default" rowKey="Id" :columns="columns" :data="loadData" :rowSelection="rowSelection" showPagination="auto" :scroll="{ x: 4000 }">
       <template slot="BasUom" slot-scope="text">
         <EnumName code="Unit" :value="text"></EnumName>
       </template>
@@ -81,11 +81,11 @@ import ListSkuUom from '../Bas_SkuUom/List'
 
 const columns = [
   { title: '货主', dataIndex: 'Storer.Name', width: 100, fixed: 'left' },
-  { title: '编号', dataIndex: 'Code', sorter: true, width: 100, fixed: 'left' },
-  { title: '名称', dataIndex: 'Name', sorter: true, width: 150, fixed: 'left' },
+  { title: '编号', dataIndex: 'Code', sorter: true, width: 150, fixed: 'left' },
+  { title: '名称', dataIndex: 'Name', sorter: true, width: 250 },
   { title: '基本单位', dataIndex: 'BasUom', scopedSlots: { customRender: 'BasUom' } },
   { title: '物料条码', dataIndex: 'Barcode' },
-  { title: '物料规格', dataIndex: 'Spec' },
+  { title: '物料规格', dataIndex: 'Spec', width: 250 },
   { title: '助记码', dataIndex: 'PinYin' },
   { title: '保质期', dataIndex: 'ShelfLife' },
   { title: '货架寿命', dataIndex: 'RackLife' },
@@ -98,7 +98,7 @@ const columns = [
   { title: '上架区域', dataIndex: 'PutawayZone.Name' },
   { title: '上架库位', dataIndex: 'PutawayLoc.Code' },
   { title: '托盘类型', dataIndex: 'TrayType.Name' },
-  { title: '供应商', dataIndex: 'Supplier.Name' },
+  { title: '供应商', dataIndex: 'Supplier.Name', width: 250 },
   { title: 'ABC', dataIndex: 'ABC', scopedSlots: { customRender: 'ABC' } },
   { title: '价格', dataIndex: 'Price' },
   { title: '重订购点', dataIndex: 'ReOrderPoint' },

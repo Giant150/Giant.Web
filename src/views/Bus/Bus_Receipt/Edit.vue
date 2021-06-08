@@ -364,14 +364,16 @@ export default {
           if (!detail.Code) validMsg.push(`收货明细编号必需输入`)
           if (!detail.SkuId) validMsg.push(`收货明细${detail.Code}中物料必需选择`)
           if (detail.QtyUomExpected === 0 && detail.QtyUomReceived === 0) validMsg.push(`收货明细${detail.Code}中 预期数量 和 已收数量 都为0`)
-          const lotStg = Object.assign({}, detail?.Sku?.LotStg)
-          // 批属性验证(必需)
-          for (const key in lotStg) {
-            if (key.endsWith('Required') && !key.endsWith('RFRequired') && lotStg[key]) {
-              const lotName = key.replace('Required', '')
-              const colVal = detail[lotName]
-              if (!colVal) {
-                validMsg.push(`收货明细${detail.Code}中${lotName}为必需`)
+          if (detail.QtyUomReceived > 0) { // 只有真实的收货的时候，才验证批次属性
+            const lotStg = Object.assign({}, detail?.Sku?.LotStg)
+            // 批属性验证(必需)
+            for (const key in lotStg) {
+              if (key.endsWith('Required') && !key.endsWith('RFRequired') && lotStg[key]) {
+                const lotName = key.replace('Required', '')
+                const colVal = detail[lotName]
+                if (!colVal) {
+                  validMsg.push(`收货明细${detail.Code}中${lotName}为必需`)
+                }
               }
             }
           }

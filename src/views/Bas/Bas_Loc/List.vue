@@ -63,7 +63,7 @@ import EnumSelect from '@/components/CF/EnumSelect'
 import EnumName from '@/components/CF/EnumName'
 
 const columns = [
-  { title: '编号', dataIndex: 'Code', sorter: true, width: 100, fixed: 'left' },
+  { title: '编号', dataIndex: 'Code', sorter: true, width: 150, fixed: 'left' },
   { title: '类型', dataIndex: 'Type', scopedSlots: { customRender: 'Type' } },
   { title: '标志', dataIndex: 'Flag', scopedSlots: { customRender: 'Flag' } },
   { title: '拣货路顺', dataIndex: 'AllocCode', sorter: true },
@@ -78,7 +78,7 @@ const columns = [
   { title: '混放批次', dataIndex: 'CommingleLot', customRender: (value, row, index) => { return value ? '是' : '否' } },
   { title: '空库位', dataIndex: 'IsEmpty', customRender: (value, row, index) => { return value ? '是' : '否' } },
   { title: '状态', dataIndex: 'Status', scopedSlots: { customRender: 'Status' } },
-  { title: '操作', dataIndex: 'action', width: 200, fixed: 'right', scopedSlots: { customRender: 'action' } }
+  { title: '操作', dataIndex: 'action', width: 120, fixed: 'right', scopedSlots: { customRender: 'action' } }
 ]
 
 export default {
