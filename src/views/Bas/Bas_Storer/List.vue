@@ -43,10 +43,13 @@
           <a v-action:Update @click="handleEdit(record)">修改</a>
           <a-divider v-action:Delete type="vertical" />
           <a v-action:Delete @click="handleDelete([record])">删除</a>
+          <a-divider v-action:Query type="vertical" />
+          <a v-action:Query @click="handleContact(record)">联系人</a>
         </template>
       </span>
     </s-table>
     <EditForm ref="editForm" @Success="()=>{this.$refs.table.refresh()}"></EditForm>
+    <ListContact ref="listContact"></ListContact>
   </a-card>
 </template>
 
@@ -58,6 +61,7 @@ import MainSvc from '@/api/Bas/Bas_StorerSvc'
 import EditForm from './Edit'
 import EnumSelect from '@/components/CF/EnumSelect'
 import EnumName from '@/components/CF/EnumName'
+import ListContact from '../Bas_Contact/List'
 
 const columns = [
   { title: '编号', dataIndex: 'Code', sorter: true },
@@ -65,7 +69,7 @@ const columns = [
   { title: '类型', dataIndex: 'Type', scopedSlots: { customRender: 'Type' } },
   { title: '状态', dataIndex: 'Status', scopedSlots: { customRender: 'Status' } },
   { title: '修改时间', dataIndex: 'ModifyTime', sorter: true, scopedSlots: { customRender: 'ModifyTime' } },
-  { title: '操作', dataIndex: 'action', width: '200px', scopedSlots: { customRender: 'action' } }
+  { title: '操作', dataIndex: 'action', width: 250, scopedSlots: { customRender: 'action' } }
 ]
 
 export default {
@@ -74,7 +78,8 @@ export default {
     MainSvc,
     EnumSelect,
     EnumName,
-    EditForm
+    EditForm,
+    ListContact
   },
   data() {
     this.columns = columns
@@ -123,6 +128,9 @@ export default {
       this.visible = true
       this.mdl = { ...record }
       this.$refs.editForm.openForm(record.Id, '修改')
+    },
+    handleContact(record) {
+      this.$refs.listContact.openForm(record)
     },
     onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
