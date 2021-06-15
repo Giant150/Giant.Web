@@ -39,9 +39,17 @@
       </template>
       <span slot="action" slot-scope="text, record">
         <template>
-          <a v-action:Update @click="handleEdit(record)">修改</a>
-          <a-divider v-action:Delete type="vertical" />
-          <a v-action:Delete @click="handleDelete([record])">删除</a>
+          <a v-action:Query @click="handleEdit(record)">查看</a>
+          <a-divider type="vertical" />
+          <a-dropdown class="ant-dropdown-link" placement="bottomCenter">
+            <a class="ant-dropdown-link" @click="e => e.preventDefault()">操作</a>
+            <a-menu slot="overlay" @click="(e)=>{handleActionClick(e.key,record)}">
+              <a-menu-item v-action:Print key="Print">打印调整单</a-menu-item>
+              <a-menu-item v-action:Adjust key="Adjust" v-if="record.Status==='Active'">确认调整</a-menu-item>
+            </a-menu>
+          </a-dropdown>
+          <a-divider v-action:Delete v-if="record.Status==='Active'" type="vertical" />
+          <a v-action:Delete v-if="record.Status==='Active'" @click="handleDelete([record])">删除</a>
         </template>
       </span>
     </s-table>
@@ -52,6 +60,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import moment from 'moment'
+import print from 'print-js'
 import { STable } from '@/components'
 import MainSvc from '@/api/Inv/Inv_AdjustSvc'
 import EditForm from './Edit'
@@ -147,6 +156,28 @@ export default {
     onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
+    },
+    handleActionClick(key, row) {
+      console.log(key, row)
+      if (key === 'Adjust') {
+        MainSvc.Adjust(row.Id).then(result => {
+          if (result.Success) {
+            this.$message.success('操作成功!')
+            this.$refs.table.refresh()
+          } else {
+            this.$message.error(result.Msg)
+          }
+        })
+      } else if (key === 'Print') {
+        MainSvc.Print(row.Id).then(result => {
+          if (result.Success) {
+            var filePath = `${process.env.VUE_APP_API_BASE_URL}${result.Data}`
+            print(filePath)
+          } else {
+            this.$message.error(result.Msg)
+          }
+        })
+      }
     },
     resetSearchForm() {
       this.queryParam = { WhseId: this.defaultWhseId, Keyword: '', StorerId: this.defaultStorerId, DocDateStart: moment(), DocDateEnd: moment().add(1, 'days') }

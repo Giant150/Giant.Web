@@ -49,5 +49,27 @@ export default {
             method: 'delete',
             data: ids
         })
+    },
+    /**
+     * 库存调整
+     * @param {string} id 主键
+     * @returns 实体数据
+     */
+     Adjust(id) {
+        return request({
+            url: '/api/Inv_Adjust/Adjust?id=' + id,
+            method: 'post'
+        })
+    },
+    /**
+     * 打印调整单
+     * @param {string} id 主键
+     * @returns 调整单PDF
+     */
+     Print(id) {
+        return request({
+            url: '/api/Inv_Adjust/Print?id=' + id,
+            method: 'get'
+        })
     }
 }

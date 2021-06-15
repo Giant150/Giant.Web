@@ -33,7 +33,7 @@
         </a-row>
       </a-form-model>
       <div class="table-operator">
-        <a-button type="primary" v-action:Add icon="plus" @click="handleAdd()">新建</a-button>
+        <a-button type="primary" v-action:Add icon="plus" v-if="entity.Status==='Active'" @click="handleAdd()">新建</a-button>
       </div>
       <a-table ref="table" size="small" rowKey="Id" :columns="columns" :data-source="adjustDetail" :pagination="false">
         <template slot="QtyAdj" slot-scope="text, record">
@@ -44,16 +44,16 @@
         </template>
         <span slot="action" slot-scope="text, record">
           <template>
-            <a v-action:Delete @click="handleDelete(record)">删除</a>
+            <a v-action:Delete v-if="entity.Status==='Active'" @click="handleDelete(record)">删除</a>
           </template>
         </span>
       </a-table>
       <InvChoose type="radio" ref="invChoose" @choose="handlerInvChoose"></InvChoose>
     </a-spin>
     <div :style="{ position: 'absolute', bottom: 0, right: 0, width: '100%', borderTop: '1px solid #e9e9e9', padding: '10px 16px', background: '#fff', textAlign: 'right', zIndex: 1, }">
-      <a-button :style="{ marginRight: '8px' }" type="default" @click="handlePrint">打印调整单</a-button>
-      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleAdjust">确认调整</a-button>
-      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleSubmit">保存</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="default" v-action:Print @click="handlePrint">打印调整单</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" v-action:Adjust v-if="entity.Status==='Active'" @click="handleAdjust">确认调整</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" v-action:Update v-if="entity.Status==='Active'" @click="handleSubmit">保存</a-button>
       <a-button :style="{ marginRight: '8px' }" @click="()=>{this.visible=false}">关闭</a-button>
     </div>
   </a-drawer>
@@ -61,8 +61,10 @@
 
 <script>
 import moment from 'moment'
+import print from 'print-js'
 import { mapActions, mapGetters } from 'vuex'
 import MainSvc from '@/api/Inv/Inv_AdjustSvc'
+import DetailSvc from '@/api/Inv/Inv_AdjustDetailSvc'
 import EnumSelect from '@/components/CF/EnumSelect'
 import CodeInput from '@/components/CF/CodeInput'
 import StorerSelect from '@/components/Bas/StorerSelect'
@@ -170,8 +172,44 @@ export default {
       console.log(detail)
       this.entity.AdjustDetail.push(detail)
     },
-    handlePrint() { },
-    handleAdjust() { },
+    handleDelete(record) {
+      if (!record.Id.startsWith('new_')) {
+        DetailSvc.Delete([record.Id]).then(result => {
+          if (result.Success) {
+            var index = this.entity.AdjustDetail.indexOf(record)
+            this.entity.AdjustDetail.splice(index, 1)
+          } else {
+            this.$message.error(result.Msg)
+          }
+        })
+      } else {
+        var index = this.entity.AdjustDetail.indexOf(record)
+        this.entity.AdjustDetail.splice(index, 1)
+      }
+    },
+    handlePrint() {
+      MainSvc.Print(this.entity.Id).then(result => {
+        if (result.Success) {
+          var filePath = `${process.env.VUE_APP_API_BASE_URL}${result.Data}`
+          print(filePath)
+        } else {
+          this.$message.error(result.Msg)
+        }
+      })
+    },
+    handleAdjust() {
+      this.loading = true
+      MainSvc.Adjust(this.entity.Id).then(result => {
+        this.loading = false
+        if (result.Success) {
+          this.$message.success(result.Msg)
+          this.visible = false
+          this.$emit('Success')
+        } else {
+          this.$message.error(result.Msg)
+        }
+      })
+    },
     handleSubmit() {
       this.$refs['form'].validate(valid => {
         if (!valid) {
