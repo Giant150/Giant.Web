@@ -198,6 +198,7 @@ export default {
         { title: '已分配', dataIndex: 'QtyAllocated', width: 100 },
         { title: '已拣货', dataIndex: 'QtyPicked', width: 100 },
         { title: '库存状态', dataIndex: 'Status', width: 120, scopedSlots: { customRender: 'Status' } },
+        { title: '批次号', dataIndex: 'Lot.Code', width: 120 },
         { title: () => { return this.cusHeaderTitle('Lot01') }, dataIndex: 'Lot.Lot01' },
         { title: () => { return this.cusHeaderTitle('Lot02') }, dataIndex: 'Lot.Lot02' },
         { title: () => { return this.cusHeaderTitle('Lot03') }, dataIndex: 'Lot.Lot03' },
