@@ -18,8 +18,6 @@
               <EnumSelect code="Bas_Loc_Flag" v-model="entity.Flag"></EnumSelect>
             </a-form-model-item>
           </a-col>
-        </a-row>
-        <a-row>
           <a-col :span="8">
             <a-form-model-item label="拣货路顺" prop="AllocCode">
               <a-input v-model="entity.AllocCode" placeholder="拣货路顺" />
@@ -35,8 +33,6 @@
               <a-input v-model="entity.WorkZone" placeholder="工作区域" />
             </a-form-model-item>
           </a-col>
-        </a-row>
-        <a-row>
           <a-col :span="8">
             <a-form-model-item label="上架区域" prop="PutawayZoneId">
               <CommonSelect v-model="entity.PutawayZoneId" table="Bas_PutawayZone" placeholder="上架区域"></CommonSelect>
@@ -52,8 +48,6 @@
               <CommonSelect v-model="entity.LanewayId" table="Bas_Laneway" placeholder="巷道"></CommonSelect>
             </a-form-model-item>
           </a-col>
-        </a-row>
-        <a-row>
           <a-col :span="8">
             <a-form-model-item label="ABC" prop="ABC">
               <EnumSelect code="ABC" v-model="entity.ABC"></EnumSelect>
@@ -75,8 +69,6 @@
               </a-radio-group>
             </a-form-model-item>
           </a-col>
-        </a-row>
-        <a-row>
           <a-col :span="8">
             <a-form-model-item label="状态" prop="Status">
               <EnumSelect code="State" v-model="entity.Status"></EnumSelect>
@@ -92,6 +84,13 @@
               <a-input-number v-model="entity.MaxWeight" style="width:100%" />
             </a-form-model-item>
           </a-col>
+          <template v-if="entity.Expand">
+            <a-col :span="8" v-for="item in expand.EnumItems" :key="item.Code">
+              <a-form-model-item :label="item.Name" :prop="item.Code">
+                <ExpandInput v-model="entity.Expand[item.Code]" :name="item.Name" :code="item.Code" />
+              </a-form-model-item>
+            </a-col>
+          </template>
         </a-row>
       </a-form-model>
     </a-spin>
@@ -104,12 +103,14 @@ import MainSvc from '@/api/Bas/Bas_LocSvc'
 import EnumSelect from '@/components/CF/EnumSelect'
 import CodeInput from '@/components/CF/CodeInput'
 import CommonSelect from '@/components/CF/CommonSelect'
+import ExpandInput from '@/components/CF/ExpandInput'
 export default {
   components: {
     MainSvc,
     CodeInput,
     EnumSelect,
-    CommonSelect
+    CommonSelect,
+    ExpandInput
   },
   props: {},
   data() {
@@ -126,7 +127,8 @@ export default {
       },
       visible: false,
       loading: false,
-      entity: {}
+      entity: {},
+      expand: {}
     }
   },
   computed: {
@@ -158,13 +160,26 @@ export default {
       this.entity.CommingleSku = newVal
     }
   },
-  created() { },
+  created() {
+    this.getEnum({ whseId: this.defaultWhseId, code: 'Bas_Loc_Expand' }).then(result => {
+      this.expand = result
+    })
+  },
   methods: {
-    ...mapActions({ getConfig: 'getConfig' }),
+    ...mapActions({ getConfig: 'getConfig', getEnum: 'getEnum' }),
     init() {
       this.loading = false
       this.visible = true
-      this.entity = { Id: '', WhseId: this.defaultWhseId, Code: '', Name: '', Type: 'Standard', Flag: 'None', AllocCode: '', PutawayCode: '', PutawayZoneId: undefined, TrayTypeId: undefined, LanewayId: undefined, WorkZone: '', ABC: 'B', MaxCapacity: 0, MaxWeight: 0, CommingleSku: true, CommingleLot: true, Status: 'Enable' }
+      this.entity = {
+        Id: '', WhseId: this.defaultWhseId, Code: '', Name: '', Type: 'Standard', Flag: 'None', AllocCode: '', PutawayCode: '', PutawayZoneId: undefined,
+        TrayTypeId: undefined, LanewayId: undefined, WorkZone: '', ABC: 'B', MaxCapacity: 0, MaxWeight: 0, CommingleSku: true, CommingleLot: true, Status: 'Enable',
+        Expand: {
+          ExpStr1: undefined, ExpStr2: undefined, ExpStr3: undefined, ExpStr4: undefined, ExpStr5: undefined, ExpStr6: undefined,
+          ExpInt1: undefined, ExpInt2: undefined, ExpInt3: undefined,
+          ExpNum1: undefined, ExpNum2: undefined, ExpNum3: undefined,
+          ExpDate1: undefined, ExpDate2: undefined, ExpDate3: undefined
+        }
+      }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })
