@@ -11,6 +11,9 @@
         <a-form-model-item label="排序" prop="Sort">
           <a-input-number v-model="entity.Sort" style="width:100%"></a-input-number>
         </a-form-model-item>
+        <a-form-model-item label="配置参数" prop="Config">
+          <a-textarea v-model="entity.Config" autocomplete="off"></a-textarea>
+        </a-form-model-item>
         <a-form-model-item label="备注" prop="Remark">
           <a-textarea v-model="entity.Remark" autocomplete="off"></a-textarea>
         </a-form-model-item>
@@ -54,7 +57,7 @@ export default {
     init() {
       this.loading = false
       this.visible = true
-      this.entity = { Id: '', WhseId: this.defaultWhseId, EnumId: '', Code: '', Name: '', Sort: 1, Remark: '', IsSystem: false }
+      this.entity = { Id: '', WhseId: this.defaultWhseId, EnumId: '', Code: '', Name: '', Sort: 1, Config: undefined, Remark: undefined, IsSystem: false }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })

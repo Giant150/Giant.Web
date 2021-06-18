@@ -87,7 +87,7 @@
           <template v-if="entity.Expand">
             <a-col :span="8" v-for="item in expand.EnumItems" :key="item.Code">
               <a-form-model-item :label="item.Name" :prop="item.Code">
-                <ExpandInput v-model="entity.Expand[item.Code]" :name="item.Name" :code="item.Code" />
+                <ExpandInput v-model="entity.Expand[item.Code]" :enumitem="item" />
               </a-form-model-item>
             </a-col>
           </template>
@@ -175,9 +175,10 @@ export default {
         TrayTypeId: undefined, LanewayId: undefined, WorkZone: '', ABC: 'B', MaxCapacity: 0, MaxWeight: 0, CommingleSku: true, CommingleLot: true, Status: 'Enable',
         Expand: {
           ExpStr1: undefined, ExpStr2: undefined, ExpStr3: undefined, ExpStr4: undefined, ExpStr5: undefined, ExpStr6: undefined,
-          ExpInt1: undefined, ExpInt2: undefined, ExpInt3: undefined,
-          ExpNum1: undefined, ExpNum2: undefined, ExpNum3: undefined,
-          ExpDate1: undefined, ExpDate2: undefined, ExpDate3: undefined
+          ExpEnum1: undefined, ExpEnum2: undefined, ExpEnum3: undefined, ExpEnum4: undefined, ExpEnum5: undefined, ExpEnum6: undefined,
+          ExpInt1: undefined, ExpInt2: undefined, ExpInt3: undefined, ExpInt4: undefined, ExpInt5: undefined, ExpInt6: undefined,
+          ExpNum1: undefined, ExpNum2: undefined, ExpNum3: undefined, ExpNum4: undefined, ExpNum5: undefined, ExpNum6: undefined,
+          ExpDate1: undefined, ExpDate2: undefined, ExpDate3: undefined, ExpDate4: undefined, ExpDate5: undefined, ExpDate6: undefined
         }
       }
       this.$nextTick(() => {

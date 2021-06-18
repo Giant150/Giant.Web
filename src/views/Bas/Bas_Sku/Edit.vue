@@ -18,8 +18,6 @@
               <CodeInput code="Bas_Sku_Code" v-model="entity.Code" :para="{SkuType:this.skuType}" placeholder="编号"></CodeInput>
             </a-form-model-item>
           </a-col>
-        </a-row>
-        <a-row>
           <a-col :span="8">
             <a-form-model-item label="名称" prop="Name">
               <a-input v-model="entity.Name" placeholder="名称" />
@@ -35,8 +33,6 @@
               <a-input v-model="entity.Barcode" placeholder="物料条码" />
             </a-form-model-item>
           </a-col>
-        </a-row>
-        <a-row>
           <a-col :span="8">
             <a-form-model-item label="物料规格" prop="Spec">
               <a-input v-model="entity.Spec" placeholder="物料规格" />
@@ -52,8 +48,6 @@
               <StorerSelect v-model="entity.SupplierId" :type="['Supplier']" placeholder="供应商"></StorerSelect>
             </a-form-model-item>
           </a-col>
-        </a-row>
-        <a-row>
           <a-col :span="8">
             <a-form-model-item label="保质期" prop="ShelfLife">
               <a-input-number v-model="entity.ShelfLife" autocomplete="off" style="width:100%" />
@@ -69,8 +63,6 @@
               <EnumSelect code="ABC" v-model="entity.ABC"></EnumSelect>
             </a-form-model-item>
           </a-col>
-        </a-row>
-        <a-row>
           <a-col :span="8">
             <a-form-model-item label="批次策略" prop="LotStgId">
               <CommonSelect table="Stg_Lot" v-model="entity.LotStgId" placeholder="批次策略"></CommonSelect>
@@ -86,8 +78,6 @@
               <EnumSelect code="State" v-model="entity.Status"></EnumSelect>
             </a-form-model-item>
           </a-col>
-        </a-row>
-        <a-row>
           <a-col :span="8">
             <a-form-model-item label="发货策略" prop="AllocStgId">
               <CommonSelect table="Stg_Allocate" v-model="entity.AllocStgId"></CommonSelect>
@@ -103,8 +93,6 @@
               <EnumSelect code="Rotation" v-model="entity.RotateType"></EnumSelect>
             </a-form-model-item>
           </a-col>
-        </a-row>
-        <a-row>
           <a-col :span="8">
             <a-form-model-item label="上架策略" prop="PutawayStgId">
               <CommonSelect table="Stg_Putaway" v-model="entity.PutawayStgId"></CommonSelect>
@@ -120,8 +108,6 @@
               <LocSelect v-model="entity.PutawayLocId" :zone="entity.PutawayZoneId" allowClear placeholder="上架库位"></LocSelect>
             </a-form-model-item>
           </a-col>
-        </a-row>
-        <a-row>
           <a-col :span="8">
             <a-form-model-item label="价格" prop="Price">
               <a-input-number v-model="entity.Price" autocomplete="off" style="width:100%" />
@@ -137,6 +123,13 @@
               <a-input-number v-model="entity.ReOrderQty" autocomplete="off" style="width:100%" />
             </a-form-model-item>
           </a-col>
+          <template v-if="entity.Expand">
+            <a-col :span="8" v-for="item in expand.EnumItems" :key="item.Code">
+              <a-form-model-item :label="item.Name" :prop="item.Code">
+                <ExpandInput v-model="entity.Expand[item.Code]" :enumitem="item" />
+              </a-form-model-item>
+            </a-col>
+          </template>
         </a-row>
       </a-form-model>
     </a-spin>
@@ -152,6 +145,7 @@ import StorerSelect from '@/components/Bas/StorerSelect'
 import TreeSelect from '@/components/CF/TreeSelect'
 import CommonSelect from '@/components/CF/CommonSelect'
 import LocSelect from '@/components/Bas/LocSelect'
+import ExpandInput from '@/components/CF/ExpandInput'
 export default {
   components: {
     MainSvc,
@@ -160,7 +154,8 @@ export default {
     StorerSelect,
     TreeSelect,
     CommonSelect,
-    LocSelect
+    LocSelect,
+    ExpandInput
   },
   props: {},
   data() {
@@ -176,7 +171,8 @@ export default {
       visible: false,
       loading: false,
       entity: {},
-      skuType: ''
+      skuType: '',
+      expand: {}
     }
   },
   computed: {
@@ -185,9 +181,13 @@ export default {
       defaultStorerId: 'storerId'
     })
   },
-  created() { },
+  created() {
+    this.getEnum({ whseId: this.defaultWhseId, code: 'Bas_Sku_Expand' }).then(result => {
+      this.expand = result
+    })
+  },
   methods: {
-    ...mapActions({ getConfig: 'getConfig' }),
+    ...mapActions({ getConfig: 'getConfig', getEnum: 'getEnum' }),
     init() {
       this.loading = false
       this.visible = true
@@ -195,7 +195,14 @@ export default {
         Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', Name: '', BasUom: 'EA', Barcode: '',
         Spec: '', PinYin: '', SupplierId: undefined, ShelfLife: 0, SkuTypeId: null, Price: 0, LotStgId: '', AllocStgId: '', RotateBy: 'Code', RotateType: 'FIFO',
         PutawayStgId: '', PutawayZoneId: undefined, PutawayLocId: undefined, ABC: 'A', ReOrderPoint: 0, ReOrderQty: 0,
-        RackLife: 0, TrayTypeId: undefined, Status: 'Enable'
+        RackLife: 0, TrayTypeId: undefined, Status: 'Enable',
+        Expand: {
+          ExpStr1: undefined, ExpStr2: undefined, ExpStr3: undefined, ExpStr4: undefined, ExpStr5: undefined, ExpStr6: undefined,
+          ExpEnum1: undefined, ExpEnum2: undefined, ExpEnum3: undefined, ExpEnum4: undefined, ExpEnum5: undefined, ExpEnum6: undefined,
+          ExpInt1: undefined, ExpInt2: undefined, ExpInt3: undefined, ExpInt4: undefined, ExpInt5: undefined, ExpInt6: undefined,
+          ExpNum1: undefined, ExpNum2: undefined, ExpNum3: undefined, ExpNum4: undefined, ExpNum5: undefined, ExpNum6: undefined,
+          ExpDate1: undefined, ExpDate2: undefined, ExpDate3: undefined, ExpDate4: undefined, ExpDate5: undefined, ExpDate6: undefined
+        }
       }
       this.getConfig({ whseId: this.defaultWhseId, code: 'Bas_Sku_LotStgId_Default' }).then(result => {
         this.entity.LotStgId = result.Val
