@@ -22,7 +22,8 @@ export default {
   },
   props: {
     value: String,
-    type: { type: Array, required: false, default: () => { return [] } }
+    type: { type: Array, required: false, default: () => { return [] } },
+    whse: { type: String, required: false, default: () => { return undefined } }
   },
   data() {
     return {
@@ -59,7 +60,7 @@ export default {
         Search: {
           Id: this.curValue,
           Keyword: this.keyword,
-          WhseId: this.defaultWhseId,
+          WhseId: this.whse | this.defaultWhseId,
           Type: this.type
         }
       }).then(result => {
