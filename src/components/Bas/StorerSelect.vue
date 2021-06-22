@@ -60,7 +60,7 @@ export default {
         Search: {
           Id: this.curValue,
           Keyword: this.keyword,
-          WhseId: this.whse | this.defaultWhseId,
+          WhseId: this.whse ? this.whse : this.defaultWhseId,
           Type: this.type
         }
       }).then(result => {
