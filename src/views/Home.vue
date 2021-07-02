@@ -98,6 +98,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       invSummary: { Qty: 0, QtyAllocated: 0, QtyPicked: 0 },
       ledger: [],
       commits: []
@@ -152,9 +153,11 @@ export default {
     }
   },
   mounted() {
+    this.loading = true
     this.getInvSummary()
     this.getLedgerAge()
     this.getGitLog()
+    this.loading = false
   },
   methods: {
     moment,

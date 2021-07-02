@@ -3,12 +3,27 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline">
         <a-row :gutter="48">
-          <a-col :md="6" :sm="24">
+          <a-col :md="4" :sm="24">
             <a-form-item label="关键字">
-              <a-input v-model="queryParam.Keyword" placeholder="关键字" />
+              <a-input v-model="queryParam.Keyword" placeholder="编号/名称" />
+            </a-form-item>
+          </a-col>
+          <a-col :md="4" :sm="24">
+            <a-form-item label="盘点类型">
+              <EnumSelect code="Inv_Check_Type" v-model="queryParam.Type"></EnumSelect>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="24">
+            <a-form-item label="盘点日期">
+              <a-range-picker :value="[queryParam.CheckDateStart,queryParam.CheckDateEnd]" format="YYYY-MM-DD" @change="onDateChange" />
+            </a-form-item>
+          </a-col>
+          <a-col :md="4" :sm="24">
+            <a-form-item label="盘点状态">
+              <EnumSelect code="Inv_Check_Status" v-model="queryParam.Status"></EnumSelect>
+            </a-form-item>
+          </a-col>
+          <a-col :md="4" :sm="24">
             <span class="table-page-search-submitButtons">
               <a-button type="primary" v-action:Query @click="()=>{this.$refs.table.refresh()}">查询</a-button>
               <a-button style="margin-left: 8px" @click="resetSearchForm()">重置</a-button>
@@ -24,6 +39,12 @@
     </div>
 
     <s-table ref="table" size="default" rowKey="Id" :columns="columns" :data="loadData" :rowSelection="rowSelection" showPagination="auto">
+      <template slot="Type" slot-scope="text">
+        <EnumName code="Inv_Check_Type" :value="text"></EnumName>
+      </template>
+      <template slot="Status" slot-scope="text">
+        <EnumName code="Inv_Check_Status" :value="text"></EnumName>
+      </template>
       <span slot="action" slot-scope="text, record">
         <template>
           <a v-action:Update @click="handleEdit(record)">修改</a>
@@ -51,8 +72,10 @@ import LocSelect from '@/components/Bas/LocSelect'
 const columns = [
   { title: '编号', dataIndex: 'Code', sorter: true },
   { title: '名称', dataIndex: 'Name', sorter: true },
-  { title: '修改时间', dataIndex: 'ModifyTime', sorter: true, customRender: (value) => { return moment(value).format('yyyy-MM-DD') } },
-  { title: '操作', dataIndex: 'action', width: '200px', scopedSlots: { customRender: 'action' } }
+  { title: '盘点类型', dataIndex: 'Type', scopedSlots: { customRender: 'Type' } },
+  { title: '盘点日期', dataIndex: 'CheckDate', sorter: true, customRender: (value) => { return moment(value).format('yyyy-MM-DD') } },
+  { title: '盘点状态', dataIndex: 'Status', scopedSlots: { customRender: 'Status' } },
+  { title: '操作', dataIndex: 'action', scopedSlots: { customRender: 'action' } }
 ]
 
 export default {
@@ -76,7 +99,7 @@ export default {
       // 高级搜索 展开/关闭
       advanced: false,
       // 查询参数
-      queryParam: { WhseId: '', Keyword: '' },
+      queryParam: { WhseId: '', Keyword: '', Type: undefined, CheckDateStart: null, CheckDateEnd: null, Status: undefined },
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         this.queryParam.WhseId = this.defaultWhseId
@@ -86,7 +109,7 @@ export default {
             _query[key] = _query[key].format('YYYY-MM-DD')
           }
         }
-        const requestParameters = Object.assign({ sortField: 'ModifyTime', sortOrder: 'desc', Search: _query }, parameter)
+        const requestParameters = Object.assign({ sortField: 'Code', sortOrder: 'desc', Search: _query }, parameter)
         console.log('loadData request parameters:', requestParameters)
         return MainSvc.GetPage(requestParameters)
       },
@@ -96,7 +119,9 @@ export default {
   },
   filters: {
   },
-  created() {},
+  created() {
+    this.resetSearchForm()
+  },
   computed: {
     ...mapGetters({
       defaultWhseId: 'whseId',
@@ -126,7 +151,11 @@ export default {
       this.selectedRows = selectedRows
     },
     resetSearchForm() {
-      this.queryParam = { WhseId: this.defaultWhseId, Keyword: '' }
+      this.queryParam = { WhseId: this.defaultWhseId, Keyword: '', Type: undefined, CheckDateStart: moment(), CheckDateEnd: moment().add(1, 'days'), Status: undefined }
+    },
+    onDateChange(dates, dateStrings) {
+      this.queryParam.CheckDateStart = dates[0]
+      this.queryParam.CheckDateEnd = dates[1]
     },
     handleDelete(rows) {
       var thisObj = this
