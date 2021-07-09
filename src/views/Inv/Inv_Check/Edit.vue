@@ -32,7 +32,8 @@
       </a-form-model>
       <a-tabs :defaultActiveKey="activeKey" size="small" @change="handlerTabsChange" :animated="false" :tabBarStyle="{marginBottom:0}">
         <div slot="tabBarExtraContent">
-          <a-button type="primary" v-action:Add icon="plus" @click="handleAdd" v-if="activeKey==='CheckDetail'">新建</a-button>
+          <a-button type="primary" v-action:Add icon="plus" @click="handleDetailAdd" v-if="activeKey==='CheckDetail'">新建</a-button>
+          <a-button type="primary" v-action:Add icon="plus" @click="handleDetailDel" v-if="activeKey==='CheckDetail'">删除</a-button>
         </div>
         <a-tab-pane key="CheckConfig" tab="盘点配置">
           <a-form-model ref="configform" :model="config" v-bind="layout">
@@ -125,7 +126,10 @@
             </a-row>
           </a-form-model>
         </a-tab-pane>
-        <a-tab-pane key="CheckDetail" tab="盘点明细"></a-tab-pane>
+        <a-tab-pane key="CheckDetail" tab="盘点明细">
+          <a-table ref="table" size="default" rowKey="Id" :columns="columns" :dataSource="details" :rowSelection="rowSelection" :pagination="pagination" @change="handlerTableChange" :scroll="{ x: 3060 }">
+          </a-table>
+        </a-tab-pane>
       </a-tabs>
     </a-spin>
     <div :style="{ position: 'absolute', bottom: 0, right: 0, width: '100%', borderTop: '1px solid #e9e9e9', padding: '10px 16px', background: '#fff', textAlign: 'right', zIndex: 1, }">
@@ -139,6 +143,7 @@
 import { mapActions, mapGetters } from 'vuex'
 import moment from 'moment'
 import MainSvc from '@/api/Inv/Inv_CheckSvc'
+import DetailSvc from '@/api/Inv/Inv_CheckDetailSvc'
 import EnumSelect from '@/components/CF/EnumSelect'
 import CodeInput from '@/components/CF/CodeInput'
 import StorerSelect from '@/components/Bas/StorerSelect'
@@ -176,14 +181,50 @@ export default {
       config: {},
       activeKey: 'CheckConfig',
       enumItems: [],
-      querySku: undefined
+      querySku: undefined,
+      details: [],
+      pagination: { current: 1, pageSize: 10, total: 0 },
+      columns: [
+        { title: '编号', dataIndex: 'Code', width: 150, fixed: 'left' },
+        { title: '库位', dataIndex: 'Loc.Code' },
+        { title: '货主', dataIndex: 'Storer.Name' },
+        { title: '物料名称', dataIndex: 'Sku.Name' },
+        { title: '物料编号', dataIndex: 'Sku.Code' },
+        { title: '批次号', dataIndex: 'Lot.Code' },
+        { title: '托盘', dataIndex: 'Tray.Code' },
+        { title: '库存数量', dataIndex: 'Qty' },
+        { title: '盘点数量', dataIndex: 'QtyCheck' },
+        { title: '盘点日期', dataIndex: 'CheckDate' },
+        { title: '盘点人', dataIndex: 'CheckWho' },
+        { title: '盘点状态', dataIndex: 'Status' },
+        { title: '盘点确认', dataIndex: 'Confirmed' },
+        { title: '备注', dataIndex: 'Remark' },
+        { title: () => { return this.cusHeaderTitle('Lot01') }, dataIndex: 'Lot01' },
+        { title: () => { return this.cusHeaderTitle('Lot02') }, dataIndex: 'Lot02' },
+        { title: () => { return this.cusHeaderTitle('Lot03') }, dataIndex: 'Lot03' },
+        { title: () => { return this.cusHeaderTitle('Lot04') }, dataIndex: 'Lot04' },
+        { title: () => { return this.cusHeaderTitle('Lot05') }, dataIndex: 'Lot05' },
+        { title: () => { return this.cusHeaderTitle('Lot06') }, dataIndex: 'Lot06' },
+        { title: () => { return this.cusHeaderTitle('Lot07') }, dataIndex: 'Lot07' },
+        { title: () => { return this.cusHeaderTitle('Lot08') }, dataIndex: 'Lot08' },
+        { title: () => { return this.cusHeaderTitle('Lot09') }, dataIndex: 'Lot09' },
+        { title: () => { return this.cusHeaderTitle('Lot10') }, dataIndex: 'Lot10' }
+      ],
+      selectedRowKeys: [],
+      selectedRows: []
     }
   },
   computed: {
     ...mapGetters({
       defaultWhseId: 'whseId',
       defaultStorerId: 'storerId'
-    })
+    }),
+    rowSelection() {
+      return {
+        selectedRowKeys: this.selectedRowKeys,
+        onChange: this.onSelectChange
+      }
+    }
   },
   created() {
     this.getEnum({ whseId: this.defaultWhseId, code: 'Bas_Lot_Field' }).then(result => {
@@ -217,8 +258,10 @@ export default {
     },
     handlerTabsChange(key) {
       this.activeKey = key
+      if (key === 'CheckDetail') this.getDetailList()
     },
-    handleAdd() { },
+    handleDetailAdd() { },
+    handleDetailDel() { },
     handleSubmit() {
       this.$refs['form'].validate(valid => {
         if (!valid) {
@@ -237,6 +280,22 @@ export default {
           }
         })
       })
+    },
+    handlerTableChange(pagination, filters, sorter) {
+      this.pagination = { ...pagination }
+      this.getDetailList()
+    },
+    getDetailList() {
+      const requestParameters = { pageNo: this.pagination.current, pageSize: this.pagination.pageSize, sortField: 'Code', sortOrder: 'asc', Search: { WhseId: this.defaultWhseId, CheckId: this.entity.Id } }
+      console.log('loadData request parameters:', requestParameters)
+      DetailSvc.GetPage(requestParameters).then(result => {
+        this.details = result.Data
+        this.pagination.total = result.Total
+      })
+    },
+    onSelectChange(selectedRowKeys, selectedRows) {
+      this.selectedRowKeys = selectedRowKeys
+      this.selectedRows = selectedRows
     }
   }
 }
