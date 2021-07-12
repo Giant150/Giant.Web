@@ -5,7 +5,7 @@
         <a-row>
           <a-col :span="8">
             <a-form-model-item label="编号" prop="Code">
-              <a-input v-model="entity.Code" autocomplete="off" />
+              <CodeInput ref="codeInput" code="Inv_Check_Code" v-model="entity.Code" :para="{}"></CodeInput>
             </a-form-model-item>
           </a-col>
           <a-col :span="8">
@@ -32,8 +32,13 @@
       </a-form-model>
       <a-tabs :defaultActiveKey="activeKey" size="small" @change="handlerTabsChange" :animated="false" :tabBarStyle="{marginBottom:0}">
         <div slot="tabBarExtraContent">
-          <a-button type="primary" v-action:Add icon="plus" @click="handleDetailAdd" v-if="activeKey==='CheckDetail'">新建</a-button>
-          <a-button type="primary" v-action:Add icon="plus" @click="handleDetailDel" v-if="activeKey==='CheckDetail'">删除</a-button>
+          <a-button type="primary" v-action:Add icon="plus" @click="handleDetailAdd" v-if="activeKey==='CheckDetail'" size="small">新建</a-button>
+          <a-divider v-action:Delete type="vertical" />
+          <a-button type="primary" v-action:Add icon="delete" @click="handleDetailDel" v-if="activeKey==='CheckDetail'" size="small">删除</a-button>
+          <a-divider v-action:Delete type="vertical" />
+          <a-button type="primary" v-action:Add icon="import" @click="handleDetailImport" v-if="activeKey==='CheckDetail'" size="small">导入</a-button>
+          <a-divider v-action:Delete type="vertical" />
+          <a-button type="primary" v-action:Add icon="export" @click="handleDetailExport" v-if="activeKey==='CheckDetail'" size="small">导出</a-button>
         </div>
         <a-tab-pane key="CheckConfig" tab="盘点配置">
           <a-form-model ref="configform" :model="config" v-bind="layout">
@@ -133,6 +138,11 @@
       </a-tabs>
     </a-spin>
     <div :style="{ position: 'absolute', bottom: 0, right: 0, width: '100%', borderTop: '1px solid #e9e9e9', padding: '10px 16px', background: '#fff', textAlign: 'right', zIndex: 1, }">
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleCompleted" v-action:Update>盘点完成</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleConfirmed" v-action:Update>盘点复核</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleRFTask" v-action:Update>下发RF盘点任务</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handlePrint" v-action:Update>打印盘点报表</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleStart" v-action:Update>开始盘点</a-button>
       <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleSubmit" v-action:Update>保存</a-button>
       <a-button :style="{ marginRight: '8px' }" @click="()=>{this.visible=false}">关闭</a-button>
     </div>
@@ -183,9 +193,9 @@ export default {
       enumItems: [],
       querySku: undefined,
       details: [],
-      pagination: { current: 1, pageSize: 10, total: 0 },
+      pagination: { current: 1, pageSize: 10, total: 0, showTotal: (total, range) => `总数:${total} 当前:${range[0]}~${range[1]}` },
       columns: [
-        { title: '编号', dataIndex: 'Code', width: 150, fixed: 'left' },
+        { title: '编号', dataIndex: 'Code', width: 160, fixed: 'left' },
         { title: '库位', dataIndex: 'Loc.Code' },
         { title: '货主', dataIndex: 'Storer.Name' },
         { title: '物料名称', dataIndex: 'Sku.Name' },
@@ -240,6 +250,8 @@ export default {
     init() {
       this.loading = false
       this.visible = true
+      this.activeKey = 'CheckConfig'
+      this.details = []
       this.entity = { Id: '', WhseId: this.defaultWhseId, Code: '', Name: '', Type: undefined, CheckDate: moment().format('YYYY-MM-DD'), Remark: '', Status: 'Active', ConfigVal: null }
       this.config = { WhseId: this.defaultWhseId, StorerId: '', SkuId: '', ModifyDate: '', ZoneId: '', LanewayId: '', LocId: '', LotId: '', Lot01: '', Lot02: '', Lot03: '', Lot04: '', Lot05: '', Lot06: '', Lot07: '', Lot08: '', Lot09: '', Lot10: '' }
       this.$nextTick(() => {
@@ -254,14 +266,36 @@ export default {
           this.entity = resJson.Data
           this.config = JSON.parse(resJson.Data.ConfigVal)
         })
+      } else {
+        this.$nextTick(() => {
+          this.$refs.codeInput.Generate()
+        })
       }
     },
     handlerTabsChange(key) {
       this.activeKey = key
-      if (key === 'CheckDetail') this.getDetailList()
+      if (key === 'CheckDetail' && this.entity.Id) this.getDetailList()
     },
     handleDetailAdd() { },
     handleDetailDel() { },
+    handleDetailImport() { },
+    handleDetailExport() { },
+    handlerTableChange(pagination, filters, sorter) {
+      this.pagination = { ...pagination }
+      this.getDetailList()
+    },
+    getDetailList() {
+      const requestParameters = { pageNo: this.pagination.current, pageSize: this.pagination.pageSize, sortField: 'Code', sortOrder: 'asc', Search: { WhseId: this.defaultWhseId, CheckId: this.entity.Id } }
+      console.log('loadData request parameters:', requestParameters)
+      DetailSvc.GetPage(requestParameters).then(result => {
+        this.details = result.Data
+        this.pagination.total = result.Total
+      })
+    },
+    onSelectChange(selectedRowKeys, selectedRows) {
+      this.selectedRowKeys = selectedRowKeys
+      this.selectedRows = selectedRows
+    },
     handleSubmit() {
       this.$refs['form'].validate(valid => {
         if (!valid) {
@@ -281,22 +315,11 @@ export default {
         })
       })
     },
-    handlerTableChange(pagination, filters, sorter) {
-      this.pagination = { ...pagination }
-      this.getDetailList()
-    },
-    getDetailList() {
-      const requestParameters = { pageNo: this.pagination.current, pageSize: this.pagination.pageSize, sortField: 'Code', sortOrder: 'asc', Search: { WhseId: this.defaultWhseId, CheckId: this.entity.Id } }
-      console.log('loadData request parameters:', requestParameters)
-      DetailSvc.GetPage(requestParameters).then(result => {
-        this.details = result.Data
-        this.pagination.total = result.Total
-      })
-    },
-    onSelectChange(selectedRowKeys, selectedRows) {
-      this.selectedRowKeys = selectedRowKeys
-      this.selectedRows = selectedRows
-    }
+    handleStart() { },
+    handlePrint() { },
+    handleRFTask() { },
+    handleConfirmed() { },
+    handleCompleted() { }
   }
 }
 </script>
