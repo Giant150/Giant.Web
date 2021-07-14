@@ -30,15 +30,17 @@
           </a-col>
         </a-row>
       </a-form-model>
-      <a-tabs :defaultActiveKey="activeKey" size="small" @change="handlerTabsChange" :animated="false" :tabBarStyle="{marginBottom:0}">
+      <a-tabs :activeKey="activeKey" size="small" @change="handlerTabsChange" :animated="false" :tabBarStyle="{marginBottom:0}">
         <div slot="tabBarExtraContent">
-          <a-button type="primary" v-action:Add icon="plus" @click="handleDetailAdd" v-if="activeKey==='CheckDetail'" size="small">新建</a-button>
-          <a-divider v-action:Delete type="vertical" />
-          <a-button type="primary" v-action:Add icon="delete" @click="handleDetailDel" v-if="activeKey==='CheckDetail'" size="small">删除</a-button>
-          <a-divider v-action:Delete type="vertical" />
-          <a-button type="primary" v-action:Add icon="import" @click="handleDetailImport" v-if="activeKey==='CheckDetail'" size="small">导入</a-button>
-          <a-divider v-action:Delete type="vertical" />
-          <a-button type="primary" v-action:Add icon="export" @click="handleDetailExport" v-if="activeKey==='CheckDetail'" size="small">导出</a-button>
+          <a-button type="primary" v-action:Add icon="plus" @click="handleDetailAdd" v-if="activeKey==='CheckDetail' && entity.Status==='Checking'" size="small">新建</a-button>
+          <a-divider v-action:Delete type="vertical" v-if="activeKey==='CheckDetail' && entity.Status==='Active'" />
+          <a-button type="primary" v-action:Delete icon="delete" @click="handleDetailDel" v-if="activeKey==='CheckDetail' && entity.Status==='Active'" size="small">删除</a-button>
+          <a-divider v-action:Import type="vertical" v-if="activeKey==='CheckDetail' && entity.Status==='Checking'" />
+          <a-upload v-action:Import v-if="activeKey==='CheckDetail' && entity.Status==='Checking'" @change="handleDetailImport" :showUploadList="false" name="file" :action="uploadConfig.action" :data="uploadConfig.data" :headers="uploadConfig.headers">
+            <a-button type="primary" icon="import" size="small">导入</a-button>
+          </a-upload>
+          <a-divider v-action:Export type="vertical" v-if="activeKey==='CheckDetail' && entity.Status==='Checking'" />
+          <a-button type="primary" v-action:Export icon="export" @click="handleDetailExport" v-if="activeKey==='CheckDetail' && entity.Status==='Checking'" size="small">导出</a-button>
         </div>
         <a-tab-pane key="CheckConfig" tab="盘点配置">
           <a-form-model ref="configform" :model="config" v-bind="layout">
@@ -131,19 +133,24 @@
             </a-row>
           </a-form-model>
         </a-tab-pane>
-        <a-tab-pane key="CheckDetail" tab="盘点明细">
+        <a-tab-pane key="CheckDetail" tab="盘点明细" v-if="entity.Id">
           <a-table ref="table" size="default" rowKey="Id" :columns="columns" :dataSource="details" :rowSelection="rowSelection" :pagination="pagination" @change="handlerTableChange" :scroll="{ x: 3060 }">
+            <template slot="Status" slot-scope="text">
+              <EnumName code="Inv_Check_Status" :value="text"></EnumName>
+            </template>
           </a-table>
         </a-tab-pane>
       </a-tabs>
     </a-spin>
     <div :style="{ position: 'absolute', bottom: 0, right: 0, width: '100%', borderTop: '1px solid #e9e9e9', padding: '10px 16px', background: '#fff', textAlign: 'right', zIndex: 1, }">
-      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleCompleted" v-action:Update>盘点完成</a-button>
-      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleConfirmed" v-action:Update>盘点复核</a-button>
-      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleRFTask" v-action:Update>下发RF盘点任务</a-button>
-      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handlePrint" v-action:Update>打印盘点报表</a-button>
-      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleStart" v-action:Update>开始盘点</a-button>
-      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleSubmit" v-action:Update>保存</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleCompleted" v-action:Update v-if="entity.Status==='Confirmed'">完成</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleAdjust" v-action:Adjust v-if="entity.Status==='Confirmed'">调整</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleConfirmed" v-action:Update v-if="entity.Status==='Checked'">复核</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleChecked" v-action:Update v-if="entity.Status==='Checking'">确认</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleCheckTask" v-action:Task v-if="entity.Status==='Checking'">下发任务</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handlePrint" v-action:Print v-if="entity.Id">打印</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleStart" v-action:Update v-if="entity.Status==='Active' && entity.Id">开始</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleSubmit" v-action:Update v-if="entity.Status==='Active'">保存</a-button>
       <a-button :style="{ marginRight: '8px' }" @click="()=>{this.visible=false}">关闭</a-button>
     </div>
   </a-drawer>
@@ -152,9 +159,11 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import moment from 'moment'
+import print from 'print-js'
 import MainSvc from '@/api/Inv/Inv_CheckSvc'
 import DetailSvc from '@/api/Inv/Inv_CheckDetailSvc'
 import EnumSelect from '@/components/CF/EnumSelect'
+import EnumName from '@/components/CF/EnumName'
 import CodeInput from '@/components/CF/CodeInput'
 import StorerSelect from '@/components/Bas/StorerSelect'
 import TreeSelect from '@/components/CF/TreeSelect'
@@ -168,6 +177,7 @@ export default {
     MainSvc,
     CodeInput,
     EnumSelect,
+    EnumName,
     StorerSelect,
     TreeSelect,
     CommonSelect,
@@ -183,7 +193,8 @@ export default {
       layout: { labelCol: { xs: { span: 24 }, sm: { span: 6 } }, wrapperCol: { xs: { span: 24 }, sm: { span: 14 } } },
       rules: {
         Name: [{ required: true, message: '必填' }],
-        Code: [{ required: true, message: '必填' }]
+        Code: [{ required: true, message: '必填' }],
+        Type: [{ required: true, message: '必填' }]
       },
       visible: false,
       loading: false,
@@ -204,10 +215,10 @@ export default {
         { title: '托盘', dataIndex: 'Tray.Code' },
         { title: '库存数量', dataIndex: 'Qty' },
         { title: '盘点数量', dataIndex: 'QtyCheck' },
-        { title: '盘点日期', dataIndex: 'CheckDate' },
+        { title: '盘点日期', dataIndex: 'CheckDate', customRender: (value) => { return moment(value).format('yyyy-MM-DD') } },
         { title: '盘点人', dataIndex: 'CheckWho' },
-        { title: '盘点状态', dataIndex: 'Status' },
-        { title: '盘点确认', dataIndex: 'Confirmed' },
+        { title: '盘点状态', dataIndex: 'Status', scopedSlots: { customRender: 'Status' } },
+        { title: '盘点确认', dataIndex: 'Confirmed', customRender: (value) => { return value ? '是' : '否' } },
         { title: '备注', dataIndex: 'Remark' },
         { title: () => { return this.cusHeaderTitle('Lot01') }, dataIndex: 'Lot01' },
         { title: () => { return this.cusHeaderTitle('Lot02') }, dataIndex: 'Lot02' },
@@ -221,13 +232,19 @@ export default {
         { title: () => { return this.cusHeaderTitle('Lot10') }, dataIndex: 'Lot10' }
       ],
       selectedRowKeys: [],
-      selectedRows: []
+      selectedRows: [],
+      uploadConfig: {
+        action: '',
+        data: { whseId: '', checkId: '' },
+        headers: { Authorization: '' }
+      }
     }
   },
   computed: {
     ...mapGetters({
       defaultWhseId: 'whseId',
-      defaultStorerId: 'storerId'
+      defaultStorerId: 'storerId',
+      token: 'token'
     }),
     rowSelection() {
       return {
@@ -240,6 +257,9 @@ export default {
     this.getEnum({ whseId: this.defaultWhseId, code: 'Bas_Lot_Field' }).then(result => {
       this.enumItems = result.EnumItems
     })
+    this.config.StorerId = this.defaultStorerId
+    this.uploadConfig.data.whseId = this.defaultWhseId
+    this.uploadConfig.headers.Authorization = `Bearer ${this.token}`
   },
   methods: {
     ...mapActions({ getConfig: 'getConfig', getEnum: 'getEnum' }),
@@ -253,7 +273,7 @@ export default {
       this.activeKey = 'CheckConfig'
       this.details = []
       this.entity = { Id: '', WhseId: this.defaultWhseId, Code: '', Name: '', Type: undefined, CheckDate: moment().format('YYYY-MM-DD'), Remark: '', Status: 'Active', ConfigVal: null }
-      this.config = { WhseId: this.defaultWhseId, StorerId: '', SkuId: '', ModifyDate: '', ZoneId: '', LanewayId: '', LocId: '', LotId: '', Lot01: '', Lot02: '', Lot03: '', Lot04: '', Lot05: '', Lot06: '', Lot07: '', Lot08: '', Lot09: '', Lot10: '' }
+      this.config = { WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, SkuId: '', ModifyDate: '', ZoneId: '', LanewayId: '', LocId: '', LotId: '', Lot01: '', Lot02: '', Lot03: '', Lot04: '', Lot05: '', Lot06: '', Lot07: '', Lot08: '', Lot09: '', Lot10: '' }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })
@@ -262,6 +282,8 @@ export default {
       this.title = '库存盘点'
       this.init()
       if (id) {
+        this.uploadConfig.action = `${process.env.VUE_APP_API_BASE_URL}/api/Inv_Check/Import?whseId=${this.defaultWhseId}&checkId=${id}`
+        this.uploadConfig.data.checkId = id
         MainSvc.Get(id).then(resJson => {
           this.entity = resJson.Data
           this.config = JSON.parse(resJson.Data.ConfigVal)
@@ -278,8 +300,36 @@ export default {
     },
     handleDetailAdd() { },
     handleDetailDel() { },
-    handleDetailImport() { },
-    handleDetailExport() { },
+    handleDetailImport(info) {
+      if (info.file.status === 'done') {
+        this.$message.success(`${info.file.name}上传成功`)
+        this.getDetailList()
+      } else if (info.file.status === 'error') {
+        this.$message.error(`${info.file.name}上传失败`)
+      }
+    },
+    handleDetailExport() {
+      MainSvc.Export(this.entity.Id).then(result => {
+        if (result.Success) {
+          var fileName = result.Data.substring(result.Data.lastIndexOf('/') + 1)
+          var filePath = `${process.env.VUE_APP_API_BASE_URL}${result.Data}`
+          console.log('handleDetailExport', fileName, filePath)
+          try {
+            var elem = document.createElement('a')
+            elem.download = fileName
+            elem.href = filePath
+            elem.style.display = 'none'
+            document.body.appendChild(elem)
+            elem.click()
+            document.body.removeChild(elem)
+          } catch (e) {
+            this.$message.error('下载异常！')
+          }
+        } else {
+          this.$message.error(result.Msg)
+        }
+      })
+    },
     handlerTableChange(pagination, filters, sorter) {
       this.pagination = { ...pagination }
       this.getDetailList()
@@ -315,11 +365,94 @@ export default {
         })
       })
     },
-    handleStart() { },
-    handlePrint() { },
-    handleRFTask() { },
-    handleConfirmed() { },
-    handleCompleted() { }
+    handleStart() {
+      this.loading = true
+      MainSvc.Start(this.entity.Id).then(result => {
+        this.loading = false
+        if (result.Success) {
+          this.$message.success(result.Msg)
+          this.visible = false
+          this.$emit('Success')
+        } else {
+          this.$message.error(result.Msg)
+        }
+      })
+    },
+    handlePrint() {
+      MainSvc.Print(this.entity.Id).then(result => {
+        if (result.Success) {
+          var filePath = `${process.env.VUE_APP_API_BASE_URL}${result.Data}`
+          print(filePath)
+        } else {
+          this.$message.error(result.Msg)
+        }
+      })
+    },
+    handleCheckTask() {
+      this.loading = true
+      MainSvc.CheckTask(this.entity.Id).then(result => {
+        this.loading = false
+        if (result.Success) {
+          this.$message.success(result.Msg)
+          this.visible = false
+          this.$emit('Success')
+        } else {
+          this.$message.error(result.Msg)
+        }
+      })
+    },
+    handleChecked() {
+      this.loading = true
+      MainSvc.Checked(this.entity.Id).then(result => {
+        this.loading = false
+        if (result.Success) {
+          this.$message.success(result.Msg)
+          this.visible = false
+          this.$emit('Success')
+        } else {
+          this.$message.error(result.Msg)
+        }
+      })
+    },
+    handleConfirmed() {
+      this.loading = true
+      MainSvc.Confirmed(this.entity.Id).then(result => {
+        this.loading = false
+        if (result.Success) {
+          this.$message.success(result.Msg)
+          this.visible = false
+          this.$emit('Success')
+        } else {
+          this.$message.error(result.Msg)
+        }
+      })
+    },
+    handleAdjust() {
+      this.loading = true
+      MainSvc.Adjust(this.entity.Id).then(result => {
+        this.loading = false
+        if (result.Success) {
+          this.$message.success(result.Msg)
+          this.visible = false
+          this.$emit('Success')
+        } else {
+          this.$message.error(result.Msg)
+        }
+      })
+    },
+    handleCompleted() {
+      this.loading = true
+      MainSvc.Completed(this.entity.Id).then(result => {
+        this.loading = false
+        if (result.Success) {
+          this.$message.success(result.Msg)
+          this.visible = false
+          this.$emit('Success')
+        } else {
+          this.$message.error(result.Msg)
+        }
+      })
+    }
   }
 }
 </script>

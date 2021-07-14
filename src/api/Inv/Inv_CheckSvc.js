@@ -49,5 +49,93 @@ export default {
             method: 'delete',
             data: ids
         })
+    },
+    /**
+     * 开始盘点
+     * @param {string} id 主键
+     * @returns AjaxResut
+     */
+     Start(id) {
+        return request({
+            url: '/api/Inv_Check/Start?id=' + id,
+            method: 'post'
+        })
+    },
+    /**
+     * 打印盘点报表
+     * @param {string} id 主键
+     * @returns AjaxResut
+     */
+     Print(id) {
+        return request({
+            url: '/api/Inv_Check/Print?id=' + id,
+            method: 'get'
+        })
+    },
+    /**
+     * 生成盘点任务
+     * @param {string} id 主键
+     * @returns AjaxResut
+     */
+     CheckTask(id) {
+        return request({
+            url: '/api/Inv_Check/CheckTask?id=' + id,
+            method: 'post'
+        })
+    },
+    /**
+     * 盘点确认
+     * @param {string} id 主键
+     * @returns AjaxResut
+     */
+     Checked(id) {
+        return request({
+            url: '/api/Inv_Check/Checked?id=' + id,
+            method: 'post'
+        })
+    },
+    /**
+     * 复核
+     * @param {string} id 主键
+     * @returns AjaxResut
+     */
+     Confirmed(id) {
+        return request({
+            url: '/api/Inv_Check/Confirmed?id=' + id,
+            method: 'post'
+        })
+    },
+    /**
+     * 生成调整单
+     * @param {string} id 主键
+     * @returns AjaxResut
+     */
+     Adjust(id) {
+        return request({
+            url: '/api/Inv_Check/Adjust?id=' + id,
+            method: 'post'
+        })
+    },
+    /**
+     * 完成
+     * @param {string} id 主键
+     * @returns AjaxResut
+     */
+     Completed(id) {
+        return request({
+            url: '/api/Inv_Check/Completed?id=' + id,
+            method: 'post'
+        })
+    },
+    /**
+     * 导出
+     * @param {string} id 主键
+     * @returns AjaxResut
+     */
+     Export(id) {
+        return request({
+            url: '/api/Inv_Check/Export?id=' + id,
+            method: 'get'
+        })
     }
 }
