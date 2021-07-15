@@ -32,15 +32,15 @@
       </a-form-model>
       <a-tabs :activeKey="activeKey" size="small" @change="handlerTabsChange" :animated="false" :tabBarStyle="{marginBottom:0}">
         <div slot="tabBarExtraContent">
-          <a-button type="primary" v-action:Add icon="plus" @click="handleDetailAdd" v-if="activeKey==='CheckDetail' && entity.Status==='Checking'" size="small">新建</a-button>
-          <a-divider v-action:Delete type="vertical" v-if="activeKey==='CheckDetail' && entity.Status==='Active'" />
+          <!-- <a-button type="primary" v-action:Add icon="plus" @click="handleDetailAdd" v-if="activeKey==='CheckDetail' && entity.Status==='Checking'" size="small">新建</a-button>
+          <a-divider v-action:Delete type="vertical" v-if="activeKey==='CheckDetail' && entity.Status==='Active'" /> -->
           <a-button type="primary" v-action:Delete icon="delete" @click="handleDetailDel" v-if="activeKey==='CheckDetail' && entity.Status==='Active'" size="small">删除</a-button>
           <a-divider v-action:Import type="vertical" v-if="activeKey==='CheckDetail' && entity.Status==='Checking'" />
           <a-upload v-action:Import v-if="activeKey==='CheckDetail' && entity.Status==='Checking'" @change="handleDetailImport" :showUploadList="false" name="file" :action="uploadConfig.action" :data="uploadConfig.data" :headers="uploadConfig.headers">
             <a-button type="primary" icon="import" size="small">导入</a-button>
           </a-upload>
           <a-divider v-action:Export type="vertical" v-if="activeKey==='CheckDetail' && entity.Status==='Checking'" />
-          <a-button type="primary" v-action:Export icon="export" @click="handleDetailExport" v-if="activeKey==='CheckDetail' && entity.Status==='Checking'" size="small">导出</a-button>
+          <a-button type="primary" v-action:Export icon="export" @click="handleDetailExport" v-if="activeKey==='CheckDetail' && entity.Status!=='Active'" size="small">导出</a-button>
         </div>
         <a-tab-pane key="CheckConfig" tab="盘点配置">
           <a-form-model ref="configform" :model="config" v-bind="layout">
@@ -299,7 +299,16 @@ export default {
       if (key === 'CheckDetail' && this.entity.Id) this.getDetailList()
     },
     handleDetailAdd() { },
-    handleDetailDel() { },
+    handleDetailDel() {
+      DetailSvc.Delete(this.selectedRowKeys).then(result => {
+        if (result.Success) {
+          this.$message.success(result.Msg)
+          this.getDetailList()
+        } else {
+          this.$message.error(result.Msg)
+        }
+      })
+    },
     handleDetailImport(info) {
       if (info.file.status === 'done') {
         this.$message.success(`${info.file.name}上传成功`)
