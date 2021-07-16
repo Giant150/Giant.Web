@@ -39,8 +39,8 @@
           <a-upload v-action:Import v-if="activeKey==='CheckDetail' && entity.Status==='Checking'" @change="handleDetailImport" :showUploadList="false" name="file" :action="uploadConfig.action" :data="uploadConfig.data" :headers="uploadConfig.headers">
             <a-button type="primary" icon="import" size="small">导入</a-button>
           </a-upload>
-          <a-divider v-action:Export type="vertical" v-if="activeKey==='CheckDetail' && entity.Status==='Checking'" />
-          <a-button type="primary" v-action:Export icon="export" @click="handleDetailExport" v-if="activeKey==='CheckDetail' && entity.Status!=='Active'" size="small">导出</a-button>
+          <a-divider v-action:Export type="vertical" v-if="activeKey==='CheckDetail'" />
+          <a-button type="primary" v-action:Export icon="export" @click="handleDetailExport" v-if="activeKey==='CheckDetail'" size="small">导出</a-button>
         </div>
         <a-tab-pane key="CheckConfig" tab="盘点配置">
           <a-form-model ref="configform" :model="config" v-bind="layout">
