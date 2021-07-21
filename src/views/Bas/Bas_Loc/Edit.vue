@@ -75,7 +75,7 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="8">
-            <a-form-model-item label="最大重量" prop="MaxCapacity">
+            <a-form-model-item label="最大容量" prop="MaxCapacity">
               <a-input-number v-model="entity.MaxCapacity" style="width:100%" />
             </a-form-model-item>
           </a-col>

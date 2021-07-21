@@ -141,7 +141,7 @@ export default {
   },
   created() {
     this.queryParam.WhseId = this.defaultWhseId
-    this.queryParam.StorerId = this.defaultStorerId
+    // this.queryParam.StorerId = this.defaultStorerId
     const { RefTable, RefId } = this.$route.query
     if (RefTable) this.queryParam.RefTable = RefTable
     if (RefTable) this.queryParam.RefId = RefId
@@ -176,7 +176,7 @@ export default {
       this.selectedRows = selectedRows
     },
     resetSearchForm() {
-      this.queryParam = { WhseId: this.defaultWhseId, Keyword: '', StorerId: this.defaultStorerId, Type: '', SkuId: '', RefTable: '', RefId: '' }
+      this.queryParam = { WhseId: this.defaultWhseId, Keyword: '', StorerId: '', Type: '', SkuId: '', RefTable: '', RefId: '' }
     },
     handleDelete(rows) {
       var thisObj = this
