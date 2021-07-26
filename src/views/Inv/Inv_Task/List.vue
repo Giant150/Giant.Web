@@ -43,7 +43,7 @@
       <a-button type="primary" v-action:Delete icon="delete" @click="handleDelete()">批量删除</a-button>
     </div>
 
-    <s-table ref="table" size="default" rowKey="Id" :columns="columns" :data="loadData" :rowSelection="rowSelection" showPagination="auto" :scroll="{ x: 2000 }">
+    <s-table ref="table" size="default" rowKey="Id" :columns="columns" :data="loadData" :rowSelection="rowSelection" showPagination="auto" :scroll="{ x: 2500 }">
       <template slot="Type" slot-scope="text">
         <EnumName code="Inv_Task_Type" :value="text"></EnumName>
       </template>
@@ -83,9 +83,10 @@ const columns = [
   { title: '编号', dataIndex: 'Code', width: 120, fixed: 'left', sorter: true },
   { title: '类型', dataIndex: 'Type', width: 120, fixed: 'left', scopedSlots: { customRender: 'Type' } },
   { title: '状态', dataIndex: 'Status', width: 120, fixed: 'left', scopedSlots: { customRender: 'Status' } },
-  { title: '货主', dataIndex: 'Storer.Name' },
-  { title: '物料', dataIndex: 'Sku.Name' },
-  { title: '批次', dataIndex: 'Lot.Code' },
+  { title: '任务组', dataIndex: 'TaskGroup', width: 150, sorter: true },
+  { title: '货主', dataIndex: 'Storer.Name', width: 150 },
+  { title: '物料', dataIndex: 'Sku.Name', width: 150 },
+  { title: '批次', dataIndex: 'Lot.Code', width: 150 },
   { title: '自库位', dataIndex: 'FromLoc.Code' },
   { title: '自库位路顺', dataIndex: 'FromLocCode' },
   { title: '自托盘', dataIndex: 'FromTray.Code' },
