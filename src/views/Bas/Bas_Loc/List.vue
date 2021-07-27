@@ -77,6 +77,7 @@ const columns = [
   { title: '混放商品', dataIndex: 'CommingleSku', customRender: (value, row, index) => { return value ? '是' : '否' } },
   { title: '混放批次', dataIndex: 'CommingleLot', customRender: (value, row, index) => { return value ? '是' : '否' } },
   { title: '空库位', dataIndex: 'IsEmpty', customRender: (value, row, index) => { return value ? '是' : '否' } },
+  { title: '有托盘', dataIndex: 'HasTray', customRender: (value, row, index) => { return value ? '是' : '否' } },
   { title: '状态', dataIndex: 'Status', scopedSlots: { customRender: 'Status' } },
   { title: '操作', dataIndex: 'action', width: 120, fixed: 'right', scopedSlots: { customRender: 'action' } }
 ]
