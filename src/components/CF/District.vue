@@ -1,6 +1,6 @@
 <template>
   <a-select v-model="curVal" @select="handlerSelect">
-    <a-select-option v-for="distract in data" :key="distract.Id" :value="distract.Id">{{
+    <a-select-option v-for="distract in list" :key="distract.Id" :value="distract.Id">{{
       distract.Name
     }}</a-select-option>
   </a-select>
@@ -18,13 +18,13 @@ export default {
   data() {
     return {
       curVal: '',
-      data: []
+      list: []
     }
   },
   mounted() {
         if (this.parent) {
         MainSvc.Get(this.parent).then(resJson => {
-            this.data = resJson.Data
+            this.list = resJson.Data
         })
         }
         this.curVal = this.value
@@ -40,10 +40,10 @@ export default {
       this.curVal = newVal
     },
     parent(newPid) {
-      this.curVal = ''
-      this.$emit('input', '')
+      // this.curVal = ''
+      // this.$emit('input', '')
       MainSvc.Get(this.parent).then(resJson => {
-        this.data = resJson.Data
+        this.list = resJson.Data
       })
     }
   },
