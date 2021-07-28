@@ -20,7 +20,16 @@
           </a-col>
           <a-col :md="6" :sm="24">
             <a-form-item label="台账物料">
-              <SkuSelect v-model="queryParam.SkuId" :storer="queryParam.StorerId" @select="(val,sku)=>{handleSkuSelect(sku)}" aria-placeholder="物料"></SkuSelect>
+              <SkuSelect
+                v-model="queryParam.SkuId"
+                :storer="queryParam.StorerId"
+                @select="
+                  (val, sku) => {
+                    handleSkuSelect(sku)
+                  }
+                "
+                aria-placeholder="物料"
+              ></SkuSelect>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="24">
@@ -87,13 +96,9 @@
           </template>
           <a-col :md="6" :sm="24">
             <span class="table-page-search-submitButtons">
-              <a-button
-                type="primary"
-                v-action:Query
-                @click="() => {this.$refs.table.refresh()}">查询</a-button>
+              <a-button type="primary" v-action:Query @click=" () => { this.$refs.table.refresh()}">查询</a-button>
               <a-button style="margin-left: 8px" @click="resetSearchForm()">重置</a-button>
-              <a @click="() => { this.advanced = !this.advanced }" style="margin-left: 8px">
-                {{ advanced ? '收起' : '展开' }}
+              <a @click="() => {this.advanced = !this.advanced}" style="margin-left: 8px">{{ advanced ? '收起' : '展开' }}
                 <a-icon :type="advanced ? 'up' : 'down'" />
               </a>
             </span>
@@ -112,6 +117,13 @@
       showPagination="auto"
       :scroll="{ x: 4500 }"
     >
+    <template slot="Type" slot-scope="text">
+        <EnumName code="Inv_Ledger_Type" :value="text"></EnumName>
+      </template>
+      <template slot="Category" slot-scope="text">
+        <EnumName code="Inv_Ledger_Category" :value="text"></EnumName>
+      </template>
+
       <span slot="action" slot-scope="text, record">
         <template>
           <a v-action:Update @click="handleEdit(record)">修改</a>
@@ -120,14 +132,7 @@
         </template>
       </span>
     </s-table>
-    <EditForm
-      ref="editForm"
-      @Success="
-        () => {
-          this.$refs.table.refresh()
-        }
-      "
-    ></EditForm>
+    <EditForm ref="editForm" @Success="() => {this.$refs.table.refresh()}"></EditForm>
   </a-card>
 </template>
 
@@ -205,11 +210,12 @@ export default {
       selectedRows: [],
       enumItems: [],
       columns: [
-        { title: '台帐类型', dataIndex: 'Type', sorter: true },
-        { title: '类别', dataIndex: 'Category', sorter: true },
-        { title: '货主', dataIndex: 'StoreName', sorter: true },
-        { title: '物料编码', dataIndex: 'SkuCode', sorter: true },
-        { title: '物料', dataIndex: 'SkuName', sorter: true },
+        { title: '货主', dataIndex: 'StoreName', sorter: true, fixed: 'left' },
+        { title: '台帐类型', dataIndex: 'Type', sorter: true, fixed: 'left' , scopedSlots: { customRender: 'Type' }},
+        { title: '类别', dataIndex: 'Category', sorter: true, fixed: 'left' ,  scopedSlots: { customRender: 'Category' }},
+        
+        { title: '物料编码', dataIndex: 'SkuCode', sorter: true},
+        { title: '物料', dataIndex: 'SkuName', sorter: true},
         { title: '批次', dataIndex: 'LotCode', sorter: true },
         { title: '原库位', dataIndex: 'FromLocCode', sorter: true },
         { title: '目标库位', dataIndex: 'ToLocCode', sorter: true },
@@ -281,7 +287,7 @@ export default {
         {
           title: '修改时间',
           dataIndex: 'ModifyTime',
-          sorter: true,
+          sorter: true, fixed: 'right',
           customRender: (value) => {
             return moment(value).format('yyyy-MM-DD')
           }
@@ -303,9 +309,9 @@ export default {
     rowSelection() {
       return {
         selectedRowKeys: this.selectedRowKeys,
-        onChange: this.onSelectChange
+        onChange: this.onSelectChange,
       }
-    }
+    },
   },
   methods: {
     moment,
@@ -350,9 +356,9 @@ export default {
               }
             })
           })
-        }
+        },
       })
-    }
-  }
+    },
+  },
 }
 </script>

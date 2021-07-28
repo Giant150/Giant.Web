@@ -49,7 +49,7 @@
               <DistrictSelect v-model="entity.ProvinceId" parent="100000"></DistrictSelect>
             </a-form-model-item>
           </a-col>
-           <a-col :span="8">
+          <a-col :span="8">
             <a-form-model-item label="城市" prop="CityId">
               <DistrictSelect v-model="entity.CityId" :parent="entity.ProvinceId"></DistrictSelect>
             </a-form-model-item>
@@ -69,7 +69,6 @@
     </a-spin>
   </a-modal>
 </template>
-
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import MainSvc from '@/api/Bas/Bas_ContactSvc'
@@ -92,14 +91,14 @@ export default {
       },
       visible: false,
       loading: false,
-      entity: {},
+      entity: {}
     }
   },
   computed: {
     ...mapGetters({
       defaultWhseId: 'whseId',
-      defaultStorerId: 'storerId',
-    }),
+      defaultStorerId: 'storerId'
+    })
   },
   created() {},
   methods: {
@@ -139,7 +138,7 @@ export default {
           }
         })
       })
-    },
-  },
+    }
+  }
 }
 </script>
