@@ -6,6 +6,10 @@
     </div>
 
     <s-table ref="table" size="default" rowKey="Id" :columns="columns" :data="loadData" :rowSelection="rowSelection" showPagination="auto">
+      <template slot="IsDefault" slot-scope="text">
+        <a-tag color="#2db7f5" v-if="text===true">默认</a-tag>
+        <a-tag color="#919191" v-else>其他</a-tag>
+      </template>
       <span slot="action" slot-scope="text, record">
         <template>
           <a v-action:Update @click="handleEdit(record)">修改</a>
@@ -40,7 +44,7 @@ const columns = [
   { title: '城市', dataIndex: 'City.Name', sorter: true },
   { title: '县区', dataIndex: 'District.Name', sorter: true },
   { title: '地址', dataIndex: 'Addr', sorter: true },
-  { title: '是否默认', dataIndex: 'IsDefault', sorter: true },
+  { title: '是否默认', dataIndex: 'IsDefault', scopedSlots: { customRender: 'IsDefault' } },
   { title: '修改时间', dataIndex: 'ModifyTime', sorter: true, customRender: (value) => { return moment(value).format('yyyy-MM-DD') } },
   { title: '操作', dataIndex: 'action', width: '200px', scopedSlots: { customRender: 'action' } }
 ]

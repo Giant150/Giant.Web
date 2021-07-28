@@ -1,13 +1,70 @@
 <template>
-  <a-modal :title="title" :width="640" :visible="visible" :confirmLoading="loading" @ok="handleSubmit" @cancel="()=>{this.visible=false}">
+  <a-modal
+    :title="title"
+    width="60%"
+    :visible="visible"
+    :confirmLoading="loading"
+    @ok="handleSubmit"
+    @cancel="
+      () => {
+        this.visible = false
+      }
+    "
+  >
     <a-spin :spinning="loading">
       <a-form-model ref="form" :model="entity" :rules="rules" v-bind="layout">
-        <a-form-model-item label="编号" prop="Code">
-          <a-input v-model="entity.Code" autocomplete="off" />
-        </a-form-model-item>
-        <a-form-model-item label="名称" prop="Name">
-          <a-input v-model="entity.Name" autocomplete="off" />
-        </a-form-model-item>
+        <a-row>
+          <a-col :span="8">
+            <a-form-model-item label="编号" prop="Code">
+              <CodeInput code="Bas_Contact_Code" v-model="entity.Code" placeholder="编号"></CodeInput>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="8">
+            <a-form-model-item label="名称" prop="Name">
+              <a-input v-model="entity.Name" autocomplete="off" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="8">
+            <a-form-model-item label="是否默认" prop="IsDefault">
+              <a-switch checked-children="是" un-checked-children="否" v-model="entity.IsDefault" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="8">
+            <a-form-model-item label="电话" prop="Phone">
+              <a-input v-model="entity.Phone" autocomplete="off" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="8">
+            <a-form-model-item label="邮箱" prop="Emai">
+              <a-input v-model="entity.Email" autocomplete="off" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="8">
+            <a-form-model-item label="邮编" prop="Zip">
+              <a-input v-model="entity.Zip" auticomplete="off" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="8">
+            <a-form-model-item label="省份" prop="ProvinceId">
+              <DistrictSelect v-model="entity.ProvinceId" parent="100000"></DistrictSelect>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="8">
+            <a-form-model-item label="城市" prop="CityId">
+              <DistrictSelect v-model="entity.CityId" :parent="entity.ProvinceId"></DistrictSelect>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="8">
+            <a-form-model-item label="县区" prop="DistrictId">
+              <DistrictSelect v-model="entity.DistrictId" :parent="entity.CityId"></DistrictSelect>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="8">
+            <a-form-model-item label="地址" prop="addr">
+              <a-textarea v-model="entity.Addr" auticomplete="off" />
+            </a-form-model-item>
+          </a-col>
+        </a-row>
       </a-form-model>
     </a-spin>
   </a-modal>
@@ -16,23 +73,13 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import MainSvc from '@/api/Bas/Bas_ContactSvc'
-import EnumSelect from '@/components/CF/EnumSelect'
 import CodeInput from '@/components/CF/CodeInput'
-import StorerSelect from '@/components/Bas/StorerSelect'
-import TreeSelect from '@/components/CF/TreeSelect'
-import CommonSelect from '@/components/CF/CommonSelect'
-import LocSelect from '@/components/Bas/LocSelect'
-import SkuSelect from '@/components/Bas/SkuSelect'
+import DistrictSelect from '@/components/CF/District'
 export default {
   components: {
     MainSvc,
     CodeInput,
-    EnumSelect,
-    StorerSelect,
-    TreeSelect,
-    CommonSelect,
-    LocSelect,
-    SkuSelect
+    DistrictSelect
   },
   props: {},
   data() {
@@ -45,22 +92,22 @@ export default {
       },
       visible: false,
       loading: false,
-      entity: {}
+      entity: {},
     }
   },
   computed: {
     ...mapGetters({
       defaultWhseId: 'whseId',
-      defaultStorerId: 'storerId'
-    })
+      defaultStorerId: 'storerId',
+    }),
   },
-  created() { },
+  created() {},
   methods: {
     ...mapActions({ getConfig: 'getConfig' }),
     init() {
       this.loading = false
       this.visible = true
-      this.entity = { Id: '', WhseId: this.defaultWhseId, StorerId: this.parentEntity.StorerId, Code: '', Name: '' }
+      this.entity = { Id: '', WhseId: this.defaultWhseId, StorerId: this.parentEntity.Id, Code: '', Name: '' }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })
@@ -70,18 +117,18 @@ export default {
       this.parentEntity = main
       this.init()
       if (id) {
-        MainSvc.Get(id).then(resJson => {
+        MainSvc.Get(id).then((resJson) => {
           this.entity = resJson.Data
         })
       }
     },
     handleSubmit() {
-      this.$refs['form'].validate(valid => {
+      this.$refs['form'].validate((valid) => {
         if (!valid) {
           return
         }
         this.loading = true
-        MainSvc.Save(this.entity).then(result => {
+        MainSvc.Save(this.entity).then((result) => {
           this.loading = false
           if (result.Success) {
             this.$message.success(result.Msg)
@@ -92,7 +139,7 @@ export default {
           }
         })
       })
-    }
-  }
+    },
+  },
 }
 </script>
