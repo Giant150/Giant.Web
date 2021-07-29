@@ -47,7 +47,7 @@
       </a-col>
     </a-row>
     <a-divider>更新历史</a-divider>
-    <a-list item-layout="horizontal" rowKey="node_id" :dataSource="commits" :grid="{gutter: 24, lg: 4, md: 3, sm: 1, xs: 1}">
+    <a-list item-layout="horizontal" rowKey="node_id" :dataSource="listCommit" :grid="{gutter: 24, lg: 4, md: 3, sm: 1, xs: 1}">
       <a-list-item slot="renderItem" slot-scope="item">
         <a-card :hoverable="true">
           <a-card-meta>
@@ -109,6 +109,9 @@ export default {
       defaultWhseId: 'whseId',
       defaultStorerId: 'storerId'
     }),
+    listCommit() {
+      return this.commits.slice(0).sort((a, b) => new Date(a) - new Date(b))
+    },
     storageLedgerAge() {
       var item = this.ledger.find(w => w.Category === 'Storage')
       if (item) return item
@@ -172,14 +175,25 @@ export default {
       })
     },
     getGitLog() {
+      this.commits = []
       axios({
-        url: '/repos/LiuJu150/Giant.Web/commits?per_page=12',
+        url: '/repos/LiuJu150/Giant.Web/commits?per_page=6',
         method: 'get',
         baseURL: 'https://api.github.com',
         headers: { 'Accept': 'application/vnd.github.v3+json' }
       }).then(result => {
         if (result.status === 200) {
-          this.commits = result.data
+          this.commits.push(result.data)
+        }
+      })
+      axios({
+        url: '/repos/LiuJu150/Giant.RF/commits?per_page=6',
+        method: 'get',
+        baseURL: 'https://api.github.com',
+        headers: { 'Accept': 'application/vnd.github.v3+json' }
+      }).then(result => {
+        if (result.status === 200) {
+          this.commits.push(result.data)
         }
       })
     }
