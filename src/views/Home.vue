@@ -110,7 +110,7 @@ export default {
       defaultStorerId: 'storerId'
     }),
     listCommit() {
-      return this.commits.slice(0).sort((a, b) => new Date(a) - new Date(b))
+      return this.commits.slice(0).sort((a, b) => new Date(b.commit.committer.date) - new Date(a.commit.committer.date))
     },
     storageLedgerAge() {
       var item = this.ledger.find(w => w.Category === 'Storage')
@@ -183,7 +183,7 @@ export default {
         headers: { 'Accept': 'application/vnd.github.v3+json' }
       }).then(result => {
         if (result.status === 200) {
-          this.commits.push(result.data)
+          this.commits.push(...result.data)
         }
       })
       axios({
@@ -193,7 +193,7 @@ export default {
         headers: { 'Accept': 'application/vnd.github.v3+json' }
       }).then(result => {
         if (result.status === 200) {
-          this.commits.push(result.data)
+          this.commits.push(...result.data)
         }
       })
     }
