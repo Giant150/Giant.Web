@@ -117,7 +117,7 @@
       showPagination="auto"
       :scroll="{ x: 4500 }"
     >
-    <template slot="Type" slot-scope="text">
+      <template slot="Type" slot-scope="text">
         <EnumName code="Inv_Ledger_Type" :value="text"></EnumName>
       </template>
       <template slot="Category" slot-scope="text">
@@ -210,12 +210,11 @@ export default {
       selectedRows: [],
       enumItems: [],
       columns: [
-        { title: '货主', dataIndex: 'StoreName', sorter: true, fixed: 'left' },
-        { title: '台帐类型', dataIndex: 'Type', sorter: true, fixed: 'left' , scopedSlots: { customRender: 'Type' }},
-        { title: '类别', dataIndex: 'Category', sorter: true, fixed: 'left' ,  scopedSlots: { customRender: 'Category' }},
-        
-        { title: '物料编码', dataIndex: 'SkuCode', sorter: true},
-        { title: '物料', dataIndex: 'SkuName', sorter: true},
+        { title: '货主', dataIndex: 'StoreName', sorter: true, width: 120, fixed: 'left' },
+        { title: '台帐类型', dataIndex: 'Type', sorter: true, width: 120, fixed: 'left', scopedSlots: { customRender: 'Type' } },
+        { title: '类别', dataIndex: 'Category', sorter: true, width: 120, fixed: 'left', scopedSlots: { customRender: 'Category' } },
+        { title: '物料编码', dataIndex: 'SkuCode', sorter: true, width: 120, fixed: 'left' },
+        { title: '物料', dataIndex: 'SkuName', sorter: true, width: 150, fixed: 'left' },
         { title: '批次', dataIndex: 'LotCode', sorter: true },
         { title: '原库位', dataIndex: 'FromLocCode', sorter: true },
         { title: '目标库位', dataIndex: 'ToLocCode', sorter: true },
@@ -287,7 +286,7 @@ export default {
         {
           title: '修改时间',
           dataIndex: 'ModifyTime',
-          sorter: true, fixed: 'right',
+          sorter: true,
           customRender: (value) => {
             return moment(value).format('yyyy-MM-DD')
           }
@@ -309,9 +308,9 @@ export default {
     rowSelection() {
       return {
         selectedRowKeys: this.selectedRowKeys,
-        onChange: this.onSelectChange,
+        onChange: this.onSelectChange
       }
-    },
+    }
   },
   methods: {
     moment,
@@ -356,9 +355,9 @@ export default {
               }
             })
           })
-        },
+        }
       })
-    },
-  },
+    }
+  }
 }
 </script>
