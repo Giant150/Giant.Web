@@ -71,5 +71,16 @@ export default {
             url: '/api/Bus_Receipt/Print?id=' + id,
             method: 'get'
         })
+    },
+    /**
+     * 关闭
+     * @param {string} id 主键
+     * @returns 是否成功
+     */
+     Close(id) {
+        return request({
+            url: '/api/Bus_Receipt/Close?id=' + id,
+            method: 'post'
+        })
     }
 }

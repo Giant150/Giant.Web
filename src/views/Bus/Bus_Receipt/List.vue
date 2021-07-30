@@ -65,6 +65,7 @@
             <a-menu slot="overlay" @click="(e)=>{handleActionClick(e.key,record)}">
               <a-menu-item key="Print">打印收货单</a-menu-item>
               <a-menu-item v-action:Putaway key="Putaway">生成上架任务</a-menu-item>
+              <a-menu-item v-action:Close key="Close" v-if="record.Status==='Receiving' || record.Status==='Completed'">收货结束</a-menu-item>
             </a-menu>
           </a-dropdown>
           <a-divider v-action:Delete v-if="record.Status==='Active'" type="vertical" />
@@ -132,7 +133,7 @@ export default {
             _query[key] = _query[key].format('YYYY-MM-DD')
           }
         }
-        const requestParameters = Object.assign({ sortField: 'ModifyTime', sortOrder: 'desc', Search: _query }, parameter)
+        const requestParameters = Object.assign({ sortField: 'Code', sortOrder: 'desc', Search: _query }, parameter)
         console.log('loadData request parameters:', requestParameters)
         return MainSvc.GetPage(requestParameters)
       },
@@ -196,6 +197,15 @@ export default {
           if (result.Success) {
             var filePath = `${process.env.VUE_APP_API_BASE_URL}${result.Data}`
             print(filePath)
+          } else {
+            this.$message.error(result.Msg)
+          }
+        })
+      } else if (key === 'Close') {
+        MainSvc.Close(row.Id).then(result => {
+          if (result.Success) {
+            this.$message.success('操作成功!')
+            this.$refs.table.refresh()
           } else {
             this.$message.error(result.Msg)
           }
