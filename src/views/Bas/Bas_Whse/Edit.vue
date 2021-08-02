@@ -3,10 +3,10 @@
     <a-spin :spinning="loading">
       <a-form-model ref="form" :model="entity" :rules="rules" v-bind="layout">
         <a-form-model-item label="编号" prop="Code">
-          <a-input v-model="entity.Code" autocomplete="off" />
+          <a-input v-model="entity.Code" :maxLength="50" autocomplete="off" />
         </a-form-model-item>
         <a-form-model-item label="名称" prop="Name">
-          <a-input v-model="entity.Name" autocomplete="off" />
+          <a-input v-model="entity.Name" :maxLength="50" autocomplete="off" />
         </a-form-model-item>
         <a-form-model-item label="类型" prop="Type">
           <EnumSelect code="Bas_Whse_Type" v-model="entity.Type" autocomplete="off"></EnumSelect>

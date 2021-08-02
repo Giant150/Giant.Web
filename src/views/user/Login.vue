@@ -1,57 +1,23 @@
 <template>
   <div class="main">
-    <a-form
-      id="formLogin"
-      class="user-layout-login"
-      ref="formLogin"
-      :form="form"
-      @submit="handleSubmit"
-    >
-      <a-tabs
-        :activeKey="customActiveKey"
-        :tabBarStyle="{ textAlign: 'center', borderBottom: 'unset' }"
-        @change="handleTabClick"
-      >
+    <a-form id="formLogin" class="user-layout-login" ref="formLogin" :form="form" @submit="handleSubmit">
+      <a-tabs :activeKey="customActiveKey" :tabBarStyle="{ textAlign: 'center', borderBottom: 'unset' }" @change="handleTabClick">
         <a-tab-pane key="tab1" :tab="$t('user.login.tab-login-credentials')">
           <a-alert v-if="isLoginError" type="error" showIcon style="margin-bottom: 24px;" message="用户名或密码错误" />
           <a-form-item>
-            <a-input
-              size="large"
-              type="text"
-              placeholder="用户名"
-              v-decorator="[
-                'UserName',
-                {rules: [{ required: true, message: $t('user.userName.required') }]}
-              ]"
-            >
-              <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
+            <a-input size="large" type="text" placeholder="用户名" v-decorator="['UserName',{rules: [{ required: true, message: $t('user.userName.required') }]}]">
+              <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }" />
             </a-input>
           </a-form-item>
-
           <a-form-item>
-            <a-input-password
-              size="large"
-              placeholder="密码"
-              v-decorator="[
-                'Password',
-                {rules: [{ required: true, message: $t('user.password.required') }]}
-              ]"
-            >
-              <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }"/>
+            <a-input-password size="large" placeholder="密码" v-decorator="['Password',{rules: [{ required: true, message: $t('user.password.required') }]}]">
+              <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }" />
             </a-input-password>
           </a-form-item>
         </a-tab-pane>
       </a-tabs>
-
       <a-form-item style="margin-top:24px">
-        <a-button
-          size="large"
-          type="primary"
-          htmlType="submit"
-          class="login-button"
-          :loading="state.loginBtn"
-          :disabled="state.loginBtn"
-        >{{ $t('user.login.login') }}</a-button>
+        <a-button size="large" type="primary" htmlType="submit" class="login-button" :loading="state.loginBtn" :disabled="state.loginBtn">{{ $t('user.login.login') }}</a-button>
       </a-form-item>
     </a-form>
   </div>
@@ -65,7 +31,7 @@ import { timeFix } from '@/utils/util'
 export default {
   components: {
   },
-  data () {
+  data() {
     return {
       customActiveKey: 'tab1',
       loginBtn: false,
@@ -84,16 +50,16 @@ export default {
       }
     }
   },
-  created () {
+  created() {
   },
   methods: {
     ...mapActions(['Login', 'Logout']),
 
-    handleTabClick (key) {
+    handleTabClick(key) {
       this.customActiveKey = key
       // this.form.resetFields()
     },
-    handleSubmit (e) {
+    handleSubmit(e) {
       e.preventDefault()
       const {
         form: { validateFields },
@@ -123,30 +89,28 @@ export default {
         }
       })
     },
-    loginSuccess (res) {
+    loginSuccess(res) {
       console.log(res)
       // check res.homePage define, set $router.push name res.homePage
       // Why not enter onComplete
-      /*
-      this.$router.push({ name: 'analysis' }, () => {
+      this.$router.push({ path: '/' }, () => {
         console.log('onComplete')
         this.$notification.success({
           message: '欢迎',
           description: `${timeFix()}，欢迎回来`
         })
       })
-      */
-      this.$router.push({ path: '/' })
-      // 延迟 1 秒显示欢迎信息
-      setTimeout(() => {
-        this.$notification.success({
-          message: '欢迎',
-          description: `${timeFix()}，欢迎回来`
-        })
-      }, 1000)
+      // this.$router.push({ path: '/' })
+      // // 延迟 1 秒显示欢迎信息
+      // setTimeout(() => {
+      //   this.$notification.success({
+      //     message: '欢迎',
+      //     description: `${timeFix()}，欢迎回来`
+      //   })
+      // }, 1000)
       this.isLoginError = false
     },
-    requestFailed (err) {
+    requestFailed(err) {
       this.isLoginError = true
       this.$notification['error']({
         message: '错误',
