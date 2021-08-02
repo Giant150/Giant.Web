@@ -235,8 +235,10 @@ export default {
       orderRowSelection: {
         columnWidth: 20,
         type: 'radio',
+        selectedRowKeys: [],
         hideDefaultSelections: true,
         onChange: (keys, rows) => {
+          this.orderRowSelection.selectedRowKeys = keys
           console.log('orderRowSelection', keys)
           this.selectedOrderDetail = rows[0]
         }
@@ -320,6 +322,8 @@ export default {
       this.loading = false
       this.visible = true
       this.isModify = false
+      this.selectedOrderDetail = null
+      this.orderRowSelection.selectedRowKeys = []
       this.entity = { OrderDetail: [], Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', RefCode: '', Type: 'Standard', DocDate: moment().format('YYYY-MM-DD'), OrderDate: moment().format('YYYY-MM-DD'), ConsigneeId: undefined, Remark: '', Status: 'Active' }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
