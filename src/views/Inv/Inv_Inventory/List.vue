@@ -106,6 +106,7 @@
     <div class="table-operator" v-if="!choose">
       <a-button type="primary" v-action:Update icon="edit" @click="handleUpdateStatus('Hold',selectedRowKeys)">批量冻结</a-button>
       <a-button type="primary" v-action:Update icon="edit" @click="handleUpdateStatus('None',selectedRowKeys)">批量解冻</a-button>
+      <a-button type="default" v-action:Query icon="export" @click="handleExport()">导出</a-button>
     </div>
     <s-table ref="table" size="default" rowKey="Id" :columns="columns" :data="loadData" :rowSelection="rowSelection" showPagination="auto" :scroll="{ x: 3060 }">
       <template slot="Status" slot-scope="text">
@@ -198,7 +199,6 @@ export default {
         { title: '已分配', dataIndex: 'QtyAllocated', width: 100 },
         { title: '已拣货', dataIndex: 'QtyPicked', width: 100 },
         { title: '库存状态', dataIndex: 'Status', width: 120, scopedSlots: { customRender: 'Status' } },
-        { title: '批次号', dataIndex: 'Lot.Code', width: 120 },
         { title: () => { return this.cusHeaderTitle('Lot01') }, dataIndex: 'Lot.Lot01' },
         { title: () => { return this.cusHeaderTitle('Lot02') }, dataIndex: 'Lot.Lot02' },
         { title: () => { return this.cusHeaderTitle('Lot03') }, dataIndex: 'Lot.Lot03' },
@@ -280,6 +280,35 @@ export default {
     },
     handleMove(record) {
       this.$refs.moveForm.openForm(record.Id)
+    },
+    handleExport() {
+      this.queryParam.WhseId = this.defaultWhseId
+      var _query = Object.assign({}, { ...this.queryParam })
+      for (const key in _query) {
+        if (moment.isMoment(_query[key])) {
+          _query[key] = _query[key].format('YYYY-MM-DD')
+        }
+      }
+      MainSvc.Export(_query).then(result => {
+        if (result.Success) {
+          var fileName = result.Data.substring(result.Data.lastIndexOf('/') + 1)
+          var filePath = `${process.env.VUE_APP_API_BASE_URL}${result.Data}`
+          console.log('handleExport', fileName, filePath)
+          try {
+            var elem = document.createElement('a')
+            elem.download = fileName
+            elem.href = filePath
+            elem.style.display = 'none'
+            document.body.appendChild(elem)
+            elem.click()
+            document.body.removeChild(elem)
+          } catch (e) {
+            this.$message.error('下载异常！')
+          }
+        } else {
+          this.$message.error(result.Msg)
+        }
+      })
     }
   }
 }
