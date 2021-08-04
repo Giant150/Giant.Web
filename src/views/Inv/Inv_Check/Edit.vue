@@ -147,7 +147,7 @@
       <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleAdjust" v-action:Adjust v-if="entity.Status==='Confirmed'">调整</a-button>
       <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleConfirmed" v-action:Update v-if="entity.Status==='Checked'">复核</a-button>
       <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleChecked" v-action:Update v-if="entity.Status==='Checking'">确认</a-button>
-      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleCheckTask" v-action:Task v-if="entity.Status==='Checking'">下发任务</a-button>
+      <!-- <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleCheckTask" v-action:Task v-if="entity.Status==='Checking'">下发任务</a-button> -->
       <a-button :style="{ marginRight: '8px' }" type="primary" @click="handlePrint" v-action:Print v-if="entity.Id">打印</a-button>
       <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleStart" v-action:Update v-if="entity.Status==='Active' && entity.Id">开始</a-button>
       <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleSubmit" v-action:Update v-if="entity.Status==='Active'">保存</a-button>
