@@ -2,7 +2,6 @@
   <a-drawer title="库存调整" placement="right" width="60%" :visible="visible" @close="()=>{this.visible=false}" :maskClosable="false" :body-style="{ paddingBottom: '80px' }">
     <a-spin :spinning="loading">
       <a-form-model ref="form" :model="entity" :rules="rules" v-bind="layout">
-
         <a-row>
           <a-col :span="8">
             <a-form-model-item label="货主" prop="StorerId">
@@ -39,7 +38,6 @@
             </a-col>
           </template>
         </a-row>
-
       </a-form-model>
       <div class="table-operator">
         <a-button type="primary" v-action:Add icon="plus" v-if="entity.Status==='Active'" @click="handleAdd()">新建</a-button>
