@@ -111,9 +111,10 @@
       </a-table>
     </a-spin>
     <div :style="{ position: 'absolute', bottom: 0, right: 0, width: '100%', borderTop: '1px solid #e9e9e9', padding: '10px 16px', background: '#fff', textAlign: 'right', zIndex: 1, }">
+      <a-button v-action:Close :style="{ marginRight: '8px' }" type="primary" v-if="entity.Status==='Receiving' || entity.Status==='Completed'" @click="handleClose">收货结束</a-button>
       <a-button :style="{ marginRight: '8px' }" v-if="isModify" type="default" @click="handlePrint">打印收货单</a-button>
       <a-button v-if="canPutawayTask" v-action:Putaway :style="{ marginRight: '8px' }" type="default" @click="handlePutaway">生成上架任务</a-button>
-      <a-button v-action:Update :style="{ marginRight: '8px' }" type="primary" @click="handleSubmit">保存</a-button>
+      <a-button v-action:Update :style="{ marginRight: '8px' }" type="primary" v-if="entity.Status!=='Completed' && entity.Status!=='Closed'" @click="handleSubmit">保存</a-button>
       <a-button :style="{ marginRight: '8px' }" @click="()=>{this.visible=false}">关闭</a-button>
     </div>
   </a-drawer>
@@ -414,6 +415,27 @@ export default {
                 thisObj.visible = false
                 thisObj.$message.success('操作成功!')
                 thisObj.$router.push({ path: '/Inv/Inv_Task', query: { RefTable: 'Bus_Receipt', RefId: thisObj.entity.Id } })
+              } else {
+                thisObj.$message.error(result.Msg)
+              }
+            })
+          })
+        }
+      })
+    },
+    handleClose() {
+      var thisObj = this
+      var id = this.entity.Id
+      this.$confirm({
+        title: '确认结束此收货单吗?',
+        onOk() {
+          return new Promise((resolve, reject) => {
+            MainSvc.Close(id).then(result => {
+              resolve()
+              if (result.Success) {
+                thisObj.visible = false
+                thisObj.$message.success('操作成功!')
+                thisObj.$emit('Success')
               } else {
                 thisObj.$message.error(result.Msg)
               }

@@ -248,8 +248,10 @@ export default {
       orderRowSelection: {
         columnWidth: 20,
         type: 'radio',
+        selectedRowKeys: [],
         hideDefaultSelections: true,
         onChange: (keys, rows) => {
+          this.orderRowSelection.selectedRowKeys = keys
           console.log('orderRowSelection', keys)
           this.selectedOrderDetail = rows[0]
         }
@@ -336,6 +338,7 @@ export default {
       this.loading = false
       this.visible = true
       this.isModify = false
+<<<<<<< HEAD
       this.entity = { OrderDetail: [], Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', RefCode: '', Type: 'Standard', DocDate: moment().format('YYYY-MM-DD'), OrderDate: moment().format('YYYY-MM-DD'), ConsigneeId: undefined, Remark: '', Status: 'Active',
         Expand: {
           ExpStr1: undefined, ExpStr2: undefined, ExpStr3: undefined, ExpStr4: undefined, ExpStr5: undefined, ExpStr6: undefined,
@@ -345,6 +348,11 @@ export default {
           ExpDate1: undefined, ExpDate2: undefined, ExpDate3: undefined, ExpDate4: undefined, ExpDate5: undefined, ExpDate6: undefined
         }
       }
+=======
+      this.selectedOrderDetail = null
+      this.orderRowSelection.selectedRowKeys = []
+      this.entity = { OrderDetail: [], Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', RefCode: '', Type: 'Standard', DocDate: moment().format('YYYY-MM-DD'), OrderDate: moment().format('YYYY-MM-DD'), ConsigneeId: undefined, Remark: '', Status: 'Active' }
+>>>>>>> 590dcc0d91f6224d3ab3a99620262717e934ad2d
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })

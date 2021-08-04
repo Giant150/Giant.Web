@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 /**
- * Bus_Receipt API接口服务
+ * Inv_TransferDetail API接口服务
  */
 export default {
     /**
@@ -10,7 +10,7 @@ export default {
      */
     GetPage(parameter) {
         return request({
-            url: '/api/Bus_Receipt/GetPage',
+            url: '/api/Inv_TransferDetail/GetPage',
             method: 'post',
             data: parameter
         })
@@ -22,7 +22,7 @@ export default {
      */
     Get(id) {
         return request({
-            url: '/api/Bus_Receipt/Get?id=' + id,
+            url: '/api/Inv_TransferDetail/Get?id=' + id,
             method: 'get'
         })
     },
@@ -33,7 +33,7 @@ export default {
      */
     Save(data) {
         return request({
-            url: '/api/Bus_Receipt/Save',
+            url: '/api/Inv_TransferDetail/Save',
             method: 'post',
             data: data
         })
@@ -45,42 +45,9 @@ export default {
      */
     Delete(ids) {
         return request({
-            url: '/api/Bus_Receipt/Delete',
+            url: '/api/Inv_TransferDetail/Delete',
             method: 'delete',
             data: ids
-        })
-    },
-    /**
-     * 生成上架任务
-     * @param {string} id 主键
-     * @returns 实体数据
-     */
-     PutawayTask(id) {
-        return request({
-            url: '/api/Bus_Receipt/PutawayTask?id=' + id,
-            method: 'post'
-        })
-    },
-    /**
-     * 打印收货单
-     * @param {string} id 主键
-     * @returns 收货单PDF
-     */
-     Print(id) {
-        return request({
-            url: '/api/Bus_Receipt/Print?id=' + id,
-            method: 'get'
-        })
-    },
-    /**
-     * 关闭
-     * @param {string} id 主键
-     * @returns 是否成功
-     */
-     Close(id) {
-        return request({
-            url: '/api/Bus_Receipt/Close?id=' + id,
-            method: 'post'
         })
     }
 }

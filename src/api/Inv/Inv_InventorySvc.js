@@ -50,5 +50,17 @@ export default {
             method: 'post',
             data: data
         })
+    },
+    /**
+     * 导出库存数据
+     * @param {Object} query 库存查询条件
+     * @returns excel文件地址
+     */
+    Export(query) {
+        return request({
+            url: '/api/Inv_Inventory/Export',
+            method: 'post',
+            data: query
+        })
     }
 }
