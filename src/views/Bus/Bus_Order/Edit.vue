@@ -206,6 +206,7 @@ import LotInput from '@/components/Stg/LotInput'
 import LotSelect from '@/components/Inv/LotSelect'
 import InvChoose from '@/components/Inv/InvChoose'
 import ExpandInput from '@/components/CF/ExpandInput'
+
 export default {
   components: {
     PickSvc,
