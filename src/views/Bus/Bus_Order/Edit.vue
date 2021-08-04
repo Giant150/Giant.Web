@@ -352,7 +352,7 @@ export default {
       })
     },
     openForm(id, title) {
-      this.title = title || (id ? '新建' : '修改')
+      this.title = '发货管理'
       this.init()
       if (id) {
         this.isModify = true
