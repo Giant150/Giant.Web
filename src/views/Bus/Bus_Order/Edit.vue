@@ -41,6 +41,15 @@
             </a-form-model-item>
           </a-col>
         </a-row>
+        <a-row>
+          <template v-if="entity.Expand">
+            <a-col :span="6" v-for="item in expand.EnumItems" :key="item.Code">
+              <a-form-model-item :label="item.Name" :prop="item.Code">
+                <ExpandInput v-model="entity.Expand[item.Code]" :enumitem="item" />
+              </a-form-model-item>
+            </a-col>
+          </template>
+        </a-row>
       </a-form-model>
       <a-tabs :defaultActiveKey="activeKey" size="small" @change="handlerTabsChange" :animated="false" :tabBarStyle="{marginBottom:0}">
         <div slot="tabBarExtraContent">
@@ -196,6 +205,8 @@ import TraySelect from '@/components/Bas/TraySelect'
 import LotInput from '@/components/Stg/LotInput'
 import LotSelect from '@/components/Inv/LotSelect'
 import InvChoose from '@/components/Inv/InvChoose'
+import ExpandInput from '@/components/CF/ExpandInput'
+
 export default {
   components: {
     PickSvc,
@@ -211,7 +222,8 @@ export default {
     TraySelect,
     LotInput,
     LotSelect,
-    InvChoose
+    InvChoose,
+    ExpandInput
   },
   props: {},
   data() {
@@ -232,6 +244,7 @@ export default {
       isModify: false, // 是否编辑
       selectedOrderDetail: null,
       defaultPickToLocId: '',
+      expand: {},
       orderRowSelection: {
         columnWidth: 20,
         type: 'radio',
@@ -314,6 +327,9 @@ export default {
     this.getConfig({ whseId: this.defaultWhseId, code: 'Bas_PutawayZone_PickToLocId_Default' }).then(result => {
       this.defaultPickToLocId = result.Val
     })
+    this.getEnum({ whseId: this.defaultWhseId, code: 'Bus_Order_Expand' }).then(result => {
+      this.expand = result
+    })
   },
   methods: {
     moment,
@@ -322,9 +338,21 @@ export default {
       this.loading = false
       this.visible = true
       this.isModify = false
+<<<<<<< HEAD
+      this.entity = { OrderDetail: [], Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', RefCode: '', Type: 'Standard', DocDate: moment().format('YYYY-MM-DD'), OrderDate: moment().format('YYYY-MM-DD'), ConsigneeId: undefined, Remark: '', Status: 'Active',
+        Expand: {
+          ExpStr1: undefined, ExpStr2: undefined, ExpStr3: undefined, ExpStr4: undefined, ExpStr5: undefined, ExpStr6: undefined,
+          ExpEnum1: undefined, ExpEnum2: undefined, ExpEnum3: undefined, ExpEnum4: undefined, ExpEnum5: undefined, ExpEnum6: undefined,
+          ExpInt1: undefined, ExpInt2: undefined, ExpInt3: undefined, ExpInt4: undefined, ExpInt5: undefined, ExpInt6: undefined,
+          ExpNum1: undefined, ExpNum2: undefined, ExpNum3: undefined, ExpNum4: undefined, ExpNum5: undefined, ExpNum6: undefined,
+          ExpDate1: undefined, ExpDate2: undefined, ExpDate3: undefined, ExpDate4: undefined, ExpDate5: undefined, ExpDate6: undefined
+        }
+      }
+=======
       this.selectedOrderDetail = null
       this.orderRowSelection.selectedRowKeys = []
       this.entity = { OrderDetail: [], Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', RefCode: '', Type: 'Standard', DocDate: moment().format('YYYY-MM-DD'), OrderDate: moment().format('YYYY-MM-DD'), ConsigneeId: undefined, Remark: '', Status: 'Active' }
+>>>>>>> 590dcc0d91f6224d3ab3a99620262717e934ad2d
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })
