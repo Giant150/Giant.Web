@@ -41,6 +41,15 @@
             </a-form-model-item>
           </a-col>
         </a-row>
+        <a-row>
+          <template v-if="entity.Expand">
+            <a-col :span="6" v-for="item in expand.EnumItems" :key="item.Code">
+              <a-form-model-item :label="item.Name" :prop="item.Code">
+                <ExpandInput v-model="entity.Expand[item.Code]" :enumitem="item" />
+              </a-form-model-item>
+            </a-col>
+          </template>
+        </a-row>
       </a-form-model>
       <div class="table-operator">
         <a-button type="primary" v-action:Add icon="plus" @click="handleAdd(null)">新建</a-button>
@@ -136,6 +145,7 @@ import SkuSelect from '@/components/Bas/SkuSelect'
 import SkuUomSelect from '@/components/Bas/SkuUomSelect'
 import TraySelect from '@/components/Bas/TraySelect'
 import LotInput from '@/components/Stg/LotInput'
+import ExpandInput from '@/components/CF/ExpandInput'
 export default {
   components: {
     MainSvc,
@@ -148,7 +158,8 @@ export default {
     SkuSelect,
     SkuUomSelect,
     TraySelect,
-    LotInput
+    LotInput,
+    ExpandInput
   },
   props: {},
   data() {
@@ -166,6 +177,7 @@ export default {
       loading: false,
       enumItems: [],
       entity: {},
+      expand: {},
       columns: [
         { title: '编号', dataIndex: 'Code', width: 120, fixed: 'left', scopedSlots: { customRender: 'Code' } },
         { title: '物料', dataIndex: 'SkuId', width: 150, fixed: 'left', scopedSlots: { customRender: 'SkuId' } },
@@ -225,6 +237,9 @@ export default {
     this.getConfig({ whseId: this.defaultWhseId, code: 'Stg_Lot_ProductionDate_Default' }).then(result => {
       this.defaultProductDateLot = result.Val
     })
+    this.getEnum({ whseId: this.defaultWhseId, code: 'Bus_Receipt_Expand' }).then(result => {
+      this.expand = result
+    })
   },
   methods: {
     moment,
@@ -235,7 +250,14 @@ export default {
       this.isModify = false
       this.entity = {
         ReceiptDetail: [], Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', RecType: 'Standard',
-        DocDate: moment().format('YYYY-MM-DD'), RecDate: moment().format('YYYY-MM-DD'), SupplierId: '', Remark: '', Status: 'Active'
+        DocDate: moment().format('YYYY-MM-DD'), RecDate: moment().format('YYYY-MM-DD'), SupplierId: '', Remark: '', Status: 'Active',
+        Expand: {
+          ExpStr1: undefined, ExpStr2: undefined, ExpStr3: undefined, ExpStr4: undefined, ExpStr5: undefined, ExpStr6: undefined,
+          ExpEnum1: undefined, ExpEnum2: undefined, ExpEnum3: undefined, ExpEnum4: undefined, ExpEnum5: undefined, ExpEnum6: undefined,
+          ExpInt1: undefined, ExpInt2: undefined, ExpInt3: undefined, ExpInt4: undefined, ExpInt5: undefined, ExpInt6: undefined,
+          ExpNum1: undefined, ExpNum2: undefined, ExpNum3: undefined, ExpNum4: undefined, ExpNum5: undefined, ExpNum6: undefined,
+          ExpDate1: undefined, ExpDate2: undefined, ExpDate3: undefined, ExpDate4: undefined, ExpDate5: undefined, ExpDate6: undefined
+        }
       }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
