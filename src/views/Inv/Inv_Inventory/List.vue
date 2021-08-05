@@ -108,7 +108,7 @@
       <a-button type="primary" v-action:Update icon="edit" @click="handleUpdateStatus('None',selectedRowKeys)">批量解冻</a-button>
       <a-button type="default" v-action:Query icon="export" @click="handleExport()">导出</a-button>
     </div>
-    <s-table ref="table" size="default" rowKey="Id" :columns="columns" :data="loadData" :rowSelection="rowSelection" showPagination="auto" :scroll="{ x: 3060 }">
+    <s-table ref="table" rowKey="Id" :columns="columns" :data="loadData" :rowSelection="rowSelection" showPagination="auto" :size="choose?'small':'default'" :scroll="{ x: 3060 }">
       <template slot="Status" slot-scope="text">
         <EnumName code="Inv_Inventory_Status" :value="text"></EnumName>
       </template>
