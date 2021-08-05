@@ -29,6 +29,15 @@
             </a-form-model-item>
           </a-col>
         </a-row>
+        <a-row>
+          <template v-if="entity.Expand">
+            <a-col :span="8" v-for="item in expand.EnumItems" :key="item.Code">
+              <a-form-model-item :label="item.Name" :prop="item.Code">
+                <ExpandInput v-model="entity.Expand[item.Code]" :enumitem="item" />
+              </a-form-model-item>
+            </a-col>
+          </template>
+        </a-row>
       </a-form-model>
       <a-tabs :activeKey="activeKey" size="small" @change="handlerTabsChange" :animated="false" :tabBarStyle="{marginBottom:0}">
         <div slot="tabBarExtraContent">
@@ -172,6 +181,7 @@ import LocSelect from '@/components/Bas/LocSelect'
 import LotSelect from '@/components/Inv/LotSelect'
 import SkuSelect from '@/components/Bas/SkuSelect'
 import LotInput from '@/components/Stg/LotInput'
+import ExpandInput from '@/components/CF/ExpandInput'
 export default {
   components: {
     MainSvc,
@@ -184,7 +194,8 @@ export default {
     LocSelect,
     SkuSelect,
     LotInput,
-    LotSelect
+    LotSelect,
+    ExpandInput
   },
   props: {},
   data() {
@@ -237,7 +248,8 @@ export default {
         action: '',
         data: { whseId: '', checkId: '' },
         headers: { Authorization: '' }
-      }
+      },
+      expand: {}
     }
   },
   computed: {
@@ -260,6 +272,9 @@ export default {
     this.config.StorerId = this.defaultStorerId
     this.uploadConfig.data.whseId = this.defaultWhseId
     this.uploadConfig.headers.Authorization = `Bearer ${this.token}`
+    this.getEnum({ whseId: this.defaultWhseId, code: 'Inv_Check_Expand' }).then(result => {
+      this.expand = result
+    })
   },
   methods: {
     ...mapActions({ getConfig: 'getConfig', getEnum: 'getEnum' }),
@@ -272,7 +287,15 @@ export default {
       this.visible = true
       this.activeKey = 'CheckConfig'
       this.details = []
-      this.entity = { Id: '', WhseId: this.defaultWhseId, Code: '', Name: '', Type: undefined, CheckDate: moment().format('YYYY-MM-DD'), Remark: '', Status: 'Active', ConfigVal: null }
+      this.entity = { Id: '', WhseId: this.defaultWhseId, Code: '', Name: '', Type: undefined, CheckDate: moment().format('YYYY-MM-DD'), Remark: '', Status: 'Active', ConfigVal: null,
+        Expand: {
+          ExpStr1: undefined, ExpStr2: undefined, ExpStr3: undefined, ExpStr4: undefined, ExpStr5: undefined, ExpStr6: undefined,
+          ExpEnum1: undefined, ExpEnum2: undefined, ExpEnum3: undefined, ExpEnum4: undefined, ExpEnum5: undefined, ExpEnum6: undefined,
+          ExpInt1: undefined, ExpInt2: undefined, ExpInt3: undefined, ExpInt4: undefined, ExpInt5: undefined, ExpInt6: undefined,
+          ExpNum1: undefined, ExpNum2: undefined, ExpNum3: undefined, ExpNum4: undefined, ExpNum5: undefined, ExpNum6: undefined,
+          ExpDate1: undefined, ExpDate2: undefined, ExpDate3: undefined, ExpDate4: undefined, ExpDate5: undefined, ExpDate6: undefined
+        }
+      }
       this.config = { WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, SkuId: '', ModifyDate: '', ZoneId: '', LanewayId: '', LocId: '', LotId: '', Lot01: '', Lot02: '', Lot03: '', Lot04: '', Lot05: '', Lot06: '', Lot07: '', Lot08: '', Lot09: '', Lot10: '' }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
