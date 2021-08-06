@@ -70,7 +70,7 @@ const columns = [
   { title: '自货主', dataIndex: 'FromStorer.Name' },
   { title: '至货主', dataIndex: 'ToStorer.Name' },
   { title: '单据日期', dataIndex: 'DocDate', sorter: true, customRender: (value) => { return moment(value).format('yyyy-MM-DD') } },
-  { title: '转移日期', dataIndex: 'TransferDate', sorter: true, customRender: (value) => { return moment(value).format('yyyy-MM-DD') } },
+  { title: '转移日期', dataIndex: 'TransferDate', sorter: true, customRender: (value) => { return value ? moment(value).format('yyyy-MM-DD') : '' } },
   { title: '转移状态', dataIndex: 'Status', scopedSlots: { customRender: 'Status' } },
   { title: '操作', dataIndex: 'action', width: '200px', scopedSlots: { customRender: 'action' } }
 ]

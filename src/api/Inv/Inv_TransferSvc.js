@@ -49,5 +49,16 @@ export default {
             method: 'delete',
             data: ids
         })
+    },
+    /**
+     * 删除实体数据
+     * @param {Array<String>} ids 要删除的实体主键
+     * @returns 删除是否成功
+     */
+    Transfer(id) {
+        return request({
+            url: `/api/Inv_Transfer/Transfer?id=${id}`,
+            method: 'post'
+        })
     }
 }
