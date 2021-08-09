@@ -115,7 +115,7 @@
       <InvChoose type="checkbox" ref="invChoose" @choose="handlerInvChoose"></InvChoose>
     </a-spin>
     <div :style="{ position: 'absolute', bottom: 0, right: 0, width: '100%', borderTop: '1px solid #e9e9e9', padding: '10px 16px', background: '#fff', textAlign: 'right', zIndex: 1, }">
-      <a-button :style="{ marginRight: '8px' }" type="primary" v-action:Adjust v-if="entity.Status==='Active'">执行转移</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" v-action:Execute v-if="entity.Status==='Active'" @click="handleTransfer">执行转移</a-button>
       <a-button :style="{ marginRight: '8px' }" type="primary" v-action:Update v-if="entity.Status==='Active'" @click="handleSubmit">保存</a-button>
       <a-button :style="{ marginRight: '8px' }" @click="()=>{this.visible=false}">关闭</a-button>
     </div>
@@ -172,7 +172,7 @@ export default {
       enumItems: [],
       expand: {},
       columns: [
-        { title: '编号', dataIndex: 'Code', width: 150, scopedSlots: { customRender: 'Code' } },
+        { title: '编号', dataIndex: 'Code', width: 100, scopedSlots: { customRender: 'Code' } },
         { title: '自物料', dataIndex: 'FromSkuId', width: 150, scopedSlots: { customRender: 'FromSkuId' } },
         { title: '自批次', dataIndex: 'FromLotId', width: 150, scopedSlots: { customRender: 'FromLotId' } },
         { title: '自库位', dataIndex: 'FromLocId', width: 150, scopedSlots: { customRender: 'FromLocId' } },
@@ -275,7 +275,8 @@ export default {
           Id: `new_${this.curDetailIndex}`, WhseId: this.defaultWhseId, TransferId: this.entity.Id, Code: '',
           FromStorerId: this.entity.FromStorerId, FromSkuId: inv.SkuId, FromLotId: inv.LotId, FromLocId: inv.LocId, FromTrayId: inv.TrayId, FromQty: inv.Qty,
           ToStorerId: this.entity.ToStorerId, ToSkuId: null, ToLotId: null, ToLocId: inv.LocId, ToTrayId: inv.TrayId, ToQty: inv.Qty,
-          Lot01: inv.Lot.Lot01, Lot02: inv.Lot.Lot02, Lot03: inv.Lot.Lot03, Lot04: inv.Lot.Lot04, Lot05: inv.Lot.Lot05, Lot06: inv.Lot.Lot06, Lot07: inv.Lot.Lot07, Lot08: inv.Lot.Lot08, Lot09: inv.Lot.Lot09, Lot10: inv.Lot.Lot10
+          Lot01: inv.Lot.Lot01, Lot02: inv.Lot.Lot02, Lot03: inv.Lot.Lot03, Lot04: inv.Lot.Lot04, Lot05: inv.Lot.Lot05, Lot06: inv.Lot.Lot06, Lot07: inv.Lot.Lot07, Lot08: inv.Lot.Lot08, Lot09: inv.Lot.Lot09, Lot10: inv.Lot.Lot10,
+          Status: 'Active'
         }
         this.entity.TransferDetail.push(detail)
       })
@@ -321,6 +322,19 @@ export default {
             this.$message.error(result.Msg)
           }
         })
+      })
+    },
+    handleTransfer() {
+      this.loading = true
+      MainSvc.Transfer(this.entity.Id).then(result => {
+        this.loading = false
+        if (result.Success) {
+          this.$message.success(result.Msg)
+          this.visible = false
+          this.$emit('Success')
+        } else {
+          this.$message.error(result.Msg)
+        }
       })
     }
   }
