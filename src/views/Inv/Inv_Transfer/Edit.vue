@@ -29,6 +29,15 @@
             </a-form-model-item>
           </a-col>
         </a-row>
+        <a-row>
+          <template v-if="entity.Expand">
+            <a-col :span="8" v-for="item in expand.EnumItems" :key="item.Code">
+              <a-form-model-item :label="item.Name" :prop="item.Code">
+                <ExpandInput v-model="entity.Expand[item.Code]" :enumitem="item" />
+              </a-form-model-item>
+            </a-col>
+          </template>
+        </a-row>
       </a-form-model>
       <div class="table-operator">
         <a-button type="primary" v-action:Add icon="plus" v-if="entity.Status==='Active'" @click="handleAdd()">新建</a-button>
@@ -128,6 +137,7 @@ import InvChoose from '@/components/Inv/InvChoose'
 import TraySelect from '@/components/Bas/TraySelect'
 import LotSelect from '@/components/Inv/LotSelect'
 import LotInput from '@/components/Stg/LotInput'
+import ExpandInput from '@/components/CF/ExpandInput'
 export default {
   components: {
     MainSvc,
@@ -141,7 +151,8 @@ export default {
     InvChoose,
     TraySelect,
     LotSelect,
-    LotInput
+    LotInput,
+    ExpandInput
   },
   props: {},
   data() {
@@ -159,6 +170,7 @@ export default {
       entity: {},
       curDetailIndex: 0,
       enumItems: [],
+      expand: {},
       columns: [
         { title: '编号', dataIndex: 'Code', width: 150, scopedSlots: { customRender: 'Code' } },
         { title: '自物料', dataIndex: 'FromSkuId', width: 150, scopedSlots: { customRender: 'FromSkuId' } },
@@ -198,6 +210,9 @@ export default {
     this.getEnum({ whseId: this.defaultWhseId, code: 'Bas_Lot_Field' }).then(result => {
       this.enumItems = result.EnumItems
     })
+    this.getEnum({ whseId: this.defaultWhseId, code: 'Inv_Transfer_Expand' }).then(result => {
+      this.expand = result
+    })
   },
   methods: {
     moment,
@@ -208,7 +223,14 @@ export default {
       this.entity = {
         TransferDetail: [],
         Id: '', WhseId: this.defaultWhseId, Code: '', FromStorerId: null, ToStorerId: null,
-        DocDate: moment().format('YYYY-MM-DD'), TransferDate: undefined, Remark: '', Status: 'Active'
+        DocDate: moment().format('YYYY-MM-DD'), TransferDate: undefined, Remark: '', Status: 'Active',
+        Expand: {
+          ExpStr1: undefined, ExpStr2: undefined, ExpStr3: undefined, ExpStr4: undefined, ExpStr5: undefined, ExpStr6: undefined,
+          ExpEnum1: undefined, ExpEnum2: undefined, ExpEnum3: undefined, ExpEnum4: undefined, ExpEnum5: undefined, ExpEnum6: undefined,
+          ExpInt1: undefined, ExpInt2: undefined, ExpInt3: undefined, ExpInt4: undefined, ExpInt5: undefined, ExpInt6: undefined,
+          ExpNum1: undefined, ExpNum2: undefined, ExpNum3: undefined, ExpNum4: undefined, ExpNum5: undefined, ExpNum6: undefined,
+          ExpDate1: undefined, ExpDate2: undefined, ExpDate3: undefined, ExpDate4: undefined, ExpDate5: undefined, ExpDate6: undefined
+        }
       }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
