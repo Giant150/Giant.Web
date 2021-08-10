@@ -116,7 +116,7 @@
     </a-spin>
     <div :style="{ position: 'absolute', bottom: 0, right: 0, width: '100%', borderTop: '1px solid #e9e9e9', padding: '10px 16px', background: '#fff', textAlign: 'right', zIndex: 1, }">
       <a-button :style="{ marginRight: '8px' }" type="default" @click="handlePrint">打印转移单</a-button>
-      <a-button :style="{ marginRight: '8px' }" type="primary" v-action:Execute v-if="entity.Status==='Active'" @click="handleTransfer">执行转移</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" v-action:Execute v-if="entity.Status==='Active' && entity.Id" @click="handleTransfer">执行转移</a-button>
       <a-button :style="{ marginRight: '8px' }" type="primary" v-action:Update v-if="entity.Status==='Active'" @click="handleSubmit">保存</a-button>
       <a-button :style="{ marginRight: '8px' }" @click="()=>{this.visible=false}">关闭</a-button>
     </div>
