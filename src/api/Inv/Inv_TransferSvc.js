@@ -60,5 +60,16 @@ export default {
             url: `/api/Inv_Transfer/Transfer?id=${id}`,
             method: 'post'
         })
+    },
+    /**
+     * 打印转移单
+     * @param {string} id 主键
+     * @returns 收货单PDF
+     */
+    Print(id) {
+        return request({
+            url: '/api/Inv_Transfer/TransferPrint?id=' + id,
+            method: 'get'
+        })
     }
 }
