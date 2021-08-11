@@ -54,11 +54,11 @@
             <!-- style="width: calc(100% - 240px);" -->
             <div>
               <v-chart :force-fit="true" :height="300" :data="invSkuType" :scale="pieScale">
-                <v-tooltip :showTitle="false" dataKey="item*percent" />
+                <v-tooltip :showTitle="false" dataKey="Key*Value" />
                 <v-axis />
                 <!-- position="right" :offsetX="-140" -->
-                <v-legend dataKey="item" position="left" :offsetY="0" :offsetX="0" />
-                <v-pie position="percent" color="item" :vStyle="{ stroke: '#fff', lineWidth: 1 }" />
+                <v-legend dataKey="Key" position="left" :offsetY="0" :offsetX="0" />
+                <v-pie position="Value" color="Key" :vStyle="{ stroke: '#fff', lineWidth: 1 }" />
                 <v-coord type="theta" :radius="0.75" :innerRadius="0.6" />
               </v-chart>
             </div>
@@ -67,12 +67,12 @@
       </a-col>
       <a-col :span="8">
         <a-card :loading="loading" :bordered="false" :style="{ height: '100%', margin:'5px' }">
-          <bar :data="storerInv" :scale="storerScale" title="货主库存" />
+          <bar :data="storerInv" title="货主库存" />
         </a-card>
       </a-col>
       <a-col :span="8">
         <a-card :loading="loading" :bordered="false" :style="{ height: '100%', margin:'5px' }">
-          <bar :data="storerInv" :scale="storerScale" title="上架区域库存" />
+          <bar :data="putawayInv" title="上架区域库存" />
         </a-card>
       </a-col>
     </a-row>
@@ -132,24 +132,14 @@ export default {
       invSummary: { Qty: 0, QtyAllocated: 0, QtyPicked: 0 },
       ledger: [],
       pieScale: [{ dataKey: 'percent', min: 0, formatter: '.0%' }],
-      invSkuType: [
-        { item: 'Sku001', count: 10, percent: 0.1 },
-        { item: 'Sku002', count: 20, percent: 0.2 },
-        { item: 'Sku003', count: 30, percent: 0.3 },
-        { item: 'Sku004', count: 20, percent: 0.2 },
-        { item: 'Sku005', count: 10, percent: 0.1 },
-        { item: 'Sku006', count: 10, percent: 0.1 }
-      ],
-      storerScale: [
-        { dataKey: 'x', title: '货主' },
-        { dataKey: 'y', title: '库存' }
-      ],
+      invSkuType: [],
       storerInv: [
         { x: '长泰机器人', y: 1000 },
         { x: '工业智能体', y: 1500 },
         { x: '激光公司', y: 500 },
         { x: '中南智能', y: 1500 }
       ],
+      putawayInv: [],
       commits: []
     }
   },
@@ -208,6 +198,9 @@ export default {
     this.loading = true
     this.getInvSummary()
     this.getLedgerAge()
+    this.getSummaryBySkuType()
+    this.getSummaryByPutaway()
+    this.getSummaryByStorer()
     this.getGitLog()
     this.loading = false
   },
@@ -221,6 +214,21 @@ export default {
     getLedgerAge() {
       LedgerSvc.GetLedgerAge(this.defaultWhseId, moment().format('YYYY-MM-DD')).then(result => {
         this.ledger = result.Data
+      })
+    },
+    getSummaryBySkuType() {
+      InventorySvc.GetSummaryBySkuType(this.defaultWhseId).then(result => {
+        this.invSkuType = result.Data
+      })
+    },
+    getSummaryByPutaway() {
+      InventorySvc.GetSummaryByPutaway(this.defaultWhseId).then(result => {
+        this.putawayInv = result.Data.map((element) => { return { x: element.Key, y: element.Value } })
+      })
+    },
+    getSummaryByStorer() {
+      InventorySvc.GetSummaryByStorer(this.defaultWhseId).then(result => {
+        this.storerInv = result.Data.map((element) => { return { x: element.Key, y: element.Value } })
       })
     },
     getGitLog() {
