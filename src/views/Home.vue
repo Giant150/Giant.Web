@@ -133,12 +133,7 @@ export default {
       ledger: [],
       pieScale: [{ dataKey: 'percent', min: 0, formatter: '.0%' }],
       invSkuType: [],
-      storerInv: [
-        { x: '长泰机器人', y: 1000 },
-        { x: '工业智能体', y: 1500 },
-        { x: '激光公司', y: 500 },
-        { x: '中南智能', y: 1500 }
-      ],
+      storerInv: [],
       putawayInv: [],
       commits: []
     }
