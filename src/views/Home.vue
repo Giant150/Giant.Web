@@ -2,7 +2,7 @@
   <div>
     <a-row>
       <a-col :span="8">
-        <ChartCard :loading="loading" title="库存总数量" :total="invSummary.Qty">
+        <ChartCard :loading="loading" title="库存总数量" :total="invSummary.Qty" :style="{ height: '100%', margin:'5px' }">
           <a-tooltip title="当前仓库物料总数量" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
@@ -14,7 +14,7 @@
         </ChartCard>
       </a-col>
       <a-col :span="8">
-        <ChartCard :loading="loading" title="入库帐龄" :total="storageLedgerAge | totalAge | NumberFormat">
+        <ChartCard :loading="loading" title="入库帐龄" :total="storageLedgerAge | totalAge | NumberFormat" :style="{ height: '100%', margin:'5px' }">
           <a-tooltip title="7天内入库数量统计" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
@@ -30,7 +30,7 @@
         </ChartCard>
       </a-col>
       <a-col :span="8">
-        <ChartCard :loading="loading" title="出库帐龄" :total="outLedgerAge | totalAge | NumberFormat">
+        <ChartCard :loading="loading" title="出库帐龄" :total="outLedgerAge | totalAge | NumberFormat" :style="{ height: '100%', margin:'5px' }">
           <a-tooltip title="7天内出库数量统计" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
@@ -44,6 +44,36 @@
           </div>
           <template slot="footer">当天出库数量:<span> {{ Math.abs(outLedgerAge.Day0) | NumberFormat }}</span></template>
         </ChartCard>
+      </a-col>
+    </a-row>
+    <a-row>
+      <a-col :span="8">
+        <a-card :loading="loading" :bordered="false" :style="{ height: '100%', margin:'5px' }">
+          <h4>物料类型</h4>
+          <div>
+            <!-- style="width: calc(100% - 240px);" -->
+            <div>
+              <v-chart :force-fit="true" :height="300" :data="invSkuType" :scale="pieScale">
+                <v-tooltip :showTitle="false" dataKey="item*percent" />
+                <v-axis />
+                <!-- position="right" :offsetX="-140" -->
+                <v-legend dataKey="item" position="left" :offsetY="0" :offsetX="0" />
+                <v-pie position="percent" color="item" :vStyle="{ stroke: '#fff', lineWidth: 1 }" />
+                <v-coord type="theta" :radius="0.75" :innerRadius="0.6" />
+              </v-chart>
+            </div>
+          </div>
+        </a-card>
+      </a-col>
+      <a-col :span="8">
+        <a-card :loading="loading" :bordered="false" :style="{ height: '100%', margin:'5px' }">
+          <bar :data="storerInv" :scale="storerScale" title="货主库存" />
+        </a-card>
+      </a-col>
+      <a-col :span="8">
+        <a-card :loading="loading" :bordered="false" :style="{ height: '100%', margin:'5px' }">
+          <bar :data="storerInv" :scale="storerScale" title="上架区域库存" />
+        </a-card>
       </a-col>
     </a-row>
     <a-divider>更新历史</a-divider>
@@ -101,6 +131,25 @@ export default {
       loading: false,
       invSummary: { Qty: 0, QtyAllocated: 0, QtyPicked: 0 },
       ledger: [],
+      pieScale: [{ dataKey: 'percent', min: 0, formatter: '.0%' }],
+      invSkuType: [
+        { item: 'Sku001', count: 10, percent: 0.1 },
+        { item: 'Sku002', count: 20, percent: 0.2 },
+        { item: 'Sku003', count: 30, percent: 0.3 },
+        { item: 'Sku004', count: 20, percent: 0.2 },
+        { item: 'Sku005', count: 10, percent: 0.1 },
+        { item: 'Sku006', count: 10, percent: 0.1 }
+      ],
+      storerScale: [
+        { dataKey: 'x', title: '货主' },
+        { dataKey: 'y', title: '库存' }
+      ],
+      storerInv: [
+        { x: '长泰机器人', y: 1000 },
+        { x: '工业智能体', y: 1500 },
+        { x: '激光公司', y: 500 },
+        { x: '中南智能', y: 1500 }
+      ],
       commits: []
     }
   },
@@ -110,7 +159,7 @@ export default {
       defaultStorerId: 'storerId'
     }),
     listCommit() {
-      return this.commits.slice(0).sort((a, b) => new Date(b.commit.committer.date) - new Date(a.commit.committer.date))
+      return this.commits.slice(0).sort((a, b) => new Date(b.commit.committer.date) - new Date(a.commit.committer.date)).slice(0, 4)
     },
     storageLedgerAge() {
       var item = this.ledger.find(w => w.Category === 'Storage')
