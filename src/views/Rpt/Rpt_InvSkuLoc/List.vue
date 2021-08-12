@@ -49,7 +49,7 @@ import LocSelect from '@/components/Bas/LocSelect'
 const columns = [
   { title: '货主编码', dataIndex: 'StorerCode', sorter: true },
   { title: '货主名称', dataIndex: 'StorerName', sorter: true },
-  { title: '物料货位', dataIndex: 'LocCode', sorter: true },
+  { title: '物料库位', dataIndex: 'LocCode', sorter: true },
   { title: '物料编码', dataIndex: 'SkuCode', sorter: true },
   { title: '物料名称', dataIndex: 'SkuName', sorter: true },
   { title: '库存数量', dataIndex: 'Qty', sorter: true },
