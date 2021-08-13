@@ -4,33 +4,31 @@
       <a-form layout="inline">
         <a-row :gutter="48">
           <a-col :md="6" :sm="24">
-            <a-form-item label="关键字">
-              <a-input v-model="queryParam.Keyword" placeholder="关键字" />
+            <a-form-item label="货主">
+              <StorerSelect v-model="queryParam.StorerId" :type="['Storer']"></StorerSelect>
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="24">
+            <a-form-item label="批次属性">
+              <EnumSelect code="Bas_Lot_Field" v-model="queryParam.group" ></EnumSelect>
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="24">
+            <a-form-item label="物料">
+              <SkuSelect v-model="queryParam.SkuId" :storer="queryParam.StorerId"></SkuSelect>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="24">
             <span class="table-page-search-submitButtons">
               <a-button type="primary" v-action:Query @click="()=>{this.$refs.table.refresh()}">查询</a-button>
               <a-button style="margin-left: 8px" @click="resetSearchForm()">重置</a-button>
+              <a-button style="margin-left: 8px" v-action:Export icon="export" @click="handleExport()">导出</a-button>
             </span>
           </a-col>
         </a-row>
       </a-form>
     </div>
-
-    <div class="table-operator">
-      <a-button type="primary" v-action:Add icon="plus" @click="handleAdd">新建</a-button>
-      <a-button type="primary" v-action:Delete icon="delete" @click="handleDelete()">批量删除</a-button>
-    </div>
-
-    <s-table ref="table" size="default" rowKey="Id" :columns="columns" :data="loadData" :rowSelection="rowSelection" showPagination="auto">
-      <span slot="action" slot-scope="text, record">
-        <template>
-          <a v-action:Update @click="handleEdit(record)">修改</a>
-          <a-divider v-action:Delete type="vertical" />
-          <a v-action:Delete @click="handleDelete([record])">删除</a>
-        </template>
-      </span>
+    <s-table ref="table" size="default" rowKey="LotCode" :columns="columns" :data="loadData" :rowSelection="rowSelection" showPagination="auto">
     </s-table>
   </a-card>
 </template>
@@ -47,10 +45,14 @@ import SkuSelect from '@/components/Bas/SkuSelect'
 import LocSelect from '@/components/Bas/LocSelect'
 
 const columns = [
-  { title: '编号', dataIndex: 'Code', sorter: true },
-  { title: '名称', dataIndex: 'Name', sorter: true },
-  { title: '修改时间', dataIndex: 'ModifyTime', sorter: true, customRender: (value) => { return moment(value).format('yyyy-MM-DD') } },
-  { title: '操作', dataIndex: 'action', width: '200px', scopedSlots: { customRender: 'action' } }
+   { title: '货主编码', dataIndex: 'StorerCode', sorter: true },
+   { title: '货主名称', dataIndex: 'StorerName', sorter: true },
+   { title: '批次属性', dataIndex: 'LotCode', sorter: true },
+   { title: '物料编码', dataIndex: 'SkuCode', sorter: true },
+   { title: '物料名称', dataIndex: 'SkuName', sorter: true },
+   { title: '库存数量', dataIndex: 'Qty', sorter: true },
+   { title: '已分配', dataIndex: 'QtyAllocated' },
+   { title: '已拣货', dataIndex: 'QtyPicked' }
 ]
 
 export default {
@@ -73,7 +75,7 @@ export default {
       // 高级搜索 展开/关闭
       advanced: false,
       // 查询参数
-      queryParam: { WhseId: '', Keyword: '' },
+      queryParam: { WhseId: '', StorerId: '', LotId: '', SkuId: '', group: 'LotCode' },
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         this.queryParam.WhseId = this.defaultWhseId
@@ -83,9 +85,9 @@ export default {
             _query[key] = _query[key].format('YYYY-MM-DD')
           }
         }
-        const requestParameters = Object.assign({ sortField: 'ModifyTime', sortOrder: 'desc', Search: _query }, parameter)
+        const requestParameters = Object.assign({ sortField: 'StorerCode', sortOrder: 'asc', Search: _query }, parameter)
         console.log('loadData request parameters:', requestParameters)
-        return MainSvc.GetPage(requestParameters)
+        return MainSvc.GetSummary(requestParameters)
       },
       selectedRowKeys: [],
       selectedRows: []
@@ -93,7 +95,9 @@ export default {
   },
   filters: {
   },
-  created() {},
+  created() {
+    this.resetSearchForm()
+  },
   computed: {
     ...mapGetters({
       defaultWhseId: 'whseId',
@@ -108,40 +112,39 @@ export default {
   },
   methods: {
     moment,
-    handleAdd() {
-      this.mdl = null
-      this.visible = true
-      this.$refs.editForm.openForm(null, '新增')
-    },
-    handleEdit(record) {
-      this.visible = true
-      this.mdl = { ...record }
-      this.$refs.editForm.openForm(record.Id, '修改')
-    },
     onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
     },
     resetSearchForm() {
-      this.queryParam = { WhseId: this.defaultWhseId, Keyword: '' }
+      this.queryParam = { WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, LotId: '', SkuId: '', group: 'Code' }
     },
-    handleDelete(rows) {
-      var thisObj = this
-      var ids = rows.map(value => value.Id)
-      this.$confirm({
-        title: '确认删除吗?',
-        onOk() {
-          return new Promise((resolve, reject) => {
-            MainSvc.Delete(ids).then(result => {
-              resolve()
-              if (result.Success) {
-                thisObj.$message.success('操作成功!')
-                thisObj.$refs.table.refresh()
-              } else {
-                thisObj.$message.error(result.Msg)
-              }
-            })
-          })
+    handleExport() {
+      this.queryParam.WhseId = this.defaultWhseId
+      var _query = Object.assign({}, { ...this.queryParam })
+      for (const key in _query) {
+        if (moment.isMoment(_query[key])) {
+          _query[key] = _query[key].format('YYYY-MM-DD')
+        }
+      }
+      MainSvc.Export(_query).then(result => {
+        if (result.Success) {
+          var fileName = result.Data.substring(result.Data.lastIndexOf('/') + 1)
+          var filePath = `${process.env.VUE_APP_API_BASE_URL}${result.Data}`
+          console.log('handleExport', fileName, filePath)
+          try {
+            var elem = document.createElement('a')
+            elem.download = fileName
+            elem.href = filePath
+            elem.style.display = 'none'
+            document.body.appendChild(elem)
+            elem.click()
+            document.body.removeChild(elem)
+          } catch (e) {
+            this.$message.error('下载异常！')
+          }
+        } else {
+          this.$message.error(result.Msg)
         }
       })
     }

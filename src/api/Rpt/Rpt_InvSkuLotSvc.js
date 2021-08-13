@@ -10,7 +10,7 @@ export default {
      */
      GetSummary(parameter) {
         return request({
-            url: '/api/Rpt_InvSkuLot/GetSummary',
+            url: '/api/Rpt_InvSkuLot/GetSummaryByLot',
             method: 'post',
             data: parameter
         })
