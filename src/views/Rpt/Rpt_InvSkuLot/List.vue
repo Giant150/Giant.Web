@@ -37,7 +37,7 @@
 import { mapGetters } from 'vuex'
 import moment from 'moment'
 import { STable } from '@/components'
-import MainSvc from '@/api/Rpt/Rpt_InvSkuLotSvc'
+import MainSvc from '@/api/Rpt/Rpt_InvLotSvc'
 import EnumSelect from '@/components/CF/EnumSelect'
 import EnumName from '@/components/CF/EnumName'
 import StorerSelect from '@/components/Bas/StorerSelect'
