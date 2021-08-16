@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import moment from 'moment'
 import { STable } from '@/components'
 import MainSvc from '@/api/Rpt/Rpt_InvLotSvc'
@@ -43,17 +43,6 @@ import EnumName from '@/components/CF/EnumName'
 import StorerSelect from '@/components/Bas/StorerSelect'
 import SkuSelect from '@/components/Bas/SkuSelect'
 import LocSelect from '@/components/Bas/LocSelect'
-
-const columns = [
-   { title: '货主编码', dataIndex: 'StorerCode', sorter: true },
-   { title: '货主名称', dataIndex: 'StorerName', sorter: true },
-   { title: '批次属性', dataIndex: 'LotCode', sorter: true },
-   { title: '物料编码', dataIndex: 'SkuCode', sorter: true },
-   { title: '物料名称', dataIndex: 'SkuName', sorter: true },
-   { title: '库存数量', dataIndex: 'Qty', sorter: true },
-   { title: '已分配', dataIndex: 'QtyAllocated' },
-   { title: '已拣货', dataIndex: 'QtyPicked' }
-]
 
 export default {
   components: {
@@ -66,8 +55,17 @@ export default {
     LocSelect
   },
   data() {
-    this.columns = columns
     return {
+      columns: [
+        { title: '货主编码', dataIndex: 'StorerCode', sorter: true },
+        { title: '货主名称', dataIndex: 'StorerName', sorter: true },
+        { title: '物料编码', dataIndex: 'SkuCode', sorter: true },
+        { title: '物料名称', dataIndex: 'SkuName', sorter: true },
+        { title: () => { return this.cusHeaderTitle(this.queryParam.group) }, dataIndex: 'LotCode' },
+        { title: '库存数量', dataIndex: 'Qty', sorter: true },
+        { title: '已分配', dataIndex: 'QtyAllocated' },
+        { title: '已拣货', dataIndex: 'QtyPicked' }
+      ],
       // create model
       visible: false,
       confirmLoading: false,
@@ -75,7 +73,7 @@ export default {
       // 高级搜索 展开/关闭
       advanced: false,
       // 查询参数
-      queryParam: { WhseId: '', StorerId: '', LotId: '', SkuId: '', group: 'LotCode' },
+      queryParam: { WhseId: '', StorerId: '', LotId: '', SkuId: '', group: 'Code' },
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         this.queryParam.WhseId = this.defaultWhseId
@@ -85,18 +83,22 @@ export default {
             _query[key] = _query[key].format('YYYY-MM-DD')
           }
         }
-        const requestParameters = Object.assign({ sortField: 'StorerCode', sortOrder: 'asc', Search: _query }, parameter)
+        const requestParameters = Object.assign({ sortField: 'SkuCode', sortOrder: 'asc', Search: _query }, parameter)
         console.log('loadData request parameters:', requestParameters)
         return MainSvc.GetSummary(requestParameters)
       },
       selectedRowKeys: [],
-      selectedRows: []
+      selectedRows: [],
+      enumItems: []
     }
   },
   filters: {
   },
   created() {
     this.resetSearchForm()
+    this.getEnum({ whseId: this.defaultWhseId, code: 'Bas_Lot_Field' }).then(result => {
+      this.enumItems = result.EnumItems
+    })
   },
   computed: {
     ...mapGetters({
@@ -112,6 +114,10 @@ export default {
   },
   methods: {
     moment,
+    ...mapActions({ getConfig: 'getConfig', getEnum: 'getEnum' }),
+    cusHeaderTitle(column) {
+      return this.enumItems.find(w => w.Code === column)?.Name
+    },
     onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
