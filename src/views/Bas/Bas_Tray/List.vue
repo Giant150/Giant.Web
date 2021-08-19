@@ -30,10 +30,13 @@
           <a-dropdown >
             <a-menu slot="overlay" >
               <a-menu-item key="1">
-                <a-button type="primary" icon="arrow-up" @click="handleExport">导出</a-button>
+                <a-button type="primary" icon="arrow-down" @click="handleExport">导出</a-button>
               </a-menu-item>
               <a-menu-item key="2">
-                <a-button type="primary" icon="arrow-down" >导    入</a-button>
+                <a-upload name="file" :multiple="true" :action="uploadConfig.action" :headers="uploadConfig.headers" @change="handleChange">
+
+                  <a-button type="primary" icon="arrow-up" >导入</a-button>
+                </a-upload>
               </a-menu-item>
               <a-menu-item key="3">
                 <a-button type="primary" icon="export" @click="handleExportTemplet" size="small">下载模板</a-button>
@@ -120,16 +123,21 @@ export default {
         return MainSvc.GetPage(requestParameters)
       },
       selectedRowKeys: [],
-      selectedRows: []
+      selectedRows: [],
+      uploadConfig: {
+        action: '',
+        data: { whseId: '', checkId: '' },
+        headers: { Authorization: '' }
+      }
     }
   },
   filters: {
   },
-  created() { },
   computed: {
     ...mapGetters({
       defaultWhseId: 'whseId',
-      defaultStorerId: 'storerId'
+      defaultStorerId: 'storerId',
+      token: 'token'
     }),
     rowSelection() {
       return {
@@ -137,6 +145,11 @@ export default {
         onChange: this.onSelectChange
       }
     }
+  },
+  created() {
+    this.uploadConfig.data.whseId = this.defaultWhseId
+    this.uploadConfig.headers.Authorization = `Bearer ${this.token}`
+    this.uploadConfig.action = `${process.env.VUE_APP_API_BASE_URL}/api/Bas_Tray/Import?whseId=${this.defaultWhseId}`
   },
   methods: {
     moment,
@@ -227,6 +240,21 @@ export default {
           this.$message.error(result.Msg)
         }
       })
+    },
+    handleChange(info) {
+      if (info.file.status !== 'uploading') {
+        console.log(info.file, info.fileList)
+      }
+      if (info.file.status === 'done') {
+        if (info.file.response.Success === false) {
+          this.$message.error(`${info.file.name}文件,${info.file.response.Msg},请检查文件内容！ `)
+        } else {
+            this.$message.success(`${info.file.name}  文件上传成功！`)
+        }
+        this.visible = false
+      } else if (info.file.status === 'error') {
+        this.$message.error(`${info.file.name} 文件上传失败！`)
+      }
     }
   }
 }
