@@ -5,7 +5,7 @@
         <a-row :gutter="48">
           <a-col :md="4" :sm="24">
             <a-form-item label="编码">
-              <a-input v-model="queryParam.Keyword" placeholder="编码" />
+              <a-input v-model="queryParam.Keyword" placeholder="编码/关联单号" />
             </a-form-item>
           </a-col>
           <a-col :md="4" :sm="24">

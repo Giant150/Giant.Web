@@ -9,15 +9,16 @@
         <!-- <a-menu-item v-if="menu" key="center" @click="handleToCenter">
           <a-icon type="user" />
           {{ $t('menu.account.center') }}
-        </a-menu-item>
-        <a-menu-item v-if="menu" key="settings" @click="handleToSettings">
-          <a-icon type="setting" />
-          {{ $t('menu.account.settings') }}
         </a-menu-item> -->
-        <!-- <a-menu-divider v-if="menu" /> -->
+        <a-menu-item v-if="menu" key="healthcheck">
+          <a target="_blank" :href="healthchecks">
+            <a-icon type="setting" />
+            系统健康检查
+          </a>
+        </a-menu-item>
+        <a-menu-divider v-if="menu" />
         <a-menu-item key="logout" @click="handleLogout">
-          <a-icon type="logout" />
-          {{ $t('menu.account.logout') }}
+          <a-icon type="logout" />退出登录
         </a-menu-item>
       </a-menu>
     </template>
@@ -42,14 +43,19 @@ export default {
       default: true
     }
   },
+  computed: {
+    healthchecks() {
+      return `${process.env.VUE_APP_API_BASE_URL}/healthchecks-ui`
+    }
+  },
   methods: {
-    handleToCenter () {
+    handleToCenter() {
       this.$router.push({ path: '/account/center' })
     },
-    handleToSettings () {
+    handleToSettings() {
       this.$router.push({ path: '/account/settings' })
     },
-    handleLogout (e) {
+    handleLogout(e) {
       Modal.confirm({
         title: this.$t('layouts.usermenu.dialog.title'),
         content: this.$t('layouts.usermenu.dialog.content'),
@@ -61,7 +67,7 @@ export default {
             this.$router.push({ name: 'login' })
           })
         },
-        onCancel () {}
+        onCancel() { }
       })
     }
   }
