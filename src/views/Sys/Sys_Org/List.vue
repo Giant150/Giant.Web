@@ -28,6 +28,7 @@ import EditForm from './Edit'
 
 const columns = [
   { title: '名称', dataIndex: 'Name' },
+  { title: '编号', dataIndex: 'Code' },
   { title: '修改时间', dataIndex: 'ModifyTime', scopedSlots: { customRender: 'ModifyTime' } },
   { title: '操作', dataIndex: 'action', width: '150px', scopedSlots: { customRender: 'action' } }
 ]
