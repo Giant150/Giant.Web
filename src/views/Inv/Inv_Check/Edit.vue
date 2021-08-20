@@ -23,7 +23,12 @@
               <a-date-picker v-model="entity.CheckDate" valueFormat="YYYY-MM-DD"></a-date-picker>
             </a-form-model-item>
           </a-col>
-          <a-col :span="16">
+          <a-col :span="8">
+            <a-form-model-item label="关联单号" prop="RefCode">
+              <a-input v-model="entity.RefCode" autocomplete="off" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="8">
             <a-form-model-item label="备注" prop="Remark">
               <a-input v-model="entity.Remark" autocomplete="off" />
             </a-form-model-item>
@@ -287,7 +292,8 @@ export default {
       this.visible = true
       this.activeKey = 'CheckConfig'
       this.details = []
-      this.entity = { Id: '', WhseId: this.defaultWhseId, Code: '', Name: '', Type: undefined, CheckDate: moment().format('YYYY-MM-DD'), Remark: '', Status: 'Active', ConfigVal: null,
+      this.entity = {
+        Id: '', WhseId: this.defaultWhseId, Code: '', RefCode: '', Name: '', Type: undefined, CheckDate: moment().format('YYYY-MM-DD'), Remark: '', Status: 'Active', ConfigVal: null,
         Expand: {
           ExpStr1: undefined, ExpStr2: undefined, ExpStr3: undefined, ExpStr4: undefined, ExpStr5: undefined, ExpStr6: undefined,
           ExpEnum1: undefined, ExpEnum2: undefined, ExpEnum3: undefined, ExpEnum4: undefined, ExpEnum5: undefined, ExpEnum6: undefined,

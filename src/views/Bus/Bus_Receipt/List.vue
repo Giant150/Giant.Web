@@ -10,7 +10,7 @@
           </a-col>
           <a-col :md="6" :sm="24">
             <a-form-item label="单号">
-              <a-input v-model="queryParam.Keyword" placeholder="单号" />
+              <a-input v-model="queryParam.Keyword" placeholder="单号/关联单号" />
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="24">

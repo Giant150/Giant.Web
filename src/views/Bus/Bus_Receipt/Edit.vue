@@ -23,8 +23,6 @@
               <StorerSelect v-model="entity.SupplierId" :type="['Supplier']"></StorerSelect>
             </a-form-model-item>
           </a-col>
-        </a-row>
-        <a-row>
           <a-col :span="6">
             <a-form-model-item label="单据日期" prop="DocDate">
               <a-date-picker v-model="entity.DocDate" valueFormat="YYYY-MM-DD"></a-date-picker>
@@ -35,8 +33,13 @@
               <a-date-picker v-model="entity.RecDate" valueFormat="YYYY-MM-DD"></a-date-picker>
             </a-form-model-item>
           </a-col>
-          <a-col :span="12">
-            <a-form-model-item label="备注" prop="Remark" :labelCol="{ xs: { span: 24 }, sm: { span: 3 } }" :wrapperCol="{ xs: { span: 24 }, sm: { span: 19 } }">
+          <a-col :span="6">
+            <a-form-model-item label="关联单号" prop="RefCode">
+              <a-input v-model="entity.RefCode"></a-input>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="6">
+            <a-form-model-item label="备注" prop="Remark">
               <a-input v-model="entity.Remark"></a-input>
             </a-form-model-item>
           </a-col>
@@ -249,7 +252,7 @@ export default {
       this.visible = true
       this.isModify = false
       this.entity = {
-        ReceiptDetail: [], Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', RecType: 'Standard',
+        ReceiptDetail: [], Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', RefCode: '', RecType: 'Standard',
         DocDate: moment().format('YYYY-MM-DD'), RecDate: moment().format('YYYY-MM-DD'), SupplierId: '', Remark: '', Status: 'Active',
         Expand: {
           ExpStr1: undefined, ExpStr2: undefined, ExpStr3: undefined, ExpStr4: undefined, ExpStr5: undefined, ExpStr6: undefined,

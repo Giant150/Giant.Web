@@ -5,6 +5,9 @@
         <a-form-model-item label="上级组织" prop="ParentId">
           <OrgSelect v-model="entity.ParentId" :allowClear="true"></OrgSelect>
         </a-form-model-item>
+        <a-form-model-item label="组织编号" prop="Code">
+          <a-input v-model="entity.Code" autocomplete="off" />
+        </a-form-model-item>
         <a-form-model-item label="组织名称" prop="Name">
           <a-input v-model="entity.Name" autocomplete="off" />
         </a-form-model-item>
@@ -27,6 +30,7 @@ export default {
       title: '新建',
       layout: { labelCol: { xs: { span: 24 }, sm: { span: 7 } }, wrapperCol: { xs: { span: 24 }, sm: { span: 13 } } },
       rules: {
+        Code: [{ required: true, message: '必填' }],
         Name: [{ required: true, message: '必填' }]
       },
       visible: false,
@@ -39,7 +43,7 @@ export default {
     init() {
       this.loading = false
       this.visible = true
-      this.entity = { Id: '', Name: '' }
+      this.entity = { Id: '', Code: '', Name: '' }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })
