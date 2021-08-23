@@ -4,18 +4,8 @@
       <a-form layout="inline">
         <a-row :gutter="48">
           <a-col :md="6" :sm="24">
-            <a-form-item label="工号">
-              <a-input v-model="queryParam.Code" placeholder="名称" />
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="24">
-            <a-form-item label="名称">
-              <a-input v-model="queryParam.Name" placeholder="名称" />
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="24">
-            <a-form-item label="帐号">
-              <a-input v-model="queryParam.UserName" placeholder="帐号" />
+            <a-form-item label="关键字">
+              <a-input v-model="queryParam.Keyword" placeholder="名称/工号/帐号" />
             </a-form-item>
           </a-col>
           <a-col :md="!advanced && 6 || 24" :sm="24">
@@ -92,7 +82,7 @@ export default {
       // 高级搜索 展开/关闭
       advanced: false,
       // 查询参数
-      queryParam: { Code: '', Name: '', UserName: '' },
+      queryParam: { Keyword: '' },
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         const requestParameters = Object.assign({ sortField: 'Name', sortOrder: 'asc', Search: { ...this.queryParam } }, parameter)
@@ -145,7 +135,7 @@ export default {
       this.selectedRows = selectedRows
     },
     resetSearchForm() {
-      this.queryParam = {}
+      this.queryParam = { Keyword: '' }
     },
     handleDelete(rows) {
       var thisObj = this

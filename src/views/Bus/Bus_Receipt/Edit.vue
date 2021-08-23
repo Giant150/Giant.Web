@@ -363,7 +363,7 @@ export default {
             // (引用)
             const lotName = key.replace('Type', '')
             const quoteName = record.Sku.LotStg[`${lotName}Enum`]
-            const colVal = this.entity[quoteName]
+            const colVal = quoteName.startsWith('Expand.') ? this.entity.Expand[quoteName.replace('Expand.', '')] : this.entity[quoteName]
             record[lotName] = colVal
           } else if (key.endsWith('Type') && record.Sku.LotStg[key] === 'CalcExpiry') {
             // (计算到期)
