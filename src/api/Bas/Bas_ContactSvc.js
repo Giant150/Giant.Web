@@ -49,5 +49,27 @@ export default {
             method: 'delete',
             data: ids
         })
+    },
+    /**
+     * 导出模板
+     * @returns 是否成功
+     */
+     Exporttemplet() {
+        return request({
+            url: '/api/Bas_Contact/Exporttemplet',
+            method: 'get'
+        })
+    },
+    /**
+     * 导出数据
+     * @param {Object} query 查询条件
+     * @returns excel文件地址
+     */
+    Export(query) {
+        return request({
+            url: '/api/Bas_Contact/Export',
+            method: 'post',
+            data: query
+        })
     }
 }

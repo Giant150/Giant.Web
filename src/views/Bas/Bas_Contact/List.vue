@@ -3,6 +3,22 @@
     <div class="table-operator">
       <a-button type="primary" v-action:Add icon="plus" @click="handleAdd">新建</a-button>
       <a-button type="primary" v-action:Delete icon="delete" @click="handleDelete()">批量删除</a-button>
+      <a-dropdown >
+        <a-menu slot="overlay" >
+          <a-menu-item key="1">
+            <a-button type="primary" icon="download" @click="handleExport">导出</a-button>
+          </a-menu-item>
+          <a-menu-item key="2">
+            <a-upload name="file" :multiple="true" :action="uploadConfig.action" :headers="uploadConfig.headers" @change="handleChange">
+              <a-button type="primary" icon="upload" >导入</a-button>
+            </a-upload>
+          </a-menu-item>
+          <a-menu-item key="3">
+            <a-button type="primary" icon="export" @click="handleExportTemplet" size="small">下载模板</a-button>
+          </a-menu-item>
+        </a-menu>
+        <a-button> 导入\出 <a-icon type="cloud-download" /> </a-button>
+      </a-dropdown>
     </div>
 
     <s-table ref="table" size="default" rowKey="Id" :columns="columns" :data="loadData" :rowSelection="rowSelection" showPagination="auto">
@@ -80,16 +96,21 @@ export default {
       },
       selectedRowKeys: [],
       selectedRows: [],
-      entity: {}
+      entity: {},
+      uploadConfig: {
+        action: '',
+        data: { whseId: '' },
+        headers: { Authorization: '' }
+      }
     }
   },
   filters: {
   },
-  created() {},
   computed: {
     ...mapGetters({
       defaultWhseId: 'whseId',
-      defaultStorerId: 'storerId'
+      defaultStorerId: 'storerId',
+      token: 'token'
     }),
     rowSelection() {
       return {
@@ -97,6 +118,11 @@ export default {
         onChange: this.onSelectChange
       }
     }
+  },
+  created() {
+    this.uploadConfig.data.whseId = this.defaultWhseId
+    this.uploadConfig.headers.Authorization = `Bearer ${this.token}`
+    this.uploadConfig.action = `${process.env.VUE_APP_API_BASE_URL}/api/Bas_Contact/Import?whseId=${this.defaultWhseId}`
   },
   methods: {
     moment,
@@ -145,6 +171,72 @@ export default {
           })
         }
       })
+    },
+    handleExportTemplet() {
+      MainSvc.Exporttemplet().then(result => {
+        if (result.Success) {
+          var fileName = result.Data.substring(result.Data.lastIndexOf('/') + 1)
+          var filePath = `${process.env.VUE_APP_API_BASE_URL}${result.Data}`
+          console.log('handleExportTemplet', fileName, filePath)
+          try {
+            var elem = document.createElement('a')
+            elem.download = fileName
+            elem.href = filePath
+            elem.style.display = 'none'
+            document.body.appendChild(elem)
+            elem.click()
+            document.body.removeChild(elem)
+          } catch (e) {
+            this.$message.error('下载异常！')
+          }
+        } else {
+          this.$message.error(result.Msg)
+        }
+      })
+    },
+    handleExport() {
+      this.queryParam.WhseId = this.defaultWhseId
+      var _query = Object.assign({}, { ...this.queryParam })
+      for (const key in _query) {
+        if (moment.isMoment(_query[key])) {
+          _query[key] = _query[key].format('YYYY-MM-DD')
+        }
+      }
+      MainSvc.Export(_query).then(result => {
+        if (result.Success) {
+          var fileName = result.Data.substring(result.Data.lastIndexOf('/') + 1)
+          var filePath = `${process.env.VUE_APP_API_BASE_URL}${result.Data}`
+          console.log('handleExport', fileName, filePath)
+          try {
+            var elem = document.createElement('a')
+            elem.download = fileName
+            elem.href = filePath
+            elem.style.display = 'none'
+            document.body.appendChild(elem)
+            elem.click()
+            document.body.removeChild(elem)
+          } catch (e) {
+            this.$message.error('下载异常！')
+          }
+        } else {
+          this.$message.error(result.Msg)
+        }
+      })
+    },
+    handleChange(info) {
+      if (info.file.status !== 'uploading') {
+        console.log(info.file, info.fileList)
+      }
+      if (info.file.status === 'done') {
+        if (info.file.response.Success === false) {
+          this.$message.error(`${info.file.name}文件,${info.file.response.Msg},请检查文件内容！ `)
+        } else {
+            this.$message.success(`${info.file.name}  文件上传成功！`)
+        }
+        this.visible = false
+      } else if (info.file.status === 'error') {
+        this.$message.error(`${info.file.name} 文件上传失败！`)
+      }
     }
   }
 }
