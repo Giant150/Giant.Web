@@ -210,86 +210,30 @@ export default {
       selectedRows: [],
       enumItems: [],
       columns: [
-        { title: '货主', dataIndex: 'StoreName', sorter: true, width: 120, fixed: 'left' },
+        { title: '货主', dataIndex: 'Storer.Name', sorter: true, width: 120, fixed: 'left' },
         { title: '台帐类型', dataIndex: 'Type', sorter: true, width: 120, fixed: 'left', scopedSlots: { customRender: 'Type' } },
         { title: '类别', dataIndex: 'Category', sorter: true, width: 120, fixed: 'left', scopedSlots: { customRender: 'Category' } },
-        { title: '物料编码', dataIndex: 'SkuCode', sorter: true, width: 120 },
-        { title: '物料', dataIndex: 'SkuName', sorter: true, width: 150 },
-        { title: '批次', dataIndex: 'LotCode', sorter: true },
-        { title: '原库位', dataIndex: 'FromLocCode', sorter: true },
-        { title: '目标库位', dataIndex: 'ToLocCode', sorter: true },
-        { title: '原托盘', dataIndex: 'FromTrayCode', sorter: true },
-        { title: '目标托盘', dataIndex: 'ToTrayCode', sorter: true },
+        { title: '物料编码', dataIndex: 'Sku.Code', sorter: true, width: 120 },
+        { title: '物料', dataIndex: 'Sku.Name', sorter: true, width: 150 },
+        { title: '批次', dataIndex: 'Lot.Code', sorter: true },
+        { title: '原库位', dataIndex: 'FromLoc.Code', sorter: true },
+        { title: '目标库位', dataIndex: 'ToLoc.Code', sorter: true },
+        { title: '原托盘', dataIndex: 'FromTray.Code', sorter: true },
+        { title: '目标托盘', dataIndex: 'ToTray.Code', sorter: true },
         { title: '数量', dataIndex: 'Qty', sorter: true },
         { title: '来源业务', dataIndex: 'RefTable', sorter: true },
         { title: '来源业务Id', dataIndex: 'RefId', sorter: true },
-        {
-          title: () => {
-            return this.cusHeaderTitle('Lot01')
-          },
-          dataIndex: 'Lot01'
-        },
-        {
-          title: () => {
-            return this.cusHeaderTitle('Lot02')
-          },
-          dataIndex: 'Lot02'
-        },
-        {
-          title: () => {
-            return this.cusHeaderTitle('Lot03')
-          },
-          dataIndex: 'Lot03'
-        },
-        {
-          title: () => {
-            return this.cusHeaderTitle('Lot04')
-          },
-          dataIndex: 'Lot04'
-        },
-        {
-          title: () => {
-            return this.cusHeaderTitle('Lot05')
-          },
-          dataIndex: 'Lot05'
-        },
-        {
-          title: () => {
-            return this.cusHeaderTitle('Lot06')
-          },
-          dataIndex: 'Lot06'
-        },
-        {
-          title: () => {
-            return this.cusHeaderTitle('Lot07')
-          },
-          dataIndex: 'Lot07'
-        },
-        {
-          title: () => {
-            return this.cusHeaderTitle('Lot08')
-          },
-          dataIndex: 'Lot08'
-        },
-        {
-          title: () => {
-            return this.cusHeaderTitle('Lot09')
-          },
-          dataIndex: 'Lot09'
-        },
-        {
-          title: () => {
-            return this.cusHeaderTitle('Lot10')
-          },
-          dataIndex: 'Lot10'
-        },
-        {
-          title: '修改时间',
-          dataIndex: 'ModifyTime',
-          sorter: true,
-          customRender: (value) => {
-            return moment(value).format('yyyy-MM-DD')
-          }
+        { title: () => { return this.cusHeaderTitle('Lot01') }, dataIndex: 'Lot.Lot01' },
+        { title: () => { return this.cusHeaderTitle('Lot02') }, dataIndex: 'Lot.Lot02' },
+        { title: () => { return this.cusHeaderTitle('Lot03') }, dataIndex: 'Lot.Lot03' },
+        { title: () => { return this.cusHeaderTitle('Lot04') }, dataIndex: 'Lot.Lot04' },
+        { title: () => { return this.cusHeaderTitle('Lot05') }, dataIndex: 'Lot.Lot05' },
+        { title: () => { return this.cusHeaderTitle('Lot06') }, dataIndex: 'Lot.Lot06' },
+        { title: () => { return this.cusHeaderTitle('Lot07') }, dataIndex: 'Lot.Lot07' },
+        { title: () => { return this.cusHeaderTitle('Lot08') }, dataIndex: 'Lot.Lot08' },
+        { title: () => { return this.cusHeaderTitle('Lot09') }, dataIndex: 'Lot.Lot09' },
+        { title: () => { return this.cusHeaderTitle('Lot10') }, dataIndex: 'Lot.Lot10' },
+        { title: '修改时间', dataIndex: 'ModifyTime', sorter: true, customRender: (value) => { return moment(value).format('yyyy-MM-DD') }
         }
       ]
     }
