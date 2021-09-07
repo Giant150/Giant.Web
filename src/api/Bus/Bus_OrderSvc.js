@@ -84,6 +84,17 @@ export default {
         })
     },
     /**
+     * 拣货确认
+     * @param {String} id 主键
+     * @returns 拣货确认是否成功
+     */
+     Picking(id) {
+        return request({
+            url: '/api/Bus_Order/Picking?id=' + id,
+            method: 'post'
+        })
+    },
+    /**
      * 发货确认
      * @param {String} id 主键
      * @returns 发货确认是否成功
