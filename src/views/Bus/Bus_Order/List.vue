@@ -67,6 +67,7 @@
               <a-menu-item v-action:Allocate key="RejectAllocate" v-if="record.Status==='Allocate' || record.Status==='Allocated'">撤销配货</a-menu-item>
               <a-menu-item v-action:Release key="Release" v-if="record.Status==='Allocated'">释放拣货任务</a-menu-item>
               <a-menu-item v-action:Release key="PickPrint">打印拣货单</a-menu-item>
+              <a-menu-item v-action:Picking key="Picking" v-if="record.Status==='Allocated'">拣货确认</a-menu-item>
               <a-menu-item v-action:Shipping key="Shipping" v-if="record.Status==='Picked' || record.Status==='Picking'">发货确认</a-menu-item>
               <a-menu-item v-action:Shipping key="ShipPrint" v-if="record.Status==='Shipped' || record.Status==='Shipping'">打印送货单</a-menu-item>
             </a-menu>
@@ -201,6 +202,16 @@ export default {
             this.$message.success('操作成功!')
             this.$refs.table.refresh()
             this.$router.push({ path: '/Inv/Inv_Task', query: { RefTable: 'Bus_Order', RefId: row.Id } })
+          } else {
+            this.$message.error(result.Msg)
+          }
+        })
+      }
+      if (key === 'Picking') {
+        MainSvc.Picking(row.Id).then(result => {
+          if (result.Success) {
+            this.$message.success('操作成功!')
+            this.$refs.table.refresh()
           } else {
             this.$message.error(result.Msg)
           }
