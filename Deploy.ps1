@@ -16,7 +16,7 @@ Write-Host 'Deploy Starting' -ForegroundColor Yellow
 #$Password = Read-Host -Prompt "Please enter the server password" -AsSecureString
 #Write-Host 'Start connecting to the server' -ForegroundColor Yellow
 #$Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $User, $Password
-$Session = New-PSSession -ComputerName 114.115.162.100 -Credential WDeployAdmin
+$Session = New-PSSession -ComputerName 192.180.4.190 -Credential Administrator
 $Session
 Write-Host 'Successfully connected to the server' -ForegroundColor Green
 Write-Host 'Start copying files to the server' -ForegroundColor Yellow
