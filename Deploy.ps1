@@ -28,15 +28,16 @@ if($Session.State -eq "Opened")
 
 	Write-Host 'Stop the AppPool' -ForegroundColor Yellow
 	Invoke-Command -Session $Session -ScriptBlock {Stop-WebAppPool -Name "WMSWeb"}
+
+	Write-Host 'Start copy files to the server' -ForegroundColor Yellow
+	Copy-Item $ZIPFilePath -Destination $RemotePath -ToSession $Session
+
 	while((Invoke-Command -Session $Session -ScriptBlock {Get-WebAppPoolState -Name "WMSWeb"}).Value -ne "Stopped")
 	{
 		Write-Host 'Waiting Stop the AppPool' -ForegroundColor Yellow
 		Start-Sleep -Seconds 1
 	}
 	Invoke-Command -Session $Session -ScriptBlock {Get-WebAppPoolState -Name "WMSWeb"}
-
-	Write-Host 'Start copy files to the server' -ForegroundColor Yellow
-	Copy-Item $ZIPFilePath -Destination $RemotePath -ToSession $Session
 
 	Write-Host 'Start Expand files on the server' -ForegroundColor Yellow
 	Invoke-Command -Session $Session -ScriptBlock {param($p) Remove-Item -Path $p -Recurse -Force} -ArgumentList $RemoteDestinationPath
