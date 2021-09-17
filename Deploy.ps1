@@ -19,17 +19,32 @@ Write-Host 'Deploy Starting' -ForegroundColor Yellow
 $Session = New-PSSession -ComputerName 192.180.4.190 -Credential Administrator
 $Session
 Write-Host 'Successfully connected to the server' -ForegroundColor Green
-Write-Host 'Start copying files to the server' -ForegroundColor Yellow
+
 $RemotePath="D:\Publish\"
-Copy-Item $ZIPFilePath -Destination $RemotePath -ToSession $Session
-Write-Host 'Copy files completed' -ForegroundColor Green
-Write-Host 'Start Expand files on the server' -ForegroundColor Yellow
 $RemoteDestinationPath=$RemotePath+"WMSWeb\"
 $RemoteZipPath=$RemotePath+$ZIPFileName
+
+Write-Host 'Stop the AppPool' -ForegroundColor Yellow
+Invoke-Command -Session $Session -ScriptBlock {Stop-WebAppPool -Name "WMSWeb"}
+while((Invoke-Command -Session $Session -ScriptBlock {Get-WebAppPoolState -Name "WMSWeb"}).Value -ne "Stopped")
+{
+	Write-Host 'Waiting Stop the AppPool' -ForegroundColor Yellow
+	Start-Sleep -Seconds 1
+}
+Invoke-Command -Session $Session -ScriptBlock {Get-WebAppPoolState -Name "WMSWeb"}
+
+Write-Host 'Start copy files to the server' -ForegroundColor Yellow
+Copy-Item $ZIPFilePath -Destination $RemotePath -ToSession $Session
+
+Write-Host 'Start Expand files on the server' -ForegroundColor Yellow
 Invoke-Command -Session $Session -ScriptBlock {param($p) Remove-Item -Path $p -Recurse -Force} -ArgumentList $RemoteDestinationPath
 Invoke-Command -Session $Session -ScriptBlock {param($p,$dp) Expand-Archive -Path $p -DestinationPath $dp} -ArgumentList $RemoteZipPath,$RemoteDestinationPath
-Write-Host 'Expand Completed' -ForegroundColor Green
-Disconnect-PSSession -Session $Session
-Remove-Item -Path $ZIPFilePath
+
+Write-Host 'Restart the AppPool' -ForegroundColor Yellow
+Invoke-Command -Session $Session -ScriptBlock {Start-WebAppPool -Name "WMSWeb"}
+
 Write-Host 'Disconnected from server' -ForegroundColor Yellow
+Disconnect-PSSession -Session $Session
+
+Remove-Item -Path $ZIPFilePath
 Write-Host 'Deploy Completed' -ForegroundColor Green
