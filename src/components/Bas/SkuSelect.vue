@@ -2,9 +2,10 @@
   <a-select v-model="curValue" @search="handlerSearch" @change="(val)=>{if(!val){this.$emit('input', undefined)}}" @select="handlerSelect" optionLabelProp="title" v-bind="$attrs" :showSearch="true" :showArrow="false" :filterOption="false" style="width: 100%" :dropdownMenuStyle="{minWidth:'300px'}" :dropdownMatchSelectWidth="false">
     <a-select-option v-for="item in data" :key="item.Id" :value="item.Id" :title="item.Name+'('+item.Code+')'">
       <a-row>
-        <a-col :span="8">{{ item.Name }}</a-col>
-        <a-col :span="8">{{ item.Code }}</a-col>
-        <a-col :span="8">{{ item.Storer.Name }}</a-col>
+        <a-col :span="6">{{ item.Name }}</a-col>
+        <a-col :span="6">{{ item.Code }}</a-col>
+        <a-col :span="6">{{ item.BrandCode }}</a-col>
+        <a-col :span="6">{{ item.GraphCode }}</a-col>
       </a-row>
     </a-select-option>
   </a-select>

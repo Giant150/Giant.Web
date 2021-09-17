@@ -34,6 +34,21 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="8">
+            <a-form-model-item label="物料工号" prop="BrandCode">
+              <a-input v-model="entity.BrandCode" placeholder="物料工号" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="8">
+            <a-form-model-item label="物料图号" prop="Barcode">
+              <a-input v-model="entity.GraphCode" placeholder="物料图号" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="8">
+            <a-form-model-item label="物料内码" prop="CusCode">
+              <a-input v-model="entity.CusCode" placeholder="物料内码" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="8">
             <a-form-model-item label="物料规格" prop="Spec">
               <a-input v-model="entity.Spec" placeholder="物料规格" />
             </a-form-model-item>
@@ -192,7 +207,7 @@ export default {
       this.loading = false
       this.visible = true
       this.entity = {
-        Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', Name: '', BasUom: 'EA', Barcode: '',
+        Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', Name: '', BasUom: 'EA', Barcode: '', CusCode: '', BrandCode: '', GraphCode: '',
         Spec: '', PinYin: '', SupplierId: undefined, ShelfLife: 0, SkuTypeId: null, Price: 0, LotStgId: '', AllocStgId: '', RotateBy: 'Code', RotateType: 'FIFO',
         PutawayStgId: '', PutawayZoneId: undefined, PutawayLocId: undefined, ABC: 'A', ReOrderPoint: 0, ReOrderQty: 0,
         RackLife: 0, TrayTypeId: undefined, Status: 'Enable',
