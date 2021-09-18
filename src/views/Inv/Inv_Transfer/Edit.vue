@@ -19,6 +19,11 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="8">
+            <a-form-model-item label="类型" prop="Type">
+              <EnumSelect code="Inv_Transfer_Type" v-model="entity.Type"></EnumSelect>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="8">
             <a-form-model-item label="单据日期" prop="DocDate">
               <a-date-picker v-model="entity.DocDate" valueFormat="YYYY-MM-DD"></a-date-picker>
             </a-form-model-item>
@@ -33,8 +38,6 @@
               <a-input v-model="entity.Remark" autocomplete="off" />
             </a-form-model-item>
           </a-col>
-        </a-row>
-        <a-row>
           <template v-if="entity.Expand">
             <a-col :span="8" v-for="item in expand.EnumItems" :key="item.Code">
               <a-form-model-item :label="item.Name" :prop="item.Code">
@@ -170,7 +173,8 @@ export default {
         Code: [{ required: true, message: '' }],
         FromStorerId: [{ required: true, message: '' }],
         ToStorerId: [{ required: true, message: '' }],
-        DocDate: [{ required: true, message: '' }]
+        DocDate: [{ required: true, message: '' }],
+        Type: [{ required: true, message: '' }]
       },
       visible: false,
       loading: false,
@@ -229,7 +233,7 @@ export default {
       this.visible = true
       this.entity = {
         TransferDetail: [],
-        Id: '', WhseId: this.defaultWhseId, Code: '', RefCode: '', FromStorerId: null, ToStorerId: null,
+        Id: '', WhseId: this.defaultWhseId, Code: '', Type: undefined, RefCode: '', FromStorerId: null, ToStorerId: null,
         DocDate: moment().format('YYYY-MM-DD'), TransferDate: undefined, Remark: '', Status: 'Active',
         Expand: {
           ExpStr1: undefined, ExpStr2: undefined, ExpStr3: undefined, ExpStr4: undefined, ExpStr5: undefined, ExpStr6: undefined,

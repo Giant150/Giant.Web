@@ -14,12 +14,15 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="8">
+            <a-form-model-item label="类型" prop="Type">
+              <EnumSelect code="Inv_Adjust_Type" v-model="entity.Type"></EnumSelect>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="8">
             <a-form-model-item label="制单日期" prop="DocDate">
               <a-date-picker v-model="entity.DocDate" valueFormat="YYYY-MM-DD"></a-date-picker>
             </a-form-model-item>
           </a-col>
-        </a-row>
-        <a-row>
           <a-col :span="8">
             <a-form-model-item label="调整日期" prop="AdjDate">
               <a-date-picker v-model="entity.AdjDate" valueFormat="YYYY-MM-DD"></a-date-picker>
@@ -108,7 +111,8 @@ export default {
       layout: { labelCol: { xs: { span: 24 }, sm: { span: 6 } }, wrapperCol: { xs: { span: 24 }, sm: { span: 14 } } },
       rules: {
         Name: [{ required: true, message: '必填' }],
-        Code: [{ required: true, message: '必填' }]
+        Code: [{ required: true, message: '必填' }],
+        Type: [{ required: true, message: '必填' }]
       },
       visible: false,
       loading: false,
@@ -149,7 +153,7 @@ export default {
       this.visible = true
       this.entity = {
         AdjustDetail: [],
-        Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', RefCode: '',
+        Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', Type: undefined, RefCode: '',
         DocDate: moment().format('YYYY-MM-DD'), AdjDate: moment().format('YYYY-MM-DD'), Remark: '', Status: 'Active',
         Expand: {
           ExpStr1: undefined, ExpStr2: undefined, ExpStr3: undefined, ExpStr4: undefined, ExpStr5: undefined, ExpStr6: undefined,
