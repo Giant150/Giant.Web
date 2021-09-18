@@ -12,7 +12,7 @@ Compress-Archive -Path ".\dist\*" -DestinationPath $ZIPFilePath
 Write-Host 'Compress Completed' -ForegroundColor Green
 
 Write-Host 'Deploy Starting' -ForegroundColor Yellow
-$Session = New-PSSession -ComputerName 10.76.99.13 -Credential WDeployAdmin
+$Session = New-PSSession -ComputerName 10.76.99.13 -Credential Administrator
 $Session
 if($Session.State -eq "Opened")
 {
