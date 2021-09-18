@@ -12,24 +12,45 @@ Compress-Archive -Path ".\dist\*" -DestinationPath $ZIPFilePath
 Write-Host 'Compress Completed' -ForegroundColor Green
 
 Write-Host 'Deploy Starting' -ForegroundColor Yellow
-#$User = "WDeployAdmin"
-#$Password = Read-Host -Prompt "Please enter the server password" -AsSecureString
-#Write-Host 'Start connecting to the server' -ForegroundColor Yellow
-#$Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $User, $Password
-$Session = New-PSSession -ComputerName 114.115.162.100 -Credential WDeployAdmin
+$Session = New-PSSession -ComputerName 10.76.99.13 -Credential WDeployAdmin
 $Session
-Write-Host 'Successfully connected to the server' -ForegroundColor Green
-Write-Host 'Start copying files to the server' -ForegroundColor Yellow
-$RemotePath="D:\Publish\"
-Copy-Item $ZIPFilePath -Destination $RemotePath -ToSession $Session
-Write-Host 'Copy files completed' -ForegroundColor Green
-Write-Host 'Start Expand files on the server' -ForegroundColor Yellow
-$RemoteDestinationPath=$RemotePath+"WMSWeb\"
-$RemoteZipPath=$RemotePath+$ZIPFileName
-Invoke-Command -Session $Session -ScriptBlock {param($p) Remove-Item -Path $p -Recurse -Force} -ArgumentList $RemoteDestinationPath
-Invoke-Command -Session $Session -ScriptBlock {param($p,$dp) Expand-Archive -Path $p -DestinationPath $dp} -ArgumentList $RemoteZipPath,$RemoteDestinationPath
-Write-Host 'Expand Completed' -ForegroundColor Green
-Disconnect-PSSession -Session $Session
+if($Session.State -eq "Opened")
+{
+	Write-Host 'Successfully connected to the server' -ForegroundColor Green
+	#站点名称
+	$WebSiteName="WMSWeb"
+	$WebSite=Invoke-Command -Session $Session -ScriptBlock {param($name) Get-Website -Name $name} -ArgumentList $WebSiteName
+	$RemoteDestinationPath=$WebSite.PhysicalPath+"\"
+	$ApplicationPool=$WebSite.ApplicationPool
+	#远程服务器部署文件存放路径(默认为当前站点根目录的父级目录,可修改为其它路径)
+	$RemotePath=$WebSite.PhysicalPath+"\..\"
+	$RemoteZipPath=$RemotePath+$ZIPFileName
+
+	Write-Host "Start copy files to the server:$RemotePath" -ForegroundColor Yellow
+	Copy-Item $ZIPFilePath -Destination $RemotePath -ToSession $Session
+
+	Write-Host "Stop the AppPool:$ApplicationPool" -ForegroundColor Yellow
+	Invoke-Command -Session $Session -ScriptBlock {param($pool) Stop-WebAppPool -Name $pool} -ArgumentList $ApplicationPool
+	while((Invoke-Command -Session $Session -ScriptBlock {param($pool) Get-WebAppPoolState -Name $pool} -ArgumentList $ApplicationPool).Value -ne "Stopped")
+	{
+		Write-Host "Waiting Stop the AppPool:$ApplicationPool" -ForegroundColor Yellow
+		Start-Sleep -Seconds 1
+	}
+	Invoke-Command -Session $Session -ScriptBlock {param($pool) Get-WebAppPoolState -Name $pool} -ArgumentList $ApplicationPool
+
+	Write-Host "Start Expand files on the server:$RemoteDestinationPath" -ForegroundColor Yellow
+	Invoke-Command -Session $Session -ScriptBlock {param($p) Remove-Item -Path $p -Exclude "Log/*" -Recurse -Force} -ArgumentList $RemoteDestinationPath
+	Invoke-Command -Session $Session -ScriptBlock {param($p,$dp) Expand-Archive -Path $p -DestinationPath $dp} -ArgumentList $RemoteZipPath,$RemoteDestinationPath
+
+	Write-Host "Restart the AppPool:$ApplicationPool" -ForegroundColor Yellow
+	Invoke-Command -Session $Session -ScriptBlock {param($pool) Start-WebAppPool -Name $pool} -ArgumentList $ApplicationPool
+
+	Write-Host 'Disconnected from server' -ForegroundColor Yellow
+	Disconnect-PSSession -Session $Session
+}
+else
+{
+	Write-Host 'Failed connected to the server' -ForegroundColor Red
+}
 Remove-Item -Path $ZIPFilePath
-Write-Host 'Disconnected from server' -ForegroundColor Yellow
 Write-Host 'Deploy Completed' -ForegroundColor Green
