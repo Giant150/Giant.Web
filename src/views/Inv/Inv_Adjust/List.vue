@@ -3,12 +3,12 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline">
         <a-row :gutter="48">
-          <a-col :md="6" :sm="24">
+          <a-col :md="4" :sm="24">
             <a-form-item label="货主">
               <StorerSelect v-model="queryParam.StorerId" :type="['Storer']" placeholder="货主"></StorerSelect>
             </a-form-item>
           </a-col>
-          <a-col :md="6" :sm="24">
+          <a-col :md="4" :sm="24">
             <a-form-item label="编码">
               <a-input v-model="queryParam.Keyword" placeholder="编码/关联单号" />
             </a-form-item>
@@ -16,6 +16,11 @@
           <a-col :md="6" :sm="24">
             <a-form-item label="制单日期">
               <a-range-picker :value="[queryParam.DocDateStart,queryParam.DocDateEnd]" format="YYYY-MM-DD" @change="onDateChange" />
+            </a-form-item>
+          </a-col>
+          <a-col :md="4" :sm="24">
+            <a-form-item label="类型">
+              <EnumSelect code="Inv_Adjust_Type" v-model="queryParam.Type"></EnumSelect>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="24">
@@ -34,6 +39,9 @@
     </div>
 
     <s-table ref="table" size="default" rowKey="Id" :columns="columns" :data="loadData" :rowSelection="rowSelection" showPagination="auto">
+      <template slot="Type" slot-scope="text">
+        <EnumName code="Inv_Adjust_Type" :value="text"></EnumName>
+      </template>
       <template slot="Status" slot-scope="text">
         <EnumName code="Inv_Adjust_Status" :value="text"></EnumName>
       </template>
@@ -74,6 +82,7 @@ const columns = [
   { title: '货主名称', dataIndex: 'Storer.Name' },
   { title: '货主编号', dataIndex: 'Storer.Code' },
   { title: '编号', dataIndex: 'Code', sorter: true },
+  { title: '类型', dataIndex: 'Type', scopedSlots: { customRender: 'Type' } },
   { title: '制单日期', dataIndex: 'DocDate', sorter: true, customRender: (value) => { return moment(value).format('yyyy-MM-DD') } },
   { title: '调整日期', dataIndex: 'AdjDate', sorter: true, customRender: (value) => { return moment(value).format('yyyy-MM-DD') } },
   { title: '状态', dataIndex: 'Status', scopedSlots: { customRender: 'Status' } },
@@ -102,7 +111,7 @@ export default {
       // 高级搜索 展开/关闭
       advanced: false,
       // 查询参数
-      queryParam: { WhseId: '', Keyword: '', StorerId: '', DocDateStart: null, DocDateEnd: null },
+      queryParam: { WhseId: '', Keyword: '', StorerId: '', DocDateStart: null, DocDateEnd: null, Type: undefined },
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         this.queryParam.WhseId = this.defaultWhseId
@@ -180,7 +189,7 @@ export default {
       }
     },
     resetSearchForm() {
-      this.queryParam = { WhseId: this.defaultWhseId, Keyword: '', StorerId: this.defaultStorerId, DocDateStart: moment(), DocDateEnd: moment().add(1, 'days') }
+      this.queryParam = { WhseId: this.defaultWhseId, Keyword: '', StorerId: this.defaultStorerId, DocDateStart: moment(), DocDateEnd: moment().add(1, 'days'), Type: undefined }
     },
     handleDelete(rows) {
       var thisObj = this
