@@ -8,7 +8,7 @@ $ZIPFileName = "WMSWeb$CurDateString.zip"
 $CurPath = (Resolve-Path .).Path
 $ZIPFilePath = "$CurPath\$ZIPFileName"
 Compress-Archive -Path ".\dist\*" -DestinationPath $ZIPFilePath
-Write-Host 'Compress Completed' -ForegroundColor Green
+Write-Host "Compress Completed $ZIPFilePath" -ForegroundColor Green
 
 Write-Host 'Deploy Starting' -ForegroundColor Yellow
 $Session = New-PSSession -ComputerName 192.180.4.190 -Credential Administrator
@@ -22,7 +22,7 @@ if ($Session.State -eq "Opened") {
 	#站点监听端口
 	$WebSitePort = 8051
 
-	Write-Host 'Start copy files to the server' -ForegroundColor Yellow
+	Write-Host "Start copy files to the server $RemotePath" -ForegroundColor Yellow
 	Copy-Item $ZIPFilePath -Destination $RemotePath -ToSession $Session
 
 	$WebSite = Invoke-Command -Session $Session -ScriptBlock { param($name) Get-Website -Name $name } -ArgumentList $WebSiteName
