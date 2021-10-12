@@ -374,6 +374,18 @@ export default {
             const calcVal = moment(sourceVal).add(record.Sku.ShelfLife, 'days').format('YYYY-MM-DD')
             record[lotName] = calcVal
           }
+          // 处理默认值
+          if (key.endsWith('Default') && record.Sku.LotStg[key]) {
+            const lotName = key.replace('Default', '')
+            if (!record[lotName]) {
+              let defaultVal = record.Sku.LotStg[key]
+              switch (defaultVal) {
+                case '$Date$': defaultVal = moment().format('YYYY-MM-DD'); break
+                default: break
+              }
+              record[lotName] = defaultVal
+            }
+          }
         }
       }
       // 批属性处理(计算)

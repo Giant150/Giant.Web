@@ -1,5 +1,5 @@
 <template>
-  <a-modal :title="title" :width="650" :visible="visible" :confirmLoading="loading" @ok="handleSubmit" @cancel="()=>{this.visible=false}">
+  <a-modal :title="title" :width="800" :visible="visible" :confirmLoading="loading" @ok="handleSubmit" @cancel="()=>{this.visible=false}">
     <a-spin :spinning="loading">
       <a-form-model ref="form" :model="entity" :rules="rules" v-bind="layout">
         <a-row>
@@ -16,152 +16,182 @@
         </a-row>
         <a-row>
           <a-col :span="4">{{ 'Lot01' | fieldName(fields) }}</a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-checkbox :checked="entity.Lot01Required" @change="(e)=>{entity.Lot01Required=e.target.checked}">需维护</a-checkbox>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-checkbox :checked="entity.Lot01RequiredRF" @change="(e)=>{entity.Lot01RequiredRF=e.target.checked}">RF显示</a-checkbox>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <EnumSelect size="small" code="Stg_Lot_DataType" v-model="entity.Lot01Type"></EnumSelect>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-input size="small" v-model="entity.Lot01Enum" autocomplete="off" placeholder="枚举值" />
+          </a-col>
+          <a-col :span="4">
+            <a-input size="small" v-model="entity.Lot01Default" autocomplete="off" placeholder="默认值" />
           </a-col>
         </a-row>
         <a-row>
           <a-col :span="4">{{ 'Lot02' | fieldName(fields) }}</a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-checkbox :checked="entity.Lot02Required" @change="(e)=>{entity.Lot02Required=e.target.checked}">需维护</a-checkbox>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-checkbox :checked="entity.Lot02RequiredRF" @change="(e)=>{entity.Lot02RequiredRF=e.target.checked}">RF显示</a-checkbox>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <EnumSelect size="small" code="Stg_Lot_DataType" v-model="entity.Lot02Type"></EnumSelect>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-input size="small" v-model="entity.Lot02Enum" autocomplete="off" placeholder="枚举值" />
+          </a-col>
+          <a-col :span="4">
+            <a-input size="small" v-model="entity.Lot02Default" autocomplete="off" placeholder="默认值" />
           </a-col>
         </a-row>
         <a-row>
           <a-col :span="4">{{ 'Lot03' | fieldName(fields) }}</a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-checkbox :checked="entity.Lot03Required" @change="(e)=>{entity.Lot03Required=e.target.checked}">需维护</a-checkbox>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-checkbox :checked="entity.Lot03RequiredRF" @change="(e)=>{entity.Lot03RequiredRF=e.target.checked}">RF显示</a-checkbox>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <EnumSelect size="small" code="Stg_Lot_DataType" v-model="entity.Lot03Type"></EnumSelect>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-input size="small" v-model="entity.Lot03Enum" autocomplete="off" placeholder="枚举值" />
+          </a-col>
+          <a-col :span="4">
+            <a-input size="small" v-model="entity.Lot03Default" autocomplete="off" placeholder="默认值" />
           </a-col>
         </a-row>
         <a-row>
           <a-col :span="4">{{ 'Lot04' | fieldName(fields) }}</a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-checkbox :checked="entity.Lot04Required" @change="(e)=>{entity.Lot04Required=e.target.checked}">需维护</a-checkbox>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-checkbox :checked="entity.Lot04RequiredRF" @change="(e)=>{entity.Lot04RequiredRF=e.target.checked}">RF显示</a-checkbox>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <EnumSelect size="small" code="Stg_Lot_DataType" v-model="entity.Lot04Type"></EnumSelect>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-input size="small" v-model="entity.Lot04Enum" autocomplete="off" placeholder="枚举值" />
+          </a-col>
+          <a-col :span="4">
+            <a-input size="small" v-model="entity.Lot04Default" autocomplete="off" placeholder="默认值" />
           </a-col>
         </a-row>
         <a-row>
           <a-col :span="4">{{ 'Lot05' | fieldName(fields) }}</a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-checkbox :checked="entity.Lot05Required" @change="(e)=>{entity.Lot05Required=e.target.checked}">需维护</a-checkbox>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-checkbox :checked="entity.Lot05RequiredRF" @change="(e)=>{entity.Lot05RequiredRF=e.target.checked}">RF显示</a-checkbox>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <EnumSelect size="small" code="Stg_Lot_DataType" v-model="entity.Lot05Type"></EnumSelect>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-input size="small" v-model="entity.Lot05Enum" autocomplete="off" placeholder="枚举值" />
+          </a-col>
+          <a-col :span="4">
+            <a-input size="small" v-model="entity.Lot05Default" autocomplete="off" placeholder="默认值" />
           </a-col>
         </a-row>
         <a-row>
           <a-col :span="4">{{ 'Lot06' | fieldName(fields) }}</a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-checkbox :checked="entity.Lot06Required" @change="(e)=>{entity.Lot06Required=e.target.checked}">需维护</a-checkbox>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-checkbox :checked="entity.Lot06RequiredRF" @change="(e)=>{entity.Lot06RequiredRF=e.target.checked}">RF显示</a-checkbox>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <EnumSelect size="small" code="Stg_Lot_DataType" v-model="entity.Lot06Type"></EnumSelect>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-input size="small" v-model="entity.Lot06Enum" autocomplete="off" placeholder="枚举值" />
+          </a-col>
+          <a-col :span="4">
+            <a-input size="small" v-model="entity.Lot06Default" autocomplete="off" placeholder="默认值" />
           </a-col>
         </a-row>
         <a-row>
           <a-col :span="4">{{ 'Lot07' | fieldName(fields) }}</a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-checkbox :checked="entity.Lot07Required" @change="(e)=>{entity.Lot07Required=e.target.checked}">需维护</a-checkbox>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-checkbox :checked="entity.Lot07RequiredRF" @change="(e)=>{entity.Lot07RequiredRF=e.target.checked}">RF显示</a-checkbox>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <EnumSelect size="small" code="Stg_Lot_DataType" v-model="entity.Lot07Type"></EnumSelect>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-input size="small" v-model="entity.Lot07Enum" autocomplete="off" placeholder="枚举值" />
+          </a-col>
+          <a-col :span="4">
+            <a-input size="small" v-model="entity.Lot07Default" autocomplete="off" placeholder="默认值" />
           </a-col>
         </a-row>
         <a-row>
           <a-col :span="4">{{ 'Lot08' | fieldName(fields) }}</a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-checkbox :checked="entity.Lot08Required" @change="(e)=>{entity.Lot08Required=e.target.checked}">需维护</a-checkbox>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-checkbox :checked="entity.Lot08RequiredRF" @change="(e)=>{entity.Lot08RequiredRF=e.target.checked}">RF显示</a-checkbox>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <EnumSelect size="small" code="Stg_Lot_DataType" v-model="entity.Lot08Type"></EnumSelect>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-input size="small" v-model="entity.Lot08Enum" autocomplete="off" placeholder="枚举值" />
+          </a-col>
+          <a-col :span="4">
+            <a-input size="small" v-model="entity.Lot08Default" autocomplete="off" placeholder="默认值" />
           </a-col>
         </a-row>
         <a-row>
           <a-col :span="4">{{ 'Lot09' | fieldName(fields) }}</a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-checkbox :checked="entity.Lot09Required" @change="(e)=>{entity.Lot09Required=e.target.checked}">需维护</a-checkbox>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-checkbox :checked="entity.Lot09RequiredRF" @change="(e)=>{entity.Lot09RequiredRF=e.target.checked}">RF显示</a-checkbox>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <EnumSelect size="small" code="Stg_Lot_DataType" v-model="entity.Lot09Type"></EnumSelect>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-input size="small" v-model="entity.Lot09Enum" autocomplete="off" placeholder="枚举值" />
+          </a-col>
+          <a-col :span="4">
+            <a-input size="small" v-model="entity.Lot09Default" autocomplete="off" placeholder="默认值" />
           </a-col>
         </a-row>
         <a-row>
           <a-col :span="4">{{ 'Lot10' | fieldName(fields) }}</a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-checkbox :checked="entity.Lot10Required" @change="(e)=>{entity.Lot10Required=e.target.checked}">需维护</a-checkbox>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-checkbox :checked="entity.Lot10RequiredRF" @change="(e)=>{entity.Lot10RequiredRF=e.target.checked}">RF显示</a-checkbox>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <EnumSelect size="small" code="Stg_Lot_DataType" v-model="entity.Lot10Type"></EnumSelect>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-input size="small" v-model="entity.Lot10Enum" autocomplete="off" placeholder="枚举值" />
+          </a-col>
+          <a-col :span="4">
+            <a-input size="small" v-model="entity.Lot10Default" autocomplete="off" placeholder="默认值" />
           </a-col>
         </a-row>
       </a-form-model>
@@ -283,7 +313,8 @@ export default {
         Lot01Required: false, Lot02Required: false, Lot03Required: false, Lot04Required: false, Lot05Required: false, Lot06Required: false, Lot07Required: false, Lot08Required: false, Lot09Required: false, Lot10Required: false,
         Lot01RequiredRF: false, Lot02RequiredRF: false, Lot03RequiredRF: false, Lot04RequiredRF: false, Lot05RequiredRF: false, Lot06RequiredRF: false, Lot07RequiredRF: false, Lot08RequiredRF: false, Lot09RequiredRF: false, Lot10RequiredRF: false,
         Lot01Type: 'String', Lot02Type: 'String', Lot03Type: 'String', Lot04Type: 'String', Lot05Type: 'String', Lot06Type: 'String', Lot07Type: 'String', Lot08Type: 'String', Lot09Type: 'String', Lot10Type: 'String',
-        Lot01Enum: '', Lot02Enum: '', Lot03Enum: '', Lot04Enum: '', Lot05Enum: '', Lot06Enum: '', Lot07Enum: '', Lot08Enum: '', Lot09Enum: '', Lot10Enum: ''
+        Lot01Enum: '', Lot02Enum: '', Lot03Enum: '', Lot04Enum: '', Lot05Enum: '', Lot06Enum: '', Lot07Enum: '', Lot08Enum: '', Lot09Enum: '', Lot10Enum: '',
+        Lot01Default: '', Lot02Default: '', Lot03Default: '', Lot04Default: '', Lot05Default: '', Lot06Default: '', Lot07Default: '', Lot08Default: '', Lot09Default: '', Lot10Default: ''
       }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
