@@ -345,6 +345,7 @@ export default {
     },
     handleSkuSelect(record, sku) {
       record.Sku = sku
+      record.UomCode = sku.BaseUom
       record.UnitPrice = sku.Price
     },
     handlerUomSelect(record, uom) {
