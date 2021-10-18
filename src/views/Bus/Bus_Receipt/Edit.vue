@@ -80,10 +80,10 @@
           <TraySelect v-model="record.TrayId" :type="record.Sku?record.Sku.TrayTypeId:''" size="small" allowClear :disabled="!!record.LotId"></TraySelect>
         </template>
         <template slot="Lot01" slot-scope="text, record">
-          <LotInput name="Lot01" :sku="record.Sku" v-model="record.Lot01" :disabled="!!record.LotId" size="small"></LotInput>
+          <LotInput name="Lot01" :sku="record.Sku" v-model="record.Lot01" :disabled="!!record.LotId" :search="{StorerId:entity.StorerId}" size="small"></LotInput>
         </template>
         <template slot="Lot02" slot-scope="text, record">
-          <LotInput name="Lot02" :sku="record.Sku" v-model="record.Lot02" :disabled="!!record.LotId" size="small"></LotInput>
+          <LotInput name="Lot02" :sku="record.Sku" v-model="record.Lot02" :disabled="!!record.LotId" :search="{StorerId:entity.StorerId}" size="small"></LotInput>
         </template>
         <template slot="Lot03" slot-scope="text, record">
           <LotInput name="Lot03" :sku="record.Sku" v-model="record.Lot03" :disabled="!!record.LotId" size="small"></LotInput>
