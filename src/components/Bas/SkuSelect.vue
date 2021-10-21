@@ -1,6 +1,6 @@
 <template>
   <a-select v-model="curValue" @search="handlerSearch" @change="(val)=>{if(!val){this.$emit('input', undefined)}}" @select="handlerSelect" optionLabelProp="title" v-bind="$attrs" :showSearch="true" :showArrow="false" :filterOption="false" style="width: 100%" :dropdownMatchSelectWidth="false">
-    <a-select-option v-for="item in data" :key="item.Id" :value="item.Id" :title="item.Code">
+    <a-select-option v-for="item in data" :key="item.Id" :value="item.Id" :title="item.Code+'('+item.Name+')'">
       <a-row type="flex" justify="start" :gutter="10">
         <a-col flex="auto">{{ item.Code }}</a-col>
         <a-col flex="auto">{{ item.Name }}</a-col>
