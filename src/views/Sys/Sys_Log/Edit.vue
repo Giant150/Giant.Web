@@ -11,9 +11,9 @@
       <a-descriptions-item label="用户Id">{{ entity.UserId }}</a-descriptions-item>
       <a-descriptions-item label="IP">{{ entity.IP }}</a-descriptions-item>
       <a-descriptions-item label="请求Url">{{ entity.Url }}</a-descriptions-item>
-      <a-descriptions-item label="日志内容" span="3">{{ entity.Msg }}</a-descriptions-item>
-      <a-descriptions-item label="报错信息" v-if="entity.Exception" span="3">{{ entity.Exception }}</a-descriptions-item>
-      <a-descriptions-item label="记录服务" span="3">{{ entity.Logger }}</a-descriptions-item>
+      <a-descriptions-item label="日志内容" :span="3">{{ entity.Msg }}</a-descriptions-item>
+      <a-descriptions-item label="报错信息" v-if="entity.Exception" :span="3">{{ entity.Exception }}</a-descriptions-item>
+      <a-descriptions-item label="记录服务" :span="3">{{ entity.Logger }}</a-descriptions-item>
     </a-descriptions>
   </a-drawer>
 </template>
@@ -66,9 +66,6 @@ export default {
     init() {
       this.loading = false
       this.visible = true
-      this.$nextTick(() => {
-        this.$refs.form.clearValidate()
-      })
     },
     openForm(record, title) {
       this.title = title
@@ -78,3 +75,9 @@ export default {
   }
 }
 </script>
+
+<style lang="less" scoped>
+ /deep/ .ant-descriptions-item-content {
+  white-space: pre-wrap;
+}
+</style>
