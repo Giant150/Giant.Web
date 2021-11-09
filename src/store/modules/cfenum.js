@@ -25,8 +25,10 @@ const cfenum = {
           resolve(curData)
         } else {
           EnumSvc.GetByCode(whseId, code).then(result => {
-            commit('SET_ENUM', result.Data)
-            resolve(result.Data)
+            var data = result.Data
+            data.EnumItems = result.Data.EnumItems.sort((a, b) => a.Sort - b.Sort).slice(0)
+            commit('SET_ENUM', data)
+            resolve(data)
           })
         }
       })
