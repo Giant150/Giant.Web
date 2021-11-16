@@ -114,10 +114,12 @@
         </template>
         <span slot="action" slot-scope="text, record">
           <template>
-            <a v-action:Add v-if="record.LotId" @click="handleAdd(record)">复制</a>
+            <a v-action:Add v-if="record.LotId && (record.Status==='Receiving' || record.Status==='Completed')" @click="handleAdd(record)">复制</a>
             <a v-action:Delete v-if="!record.LotId" @click="handleDelete(record)">删除</a>
-            <a-divider v-action:Adjust v-if="record.LotId" type="vertical" />
-            <a v-action:Adjust v-if="record.LotId" @click="handleAdjust(record)">回转</a>
+            <a-divider v-action:Adjust v-if="record.LotId && (record.Status==='Receiving' || record.Status==='Completed')" type="vertical" />
+            <a v-action:Adjust v-if="record.LotId && (record.Status==='Receiving' || record.Status==='Completed')" @click="handleAdjust(record)">回转</a>
+            <a-divider v-action:Serial v-if="record.LotId && (record.Status==='Receiving' || record.Status==='Completed')" type="vertical" />
+            <a v-action:Serial v-if="record.LotId && (record.Status==='Receiving' || record.Status==='Completed')" @click="handleSerial(record)">序列码</a>
           </template>
         </span>
       </a-table>
@@ -202,7 +204,7 @@ export default {
         { title: () => { return this.cusHeaderTitle('Lot09') }, dataIndex: 'Lot09', width: 150, scopedSlots: { customRender: 'Lot09' } },
         { title: () => { return this.cusHeaderTitle('Lot10') }, dataIndex: 'Lot10', width: 150, scopedSlots: { customRender: 'Lot10' } },
         { title: '备注', dataIndex: 'Remark', scopedSlots: { customRender: 'Remark' } },
-        { title: '操作', dataIndex: 'action', width: 100, fixed: 'right', scopedSlots: { customRender: 'action' } }
+        { title: '操作', dataIndex: 'action', width: 150, fixed: 'right', scopedSlots: { customRender: 'action' } }
       ],
       curDetailIndex: 0,
       defaultLocId: '', // 默认收货库位
@@ -339,6 +341,23 @@ export default {
               }
             })
           })
+        }
+      })
+    },
+    handleSerial(record) {
+      DetailSvc.GenerateSerial(record.Id).then(result => {
+        if (result.Success) {
+          var data = result.Data
+          var printData = { Code: data.Sku.Code, Name: data.Sku.Name, Spec: data.Sku.Spec, Model: '', LotNo: data.Lot.Code, SerialNo: data.Code, WorkNo: data.Lot01 }
+          this.$http.post(`${process.env.VUE_APP_API_PRINT_URL}/Print`, printData).then(print => {
+            if (print.Success) {
+              this.$message.info(print.Msg)
+            } else {
+              this.$message.error(print.Msg)
+            }
+          })
+        } else {
+          this.$message.error(result.Msg)
         }
       })
     },
