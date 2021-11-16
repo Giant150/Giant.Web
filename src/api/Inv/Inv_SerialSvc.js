@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 /**
- * Bus_ReceiptDetail API接口服务
+ * Inv_Serial API接口服务
  */
 export default {
     /**
@@ -10,7 +10,7 @@ export default {
      */
     GetPage(parameter) {
         return request({
-            url: '/api/Bus_ReceiptDetail/GetPage',
+            url: '/api/Inv_Serial/GetPage',
             method: 'post',
             data: parameter
         })
@@ -22,7 +22,7 @@ export default {
      */
     Get(id) {
         return request({
-            url: '/api/Bus_ReceiptDetail/Get?id=' + id,
+            url: '/api/Inv_Serial/Get?id=' + id,
             method: 'get'
         })
     },
@@ -33,7 +33,7 @@ export default {
      */
     Save(data) {
         return request({
-            url: '/api/Bus_ReceiptDetail/Save',
+            url: '/api/Inv_Serial/Save',
             method: 'post',
             data: data
         })
@@ -45,31 +45,9 @@ export default {
      */
     Delete(ids) {
         return request({
-            url: '/api/Bus_ReceiptDetail/Delete',
+            url: '/api/Inv_Serial/Delete',
             method: 'delete',
             data: ids
-        })
-    },
-    /**
-     * 收货回转
-     * @param {String} id 收货明细Id
-     * @returns 收货回转是否成功
-     */
-    Adjustment(id) {
-        return request({
-            url: '/api/Bus_ReceiptDetail/Adjustment?id=' + id,
-            method: 'post'
-        })
-    },
-    /**
-     * 生成序列号
-     * @param {String} id 收货明细Id
-     * @returns 序列号
-     */
-     GenerateSerial(id) {
-        return request({
-            url: '/api/Bus_ReceiptDetail/GenerateSerial?id=' + id,
-            method: 'get'
         })
     }
 }
