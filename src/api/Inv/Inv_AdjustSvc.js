@@ -71,5 +71,14 @@ export default {
             url: '/api/Inv_Adjust/Print?id=' + id,
             method: 'get'
         })
+    },
+     /**
+     * ERP库存调整
+     */
+      AutoInv() {
+        return request({
+            url: '/api/Inv_Adjust/AutoAdjust',
+            method: 'post'
+        })
     }
 }
