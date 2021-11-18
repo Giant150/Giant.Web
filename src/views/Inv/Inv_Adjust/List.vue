@@ -190,7 +190,7 @@ export default {
       }
     },
     resetSearchForm() {
-      this.queryParam = { WhseId: this.defaultWhseId, Keyword: '', StorerId: this.defaultStorerId, DocDateStart: moment(), DocDateEnd: moment().add(1, 'days'), Type: undefined }
+      this.queryParam = { WhseId: this.defaultWhseId, Keyword: '', DocDateStart: moment(), DocDateEnd: moment().add(1, 'days'), Type: undefined }
     },
     handleDelete(rows) {
       var thisObj = this
