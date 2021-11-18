@@ -344,7 +344,7 @@ export default {
       this.visible = true
       this.isModify = false
       this.entity = {
-        OrderDetail: [], Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', RefCode: '', Type: 'Standard',
+        OrderDetail: [], Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', RefId: null, RefCode: null, Type: 'Standard',
         DocDate: moment().format('YYYY-MM-DD'), OrderDate: moment().format('YYYY-MM-DD'), ConsigneeId: undefined, Remark: '', Status: 'Active',
         Expand: {
           ExpStr1: undefined, ExpStr2: undefined, ExpStr3: undefined, ExpStr4: undefined, ExpStr5: undefined, ExpStr6: undefined,
@@ -387,7 +387,7 @@ export default {
       if (this.activeKey === 'OrderDetail') {
         this.curDetailIndex += 1
         var detail = {
-          Id: `new_${this.curDetailIndex}`, WhseId: this.defaultWhseId, OrderId: this.entity.Id, StorerId: this.entity.StorerId, Code: '',
+          Id: `new_${this.curDetailIndex}`, WhseId: this.defaultWhseId, OrderId: this.entity.Id, StorerId: this.entity.StorerId, Code: '', RefId: null, RefCode: null,
           SkuId: '', QtyUom: 0, UomCode: '', UomCnt: 1, Qty: 0, QtyAllocated: 0, QtyPicked: 0, RotateBy: '', RotateType: '', AllocStgId: '', RackLife: 0,
           LocId: undefined, TrayId: undefined, LotId: undefined,
           Lot01: '', Lot02: '', Lot03: '', Lot04: '', Lot05: '', Lot06: '', Lot07: '', Lot08: '', Lot09: '', Lot10: '',
