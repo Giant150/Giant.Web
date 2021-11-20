@@ -256,7 +256,7 @@ export default {
       this.visible = true
       this.isModify = false
       this.entity = {
-        ReceiptDetail: [], Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', RefCode: '', RecType: 'Standard',
+        ReceiptDetail: [], Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', RefId: null, RefCode: null, RecType: 'Standard',
         DocDate: moment().format('YYYY-MM-DD'), RecDate: moment().format('YYYY-MM-DD'), SupplierId: '', Remark: '', Status: 'Active',
         Expand: {
           ExpStr1: undefined, ExpStr2: undefined, ExpStr3: undefined, ExpStr4: undefined, ExpStr5: undefined, ExpStr6: undefined,
@@ -303,14 +303,14 @@ export default {
       this.curDetailIndex += 1
       var detail = {
         Id: `new_${this.curDetailIndex}`, WhseId: this.defaultWhseId, StorerId: this.entity.StorerId, ReceiptId: this.entity.Id, Code: '', SkuId: '', QtyUomExpected: 0, UomCode: '',
-        QtyExpected: 0, QtyUomReceived: 0, QtyUomReceivedMin: 0, QtyReceived: 0, LocId: this.defaultLocId, TrayId: '', LotId: null,
+        QtyExpected: 0, QtyUomReceived: 0, QtyUomReceivedMin: 0, QtyReceived: 0, LocId: this.defaultLocId, TrayId: '', LotId: null, RefId: null, RefCode: null,
         Lot01: '', Lot02: '', Lot03: '', Lot04: '', Lot05: '', Lot06: '', Lot07: '', Lot08: '', Lot09: '', Lot10: '',
         ReceiptDate: moment().format('YYYY-MM-DD'), SkuUomId: '', UomCnt: 0, UnitPrice: 0, TotalAmt: 0, Remark: '', Status: 'Active', HasTask: false,
         Sku: null
       }
       if (record) {
         var copyObj = {
-          SkuId: record.SkuId, UomCode: record.UomCode, LocId: record.LocId, TrayId: record.TrayId,
+          SkuId: record.SkuId, UomCode: record.UomCode, LocId: record.LocId, TrayId: record.TrayId, RefId: record.RefId, RefCode: record.RefCode,
           Lot01: record.Lot01, Lot02: record.Lot02, Lot03: record.Lot03, Lot04: record.Lot04, Lot05: record.Lot05,
           Lot06: record.Lot06, Lot07: record.Lot07, Lot08: record.Lot08, Lot09: record.Lot09, Lot10: record.Lot10,
           SkuUomId: record.SkuUomId, UomCnt: record.UomCnt, UnitPrice: record.UnitPrice,
