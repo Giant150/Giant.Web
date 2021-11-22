@@ -266,6 +266,8 @@ export default {
         { title: '物料', dataIndex: 'SkuId', width: 200, fixed: 'left', scopedSlots: { customRender: 'SkuId' } },
         { title: '订单数量', dataIndex: 'QtyUom', width: 80, fixed: 'left', scopedSlots: { customRender: 'QtyUom' } },
         { title: '单位', dataIndex: 'UomCode', width: 80, fixed: 'left', scopedSlots: { customRender: 'UomCode' } },
+        { title: '物料名称', dataIndex: 'Sku.Name', width: 150 },
+        { title: '物料规格', dataIndex: 'Sku.Spec', width: 150 },
         { title: '物料数量', dataIndex: 'Qty', width: 80 },
         { title: '状态', dataIndex: 'Status', width: 120, scopedSlots: { customRender: 'Status' } },
         { title: '已分配', dataIndex: 'QtyAllocated', width: 80 },
