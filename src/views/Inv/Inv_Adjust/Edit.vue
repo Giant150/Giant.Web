@@ -153,7 +153,7 @@ export default {
       this.visible = true
       this.entity = {
         AdjustDetail: [],
-        Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', Type: undefined, RefCode: '',
+        Id: '', WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Code: '', Type: undefined, RefId: null, RefCode: null,
         DocDate: moment().format('YYYY-MM-DD'), AdjDate: moment().format('YYYY-MM-DD'), Remark: '', Status: 'Active',
         Expand: {
           ExpStr1: undefined, ExpStr2: undefined, ExpStr3: undefined, ExpStr4: undefined, ExpStr5: undefined, ExpStr6: undefined,
@@ -196,7 +196,7 @@ export default {
       this.curDetailIndex += 1
       var detail = {
         Id: `new_${this.curDetailIndex}`, WhseId: this.defaultWhseId, StorerId: this.entity.StorerId, AdjustId: this.entity.Id,
-        SkuId: inv.SkuId, LotId: inv.LotId, LocId: inv.LocId, TrayId: inv.TrayId, QtyAdj: 0, Type: '',
+        SkuId: inv.SkuId, LotId: inv.LotId, LocId: inv.LocId, TrayId: inv.TrayId, QtyAdj: 0, Type: '', RefId: null, RefCode: null,
         Sku: inv.Sku, Lot: inv.Lot, Loc: inv.Loc, Tray: inv.Tray
       }
       console.log(detail)

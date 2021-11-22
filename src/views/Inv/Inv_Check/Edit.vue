@@ -293,7 +293,7 @@ export default {
       this.activeKey = 'CheckConfig'
       this.details = []
       this.entity = {
-        Id: '', WhseId: this.defaultWhseId, Code: '', RefCode: '', Name: '', Type: undefined, CheckDate: moment().format('YYYY-MM-DD'), Remark: '', Status: 'Active', ConfigVal: null,
+        Id: '', WhseId: this.defaultWhseId, Code: '', RefId: null, RefCode: null, Name: '', Type: undefined, CheckDate: moment().format('YYYY-MM-DD'), Remark: '', Status: 'Active', ConfigVal: null,
         Expand: {
           ExpStr1: undefined, ExpStr2: undefined, ExpStr3: undefined, ExpStr4: undefined, ExpStr5: undefined, ExpStr6: undefined,
           ExpEnum1: undefined, ExpEnum2: undefined, ExpEnum3: undefined, ExpEnum4: undefined, ExpEnum5: undefined, ExpEnum6: undefined,

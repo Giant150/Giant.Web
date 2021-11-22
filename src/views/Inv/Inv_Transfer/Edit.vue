@@ -233,7 +233,7 @@ export default {
       this.visible = true
       this.entity = {
         TransferDetail: [],
-        Id: '', WhseId: this.defaultWhseId, Code: '', Type: undefined, RefCode: '', FromStorerId: null, ToStorerId: null,
+        Id: '', WhseId: this.defaultWhseId, Code: '', Type: undefined, RefId: null, RefCode: null, FromStorerId: null, ToStorerId: null,
         DocDate: moment().format('YYYY-MM-DD'), TransferDate: undefined, Remark: '', Status: 'Active',
         Expand: {
           ExpStr1: undefined, ExpStr2: undefined, ExpStr3: undefined, ExpStr4: undefined, ExpStr5: undefined, ExpStr6: undefined,
@@ -283,7 +283,7 @@ export default {
         this.curDetailIndex += 1
         var detail = {
           ToSku: undefined,
-          Id: `new_${this.curDetailIndex}`, WhseId: this.defaultWhseId, TransferId: this.entity.Id, Code: '',
+          Id: `new_${this.curDetailIndex}`, WhseId: this.defaultWhseId, TransferId: this.entity.Id, Code: '', RefId: null, RefCode: null,
           FromStorerId: this.entity.FromStorerId, FromSkuId: inv.SkuId, FromLotId: inv.LotId, FromLocId: inv.LocId, FromTrayId: inv.TrayId, FromQty: inv.Qty,
           ToStorerId: this.entity.ToStorerId, ToSkuId: null, ToLotId: null, ToLocId: inv.LocId, ToTrayId: inv.TrayId, ToQty: inv.Qty,
           Lot01: inv.Lot.Lot01, Lot02: inv.Lot.Lot02, Lot03: inv.Lot.Lot03, Lot04: inv.Lot.Lot04, Lot05: inv.Lot.Lot05, Lot06: inv.Lot.Lot06, Lot07: inv.Lot.Lot07, Lot08: inv.Lot.Lot08, Lot09: inv.Lot.Lot09, Lot10: inv.Lot.Lot10,
