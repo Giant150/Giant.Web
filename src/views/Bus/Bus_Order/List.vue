@@ -182,7 +182,7 @@ export default {
       this.queryParam.OrderDateEnd = dates[1]
     },
     resetSearchForm() {
-      this.queryParam = { WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Keyword: '', Type: '', OrderDateStart: moment(), OrderDateEnd: moment().add(1, 'days'), Status: '' }
+      this.queryParam = { WhseId: this.defaultWhseId, Keyword: '', Type: '', OrderDateStart: moment(), OrderDateEnd: moment().add(1, 'days'), Status: '' }
     },
     handleActionClick(key, row) {
       console.log(key, row)

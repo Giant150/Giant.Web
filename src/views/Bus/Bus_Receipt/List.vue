@@ -175,7 +175,7 @@ export default {
       this.selectedRows = selectedRows
     },
     resetSearchForm() {
-      this.queryParam = { WhseId: this.defaultWhseId, StorerId: this.defaultStorerId, Keyword: '', RecDateBegin: moment(), RecDateEnd: moment().add(1, 'days'), RecType: '', Status: '' }
+      this.queryParam = { WhseId: this.defaultWhseId, Keyword: '', RecDateBegin: moment(), RecDateEnd: moment().add(1, 'days'), RecType: '', Status: '' }
     },
     onDateChange(dates, dateStrings) {
       this.queryParam.RecDateBegin = dates[0]
