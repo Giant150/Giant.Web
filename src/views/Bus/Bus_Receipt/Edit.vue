@@ -40,7 +40,7 @@
           </a-col>
           <a-col :span="6">
             <a-form-model-item label="备注" prop="Remark">
-              <a-textarea v-model="entity.Remark"></a-textarea>
+              <a-input v-model="entity.Remark"></a-input>
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -110,7 +110,7 @@
           <LotInput name="Lot10" :sku="record.Sku" v-model="record.Lot10" :disabled="!!record.LotId" size="small"></LotInput>
         </template>
         <template slot="Remark" slot-scope="text, record">
-          <a-textarea v-model="record.Remark" auto-size />
+          <a-input v-model="record.Remark" size="small"/>
         </template>
         <span slot="action" slot-scope="text, record">
           <template>
@@ -186,12 +186,11 @@ export default {
         { title: '物料', dataIndex: 'SkuId', width: 120, fixed: 'left', scopedSlots: { customRender: 'SkuId' } },
         { title: '预期数量', dataIndex: 'QtyUomExpected', width: 100, fixed: 'left', scopedSlots: { customRender: 'QtyUomExpected' } },
         { title: '单位', dataIndex: 'UomCode', width: 100, fixed: 'left', scopedSlots: { customRender: 'UomCode' } },
-        { title: '物料编号', dataIndex: 'Sku.Code', width: 120 },
         { title: '物料名称', dataIndex: 'Sku.Name', width: 120 },
         { title: '物料规格', dataIndex: 'Sku.Spec', width: 120 },
         { title: '已收数量', dataIndex: 'QtyUomReceived', width: 100, scopedSlots: { customRender: 'QtyUomReceived' } },
+        { title: () => { return this.cusHeaderTitle('Lot01') }, dataIndex: 'Lot01', width: 100, scopedSlots: { customRender: 'Lot01' } },
         { title: '库位', dataIndex: 'LocId', width: 120, scopedSlots: { customRender: 'LocId' } },
-         { title: () => { return this.cusHeaderTitle('Lot01') }, dataIndex: 'Lot01', width: 150, scopedSlots: { customRender: 'Lot01' } },
         { title: '备注', dataIndex: 'Remark', width: 120, scopedSlots: { customRender: 'Remark' } },
         { title: () => { return this.cusHeaderTitle('Lot02') }, dataIndex: 'Lot02', width: 150, scopedSlots: { customRender: 'Lot02' } },
         { title: () => { return this.cusHeaderTitle('Lot03') }, dataIndex: 'Lot03', width: 150, scopedSlots: { customRender: 'Lot03' } },
