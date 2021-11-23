@@ -1,13 +1,17 @@
 <template>
-  <a-select v-model="curValue" @search="handlerSearch" @change="(val)=>{if(!val){this.$emit('input', undefined)}}" @select="handlerSelect" optionLabelProp="title" v-bind="$attrs" :showSearch="true" :showArrow="false" :filterOption="false" style="width: 100%" :dropdownMenuStyle="{minWidth:'300px'}" :dropdownMatchSelectWidth="false">
+  <a-select v-model="curValue" @search="handlerSearch" @change="(val)=>{if(!val){this.$emit('input', undefined)}}" @select="handlerSelect" optionLabelProp="title" v-bind="$attrs" :showSearch="true" :filterOption="false" style="width: 100%" :dropdownMenuStyle="{minWidth:'300px'}" :dropdownMatchSelectWidth="false">
+    <a-icon slot="suffixIcon" type="copy" @click="copy()" title="复制编码" />
     <a-select-option v-for="item in data" :key="item.Id" :value="item.Id" :title="item.Code" :disabled="item.Status==='Disable'">
-      <a-row>
-        <a-col :span="6">{{ item.Code }}</a-col>
-        <a-col :span="6">{{ item.PutawayZone.Name }}</a-col>
-        <a-col :span="6">
+      <a-row type="flex" justify="start" :gutter="10">
+        <a-col flex="auto">{{ item.Code }}</a-col>
+        <a-col flex="auto">{{ item.PutawayZone.Name }}</a-col>
+        <a-col flex="auto">
           <EnumName code="Bas_Loc_Type" :value="item.Type"></EnumName>
         </a-col>
-        <a-col :span="6">{{ item.IsEmpty?'空':'实' }}/{{ item.HasTray?'托盘':'无托' }}</a-col>
+        <a-col flex="auto">{{ item.IsEmpty?'空':'实' }}/{{ item.HasTray?'托盘':'无托' }}</a-col>
+        <a-col flex="auto">
+          <a-button type="dashed" shape="circle" icon="copy" title="复制编码" size="small" @click="copy(item.Code)" />
+        </a-col>
       </a-row>
     </a-select-option>
   </a-select>
@@ -53,6 +57,14 @@ export default {
     this.loadData()
   },
   methods: {
+    copy(val) {
+      if (!val) {
+        var item = this.data.find(w => w.Id === this.curValue)
+        if (item) navigator.clipboard.writeText(item.Code)
+      } else {
+        navigator.clipboard.writeText(val)
+      }
+    },
     loadData() {
       MainSvc.GetPage({
         PageNo: 1,
