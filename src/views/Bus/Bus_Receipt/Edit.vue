@@ -58,6 +58,7 @@
         <a-button type="primary" v-action:Add icon="plus" @click="handleAdd(null)">新建</a-button>
       </div>
       <a-table ref="table" size="small" rowKey="Id" :columns="columns" :data-source="receiptDetail" :pagination="false" :scroll="{ x: 3000 }">
+        <span slot="customTitle" >仓位&nbsp;&nbsp;&nbsp;&nbsp;<a-button type="link" size="small" title="填充仓位" @click="handleLocFilling()"><a-icon type="line-height" /></a-button></span>
         <template slot="Code" slot-scope="text, record">
           <CodeInput code="Bus_ReceiptDetail_Code" v-model="record.Code" :para="{ReceiptCode:entity.Code}" size="small" :disabled="!!record.LotId"></CodeInput>
         </template>
@@ -190,7 +191,7 @@ export default {
         { title: '物料规格', dataIndex: 'Sku.Spec', width: 120 },
         { title: '已收数量', dataIndex: 'QtyUomReceived', width: 100, scopedSlots: { customRender: 'QtyUomReceived' } },
         { title: () => { return this.cusHeaderTitle('Lot01') }, dataIndex: 'Lot01', width: 100, scopedSlots: { customRender: 'Lot01' } },
-        { title: '库位', dataIndex: 'LocId', width: 120, scopedSlots: { customRender: 'LocId' } },
+        { dataIndex: 'LocId', width: 120, slots: { title: 'customTitle' }, scopedSlots: { customRender: 'LocId' } },
         { title: '备注', dataIndex: 'Remark', width: 120, scopedSlots: { customRender: 'Remark' } },
         { title: () => { return this.cusHeaderTitle('Lot02') }, dataIndex: 'Lot02', width: 150, scopedSlots: { customRender: 'Lot02' } },
         { title: () => { return this.cusHeaderTitle('Lot03') }, dataIndex: 'Lot03', width: 150, scopedSlots: { customRender: 'Lot03' } },
@@ -487,6 +488,16 @@ export default {
           })
         }
       })
+    },
+    handleLocFilling() {
+      if (this.entity.ReceiptDetail.slice(0, 1)[0]) {
+        const firstRow = this.entity.ReceiptDetail.slice(0, 1)[0]
+        var locId = firstRow.LocId
+        this.entity.ReceiptDetail.forEach(detail => {
+          console.log(detail.LocId)
+          detail.LocId = locId
+        })
+      }
     }
   }
 }
