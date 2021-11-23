@@ -1,10 +1,14 @@
 <template>
-  <a-select v-model="curValue" @search="handlerSearch" @change="(val)=>{if(!val){this.$emit('input', undefined)}}" @select="handlerSelect" optionLabelProp="title" v-bind="$attrs" :showSearch="true" :showArrow="false" :filterOption="false" style="width: 100%" :dropdownMatchSelectWidth="false">
-    <a-select-option v-for="item in data" :key="item.Id" :value="item.Id" :title="item.Code+'('+item.Name+')'">
+  <a-select v-model="curValue" @search="handlerSearch" @change="(val)=>{if(!val){this.$emit('input', undefined)}}" @select="handlerSelect" optionLabelProp="title" v-bind="$attrs" :showSearch="true" :filterOption="false" style="width: 100%" :dropdownMenuStyle="{minWidth:'300px'}" :dropdownMatchSelectWidth="false">
+    <a-icon slot="suffixIcon" type="copy" @click="copy()" title="复制编码" />
+    <a-select-option v-for="item in data" :key="item.Id" :value="item.Id" :title="item.Code+'('+item.Name+')'" :disabled="item.Status==='Disable'">
       <a-row type="flex" justify="start" :gutter="10">
         <a-col flex="auto">{{ item.Code }}</a-col>
         <a-col flex="auto">{{ item.Name }}</a-col>
         <a-col flex="auto">{{ item.Spec }}</a-col>
+        <a-col flex="auto">
+          <a-button type="dashed" shape="circle" icon="copy" title="复制编码" size="small" @click="copy(item.Code)" />
+        </a-col>
       </a-row>
     </a-select-option>
   </a-select>
@@ -57,6 +61,14 @@ export default {
     this.loadData()
   },
   methods: {
+    copy(val) {
+      if (!val) {
+        var item = this.data.find(w => w.Id === this.curValue)
+        if (item) navigator.clipboard.writeText(item.Code)
+      } else {
+        navigator.clipboard.writeText(val)
+      }
+    },
     loadData() {
       MainSvc.GetPage({
         PageNo: 1,
