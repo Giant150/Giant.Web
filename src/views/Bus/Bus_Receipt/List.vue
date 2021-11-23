@@ -56,6 +56,9 @@
       <template slot="Status" slot-scope="text">
         <EnumName code="Bus_Receipt_Status" :value="text"></EnumName>
       </template>
+      <template slot="SyncStatus" slot-scope="text">
+        <EnumName code="SyncStatus" :value="text"></EnumName>
+      </template>
       <span slot="action" slot-scope="text, record">
         <template>
           <a v-action:Query @click="handleEdit(record)">查看</a>
@@ -98,6 +101,7 @@ const columns = [
   { title: '收货日期', dataIndex: 'RecDate', sorter: true, customRender: (value) => { return moment(value).format('yyyy-MM-DD') } },
   { title: '供应商', dataIndex: 'Supplier.Name' },
   { title: '收货状态', dataIndex: 'Status', scopedSlots: { customRender: 'Status' } },
+  { title: 'ERP状态', dataIndex: 'SyncStatus', scopedSlots: { customRender: 'SyncStatus' } },
   { title: '修改时间', dataIndex: 'ModifyTime', sorter: true, customRender: (value) => { return moment(value).format('yyyy-MM-DD') } },
   { title: '操作', dataIndex: 'action', width: '200px', scopedSlots: { customRender: 'action' } }
 ]

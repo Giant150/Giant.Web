@@ -40,7 +40,7 @@
           </a-col>
           <a-col :span="6">
             <a-form-model-item label="备注" prop="Remark">
-              <a-input v-model="entity.Remark"></a-input>
+              <a-textarea v-model="entity.Remark"></a-textarea>
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -110,7 +110,7 @@
           <LotInput name="Lot10" :sku="record.Sku" v-model="record.Lot10" :disabled="!!record.LotId" size="small"></LotInput>
         </template>
         <template slot="Remark" slot-scope="text, record">
-          <a-input v-model="record.Remark" size="small" />
+          <a-textarea v-model="record.Remark" auto-size />
         </template>
         <span slot="action" slot-scope="text, record">
           <template>
@@ -183,15 +183,16 @@ export default {
       expand: {},
       columns: [
         { title: '编号', dataIndex: 'Code', width: 120, fixed: 'left', scopedSlots: { customRender: 'Code' } },
-        { title: '物料', dataIndex: 'SkuId', width: 150, fixed: 'left', scopedSlots: { customRender: 'SkuId' } },
-        { title: '预期数量', dataIndex: 'QtyUomExpected', width: 120, fixed: 'left', scopedSlots: { customRender: 'QtyUomExpected' } },
-        { title: '单位', dataIndex: 'UomCode', width: 120, fixed: 'left', scopedSlots: { customRender: 'UomCode' } },
-        { title: '物料名称', dataIndex: 'Sku.Name', width: 150 },
-        { title: '物料规格', dataIndex: 'Sku.Spec', width: 150 },
-        { title: '已收数量', dataIndex: 'QtyUomReceived', width: 120, scopedSlots: { customRender: 'QtyUomReceived' } },
+        { title: '物料', dataIndex: 'SkuId', width: 120, fixed: 'left', scopedSlots: { customRender: 'SkuId' } },
+        { title: '预期数量', dataIndex: 'QtyUomExpected', width: 100, fixed: 'left', scopedSlots: { customRender: 'QtyUomExpected' } },
+        { title: '单位', dataIndex: 'UomCode', width: 100, fixed: 'left', scopedSlots: { customRender: 'UomCode' } },
+        { title: '物料编号', dataIndex: 'Sku.Code', width: 120 },
+        { title: '物料名称', dataIndex: 'Sku.Name', width: 120 },
+        { title: '物料规格', dataIndex: 'Sku.Spec', width: 120 },
+        { title: '已收数量', dataIndex: 'QtyUomReceived', width: 100, scopedSlots: { customRender: 'QtyUomReceived' } },
         { title: '库位', dataIndex: 'LocId', width: 120, scopedSlots: { customRender: 'LocId' } },
-        { title: '托盘', dataIndex: 'TrayId', width: 120, scopedSlots: { customRender: 'TrayId' } },
-        { title: () => { return this.cusHeaderTitle('Lot01') }, dataIndex: 'Lot01', width: 150, scopedSlots: { customRender: 'Lot01' } },
+         { title: () => { return this.cusHeaderTitle('Lot01') }, dataIndex: 'Lot01', width: 150, scopedSlots: { customRender: 'Lot01' } },
+        { title: '备注', dataIndex: 'Remark', width: 120, scopedSlots: { customRender: 'Remark' } },
         { title: () => { return this.cusHeaderTitle('Lot02') }, dataIndex: 'Lot02', width: 150, scopedSlots: { customRender: 'Lot02' } },
         { title: () => { return this.cusHeaderTitle('Lot03') }, dataIndex: 'Lot03', width: 150, scopedSlots: { customRender: 'Lot03' } },
         { title: () => { return this.cusHeaderTitle('Lot04') }, dataIndex: 'Lot04', width: 150, scopedSlots: { customRender: 'Lot04' } },
@@ -201,7 +202,7 @@ export default {
         { title: () => { return this.cusHeaderTitle('Lot08') }, dataIndex: 'Lot08', width: 150, scopedSlots: { customRender: 'Lot08' } },
         { title: () => { return this.cusHeaderTitle('Lot09') }, dataIndex: 'Lot09', width: 150, scopedSlots: { customRender: 'Lot09' } },
         { title: () => { return this.cusHeaderTitle('Lot10') }, dataIndex: 'Lot10', width: 150, scopedSlots: { customRender: 'Lot10' } },
-        { title: '备注', dataIndex: 'Remark', scopedSlots: { customRender: 'Remark' } },
+        { title: '托盘', dataIndex: 'TrayId', width: 120, scopedSlots: { customRender: 'TrayId' } },
         { title: '操作', dataIndex: 'action', width: 100, fixed: 'right', scopedSlots: { customRender: 'action' } }
       ],
       curDetailIndex: 0,
@@ -276,6 +277,9 @@ export default {
           const tempData = resJson.Data
           tempData.ReceiptDetail.forEach(detail => {
             detail.QtyUomReceivedMin = detail.QtyUomReceived
+            if (detail.Status === 'Active') {
+              detail.QtyUomReceived = detail.QtyUomExpected
+            }
           })
           this.entity = tempData
         })
@@ -402,8 +406,9 @@ export default {
         const list = this.entity.ReceiptDetail.map(detail => Object.assign({}, detail))
         const validMsg = []
         list.forEach(detail => {
-          if (!detail.Code) validMsg.push(`收货明细编号必需输入`)
-          if (!detail.SkuId) validMsg.push(`收货明细${detail.Code}中物料必需选择`)
+          if (!detail.Code) validMsg.push(`收货明细“编号”必需输入`)
+          if (!detail.SkuId) validMsg.push(`收货明细${detail.Code}中“物料”必需选择`)
+          if (!detail.Lot01) validMsg.push(`收货明细${detail.Lot01}中“所属仓库”必需选择`)
           if (detail.QtyUomExpected === 0 && detail.QtyUomReceived === 0) validMsg.push(`收货明细${detail.Code}中 预期数量 和 已收数量 都为0`)
           if (detail.QtyUomReceived > 0) { // 只有真实的收货的时候，才验证批次属性
             const lotStg = Object.assign({}, detail?.Sku?.LotStg)
