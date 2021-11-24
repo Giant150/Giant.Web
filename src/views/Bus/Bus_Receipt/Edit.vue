@@ -58,7 +58,10 @@
         <a-button type="primary" v-action:Add icon="plus" @click="handleAdd(null)">新建</a-button>
       </div>
       <a-table ref="table" size="small" rowKey="Id" :columns="columns" :data-source="receiptDetail" :pagination="false" :scroll="{ x: 3000 }">
-        <span slot="customTitle" >仓位&nbsp;&nbsp;&nbsp;&nbsp;<a-button type="link" size="small" title="填充仓位" @click="handleLocFilling()"><a-icon type="line-height" /></a-button></span>
+        <span slot="LocId" >仓位&nbsp;&nbsp;&nbsp;&nbsp;<a-button type="link" size="small" title="填充" @click="handleLocFilling()"><a-icon type="line-height" /></a-button></span>
+        <span slot="Lot01" >仓库&nbsp;&nbsp;&nbsp;&nbsp;<a-button type="link" size="small" title="填充" @click="handleLot01Filling()"><a-icon type="line-height" /></a-button></span>
+        <span slot="Lot02" >项目号&nbsp;&nbsp;&nbsp;&nbsp;<a-button type="link" size="small" title="填充" @click="handleLot02Filling()"><a-icon type="line-height" /></a-button></span>
+        <span slot="QtyUomReceived" >已收数量<a-button type="link" size="small" title="填充" @click="handleQtyUomFilling()"><a-icon type="line-height"/></a-button></span>
         <template slot="Code" slot-scope="text, record">
           <CodeInput code="Bus_ReceiptDetail_Code" v-model="record.Code" :para="{ReceiptCode:entity.Code}" size="small" :disabled="!!record.LotId"></CodeInput>
         </template>
@@ -75,16 +78,16 @@
           <a-input-number v-model="record.QtyUomReceived" :min="record.QtyUomReceivedMin" :disabled="!!record.LotId" style="width:100%" size="small" />
         </template>
         <template slot="LocId" slot-scope="text, record">
-          <LocSelect v-model="record.LocId" size="small" :disabled="!!record.LotId"></LocSelect>
+          <LocSelect v-model="record.LocId" @select="(val,loc)=>{cacheFilling.LocId=val}" size="small" :disabled="!!record.LotId"></LocSelect>
         </template>
         <template slot="TrayId" slot-scope="text, record">
           <TraySelect v-model="record.TrayId" :type="record.Sku?record.Sku.TrayTypeId:''" size="small" allowClear :disabled="!!record.LotId"></TraySelect>
         </template>
         <template slot="Lot01" slot-scope="text, record">
-          <LotInput name="Lot01" :sku="record.Sku" v-model="record.Lot01" :disabled="!!record.LotId" :search="{StorerId:entity.StorerId}" size="small"></LotInput>
+          <LotInput name="Lot01" :sku="record.Sku" v-model="record.Lot01" @select="(val,lot01)=>{cacheFilling.Lot01=val}" :disabled="!!record.LotId" :search="{StorerId:entity.StorerId}" size="small"></LotInput>
         </template>
         <template slot="Lot02" slot-scope="text, record">
-          <LotInput name="Lot02" :sku="record.Sku" v-model="record.Lot02" :disabled="!!record.LotId" :search="{StorerId:entity.StorerId}" size="small"></LotInput>
+          <LotInput name="Lot02" :sku="record.Sku" v-model="record.Lot02" @select="(val,lot02)=>{cacheFilling.Lot02=val}" :disabled="!!record.LotId" :search="{StorerId:entity.StorerId}" size="small"></LotInput>
         </template>
         <template slot="Lot03" slot-scope="text, record">
           <LotInput name="Lot03" :sku="record.Sku" v-model="record.Lot03" :disabled="!!record.LotId" size="small"></LotInput>
@@ -189,11 +192,11 @@ export default {
         { title: '单位', dataIndex: 'UomCode', width: 100, fixed: 'left', scopedSlots: { customRender: 'UomCode' } },
         { title: '物料名称', dataIndex: 'Sku.Name', width: 120 },
         { title: '物料规格', dataIndex: 'Sku.Spec', width: 120 },
-        { title: '已收数量', dataIndex: 'QtyUomReceived', width: 100, scopedSlots: { customRender: 'QtyUomReceived' } },
-        { title: () => { return this.cusHeaderTitle('Lot01') }, dataIndex: 'Lot01', width: 100, scopedSlots: { customRender: 'Lot01' } },
-        { dataIndex: 'LocId', width: 120, slots: { title: 'customTitle' }, scopedSlots: { customRender: 'LocId' } },
+        { dataIndex: 'QtyUomReceived', slots: { title: 'QtyUomReceived' }, width: 100, scopedSlots: { customRender: 'QtyUomReceived' } },
+        { dataIndex: 'Lot01', slots: { title: 'Lot01' }, width: 100, scopedSlots: { customRender: 'Lot01' } },
+        { dataIndex: 'LocId', slots: { title: 'LocId' }, width: 120, scopedSlots: { customRender: 'LocId' } },
         { title: '备注', dataIndex: 'Remark', width: 120, scopedSlots: { customRender: 'Remark' } },
-        { title: () => { return this.cusHeaderTitle('Lot02') }, dataIndex: 'Lot02', width: 150, scopedSlots: { customRender: 'Lot02' } },
+        { dataIndex: 'Lot02', slots: { title: 'Lot02' }, width: 150, scopedSlots: { customRender: 'Lot02' } },
         { title: () => { return this.cusHeaderTitle('Lot03') }, dataIndex: 'Lot03', width: 150, scopedSlots: { customRender: 'Lot03' } },
         { title: () => { return this.cusHeaderTitle('Lot04') }, dataIndex: 'Lot04', width: 150, scopedSlots: { customRender: 'Lot04' } },
         { title: () => { return this.cusHeaderTitle('Lot05') }, dataIndex: 'Lot05', width: 150, scopedSlots: { customRender: 'Lot05' } },
@@ -208,7 +211,8 @@ export default {
       curDetailIndex: 0,
       defaultLocId: '', // 默认收货库位
       defaultProductDateLot: 'Lot01', // 默认的生产日期的批次字段
-      isModify: false // 是否编辑
+      isModify: false, // 是否编辑
+      cacheFilling: { LocId: null, Lot01: null, Lot02: null }
     }
   },
   computed: {
@@ -277,9 +281,9 @@ export default {
           const tempData = resJson.Data
           tempData.ReceiptDetail.forEach(detail => {
             detail.QtyUomReceivedMin = detail.QtyUomReceived
-            if (detail.Status === 'Active') {
-              detail.QtyUomReceived = detail.QtyUomExpected
-            }
+            // if (detail.Status === 'Active') {
+            //   detail.QtyUomReceived = detail.QtyUomExpected
+            // }
           })
           this.entity = tempData
         })
@@ -490,14 +494,33 @@ export default {
       })
     },
     handleLocFilling() {
-      if (this.entity.ReceiptDetail.slice(0, 1)[0]) {
-        const firstRow = this.entity.ReceiptDetail.slice(0, 1)[0]
-        var locId = firstRow.LocId
+      if (this.cacheFilling.LocId) {
         this.entity.ReceiptDetail.forEach(detail => {
           console.log(detail.LocId)
-          detail.LocId = locId
+          detail.LocId = this.cacheFilling.LocId
         })
       }
+    },
+    handleLot01Filling() {
+      if (this.cacheFilling.Lot01) {
+        this.entity.ReceiptDetail.forEach(detail => {
+          console.log(detail.Lot01)
+          detail.Lot01 = this.cacheFilling.Lot01
+        })
+      }
+    },
+    handleLot02Filling() {
+      if (this.cacheFilling.Lot02) {
+        this.entity.ReceiptDetail.forEach(detail => {
+          console.log(detail.Lot02)
+          detail.Lot02 = this.cacheFilling.Lot02
+        })
+      }
+    },
+    handleQtyUomFilling() {
+      this.entity.ReceiptDetail.forEach(detail => {
+          detail.QtyUomReceived = detail.QtyUomExpected
+        })
     }
   }
 }
