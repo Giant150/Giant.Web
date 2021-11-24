@@ -1,6 +1,6 @@
 <template>
   <a-select v-model="curValue" @search="handlerSearch" @change="(val)=>{if(!val){this.$emit('input', undefined)}}" @select="handlerSelect" optionLabelProp="title" v-bind="$attrs" :showSearch="true" :filterOption="false" style="width: 100%" :dropdownMenuStyle="{minWidth:'300px'}" :dropdownMatchSelectWidth="false">
-    <a-icon slot="suffixIcon" type="copy" @click="copy()" title="复制编码" />
+    <a-icon slot="suffixIcon" type="copy" @click="copy(selected?selected.Code:'')" title="复制编码" />
     <a-select-option v-for="item in data" :key="item.Id" :value="item.Id" :title="item.Name+'('+item.Code+')'">
       <a-row type="flex" justify="start" :gutter="10">
         <a-col flex="auto">{{ item.Name }}</a-col>
@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import copy from 'copy-to-clipboard'
 import { mapGetters } from 'vuex'
 export default {
   components: {},
@@ -34,7 +35,10 @@ export default {
     ...mapGetters({
       defaultWhseId: 'whseId',
       defaultStorerId: 'storerId'
-    })
+    }),
+    selected() {
+      return this.data.find(w => w.Id === this.curValue)
+    }
   },
   watch: {
     value(newVal) {
@@ -49,14 +53,7 @@ export default {
     this.loadData()
   },
   methods: {
-    copy(val) {
-      if (!val) {
-        var item = this.data.find(w => w.Id === this.curValue)
-        if (item) navigator.clipboard.writeText(item.Code)
-      } else {
-        navigator.clipboard.writeText(val)
-      }
-    },
+    copy,
     loadData() {
       this.$http.post(`/api/${this.table}/GetPage`, {
         PageNo: 1,
