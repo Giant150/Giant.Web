@@ -53,11 +53,13 @@
       <template slot="RecType" slot-scope="text">
         <EnumName code="Bus_Receipt_RecType" :value="text"></EnumName>
       </template>
-      <template slot="Status" slot-scope="text">
-        <EnumName code="Bus_Receipt_Status" :value="text"></EnumName>
+      <template slot="Status" slot-scope="text, record">
+        <a-tag v-if="record.Status === 'Closed'" color="#108ee9"><EnumName code="Bus_Receipt_Status" :value="text"></EnumName></a-tag>
+        <a-tag v-else color="blue"><EnumName code="Bus_Receipt_Status" :value="text"></EnumName></a-tag>
       </template>
-      <template slot="SyncStatus" slot-scope="text">
-        <EnumName code="SyncStatus" :value="text"></EnumName>
+      <template slot="SyncStatus" slot-scope="text, record">
+        <a-tag v-if="record.SyncStatus === 'Active'" color="green"><EnumName code="SyncStatus" :value="text"></EnumName></a-tag>
+        <a-tag v-else color="#87d068"><EnumName code="SyncStatus" :value="text"></EnumName></a-tag>
       </template>
       <span slot="action" slot-scope="text, record">
         <template>

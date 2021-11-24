@@ -61,6 +61,7 @@
         <span slot="LocId" >仓位&nbsp;&nbsp;&nbsp;&nbsp;<a-button type="link" size="small" title="填充" @click="handleLocFilling()"><a-icon type="line-height" /></a-button></span>
         <span slot="Lot01" >仓库&nbsp;&nbsp;&nbsp;&nbsp;<a-button type="link" size="small" title="填充" @click="handleLot01Filling()"><a-icon type="line-height" /></a-button></span>
         <span slot="Lot02" >项目号&nbsp;&nbsp;&nbsp;&nbsp;<a-button type="link" size="small" title="填充" @click="handleLot02Filling()"><a-icon type="line-height" /></a-button></span>
+        <span slot="Remark" >备注&nbsp;&nbsp;&nbsp;&nbsp;<a-button type="link" size="small" title="填充" @click="handleRemarkFilling()"><a-icon type="line-height" /></a-button></span>
         <span slot="QtyUomReceived" >已收数量<a-button type="link" size="small" title="填充" @click="handleQtyUomFilling()"><a-icon type="line-height"/></a-button></span>
         <template slot="Code" slot-scope="text, record">
           <CodeInput code="Bus_ReceiptDetail_Code" v-model="record.Code" :para="{ReceiptCode:entity.Code}" size="small" :disabled="!!record.LotId"></CodeInput>
@@ -114,7 +115,7 @@
           <LotInput name="Lot10" :sku="record.Sku" v-model="record.Lot10" :disabled="!!record.LotId" size="small"></LotInput>
         </template>
         <template slot="Remark" slot-scope="text, record">
-          <a-input v-model="record.Remark" size="small"/>
+          <a-input v-model="record.Remark" @select="(val,remark)=>{cacheFilling.Remark=val}" size="small"/>
         </template>
         <span slot="action" slot-scope="text, record">
           <template>
@@ -195,7 +196,7 @@ export default {
         { dataIndex: 'QtyUomReceived', slots: { title: 'QtyUomReceived' }, width: 100, scopedSlots: { customRender: 'QtyUomReceived' } },
         { dataIndex: 'Lot01', slots: { title: 'Lot01' }, width: 100, scopedSlots: { customRender: 'Lot01' } },
         { dataIndex: 'LocId', slots: { title: 'LocId' }, width: 120, scopedSlots: { customRender: 'LocId' } },
-        { title: '备注', dataIndex: 'Remark', width: 120, scopedSlots: { customRender: 'Remark' } },
+        { dataIndex: 'Remark', slots: { title: 'Remark' }, width: 120, scopedSlots: { customRender: 'Remark' } },
         { dataIndex: 'Lot02', slots: { title: 'Lot02' }, width: 150, scopedSlots: { customRender: 'Lot02' } },
         { title: () => { return this.cusHeaderTitle('Lot03') }, dataIndex: 'Lot03', width: 150, scopedSlots: { customRender: 'Lot03' } },
         { title: () => { return this.cusHeaderTitle('Lot04') }, dataIndex: 'Lot04', width: 150, scopedSlots: { customRender: 'Lot04' } },
@@ -212,7 +213,7 @@ export default {
       defaultLocId: '', // 默认收货库位
       defaultProductDateLot: 'Lot01', // 默认的生产日期的批次字段
       isModify: false, // 是否编辑
-      cacheFilling: { LocId: null, Lot01: null, Lot02: null }
+      cacheFilling: { LocId: null, Lot01: null, Lot02: null, Remark: null }
     }
   },
   computed: {
@@ -520,6 +521,15 @@ export default {
     handleQtyUomFilling() {
       this.entity.ReceiptDetail.forEach(detail => {
           detail.QtyUomReceived = detail.QtyUomExpected
+        })
+    },
+    handleRemarkFilling() {
+       const firstRow = this.entity.ReceiptDetail
+       firstRow.forEach(detail => {
+          // if (!detail.Remark) {
+            detail.Remark = firstRow.Remark
+          // }
+          // detail.Remark = this.cacheFilling.Remark
         })
     }
   }
