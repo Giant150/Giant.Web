@@ -21,7 +21,7 @@
           </a-col>
           <a-col :md="4" :sm="24">
             <a-form-item label="级别">
-              <EnumSelect code="Sys_Log_Level" v-model="queryParam.Level"></EnumSelect>
+              <EnumSelect code="Sys_Log_Level" v-model="queryParam.Level" :color="true"></EnumSelect>
             </a-form-item>
           </a-col>
           <a-col :md="4" :sm="24">
@@ -43,7 +43,7 @@
         <EnumName code="Sys_Log_AppName" :value="text"></EnumName>
       </template>
       <template slot="Level" slot-scope="text">
-        <EnumName code="Sys_Log_Level" :value="text"></EnumName>
+        <EnumName code="Sys_Log_Level" :value="text" :color="true"></EnumName>
       </template>
       <span slot="action" slot-scope="text, record">
         <template>

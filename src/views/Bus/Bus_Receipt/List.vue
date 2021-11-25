@@ -54,7 +54,7 @@
         <EnumName code="Bus_Receipt_RecType" :value="text"></EnumName>
       </template>
       <template slot="Status" slot-scope="text">
-        <EnumName code="Bus_Receipt_Status" :value="text"></EnumName>
+        <EnumName code="Bus_Receipt_Status" :value="text" :color="true"></EnumName>
       </template>
       <span slot="action" slot-scope="text, record">
         <template>

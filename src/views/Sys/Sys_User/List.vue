@@ -28,7 +28,7 @@
         {{ moment(text).format("yyyy-MM-DD") }}
       </span>
       <template slot="Status" slot-scope="text">
-        <EnumName code="State" :value="text"></EnumName>
+        <EnumName code="State" :value="text" :color="true"></EnumName>
       </template>
       <span slot="action" slot-scope="text, record">
         <template>

@@ -58,7 +58,7 @@
 
     <s-table ref="table" size="default" rowKey="Id" :columns="columns" :data="loadData" :rowSelection="rowSelection" showPagination="auto">
       <template slot="Status" slot-scope="text">
-        <EnumName code="State" :value="text"></EnumName>
+        <EnumName code="State" :value="text" :color="true"></EnumName>
       </template>
       <span slot="ModifyTime" slot-scope="text">
         {{ moment(text).format("yyyy-MM-DD") }}

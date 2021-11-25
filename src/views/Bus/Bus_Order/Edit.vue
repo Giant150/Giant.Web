@@ -75,7 +75,7 @@
               <SkuUomSelect v-model="record.UomCode" :sku="record.SkuId" @select="(val,uom)=>{handlerUomSelect(record,uom)}" style="width:100%" size="small" :disabled="record.Status!=='Active'"></SkuUomSelect>
             </template>
             <template slot="Status" slot-scope="text">
-              <EnumName code="Bus_Order_Status" :value="text"></EnumName>
+              <EnumName code="Bus_Order_Status" :value="text" :color="true"></EnumName>
             </template>
             <template slot="RotateBy" slot-scope="text, record">
               <EnumSelect code="Bas_Lot_Field" v-model="record.RotateBy" style="width:100%" size="small" :disabled="record.Status!=='Active'"></EnumSelect>
@@ -152,7 +152,7 @@
               <a-input-number v-model="record.Qty" style="width:100%" size="small" :disabled="!record.Id.startsWith('new_')" />
             </template>
             <template slot="Status" slot-scope="text">
-              <EnumName code="Bus_PickDetail_Status" :value="text"></EnumName>
+              <EnumName code="Bus_PickDetail_Status" :value="text" :color="true"></EnumName>
             </template>
             <template slot="ToLocId" slot-scope="text, record">
               <LocSelect v-model="record.ToLocId" size="small" :disabled="!record.Id.startsWith('new_')"></LocSelect>

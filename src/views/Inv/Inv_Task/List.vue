@@ -48,7 +48,7 @@
         <EnumName code="Inv_Task_Type" :value="text"></EnumName>
       </template>
       <template slot="Status" slot-scope="text">
-        <EnumName code="Inv_Task_Status" :value="text"></EnumName>
+        <EnumName code="Inv_Task_Status" :value="text" :color="true"></EnumName>
       </template>
       <template slot="RefTable" slot-scope="text">
         <EnumName code="Inv_Ledger_RefTable" :value="text"></EnumName>

@@ -20,7 +20,7 @@
           </a-col>
           <a-col :md="4" :sm="24">
             <a-form-item label="盘点状态">
-              <EnumSelect code="Inv_Check_Status" v-model="queryParam.Status"></EnumSelect>
+              <EnumSelect code="Inv_Check_Status" v-model="queryParam.Status" :color="true"></EnumSelect>
             </a-form-item>
           </a-col>
           <a-col :md="4" :sm="24">
@@ -43,7 +43,7 @@
         <EnumName code="Inv_Check_Type" :value="text"></EnumName>
       </template>
       <template slot="Status" slot-scope="text">
-        <EnumName code="Inv_Check_Status" :value="text"></EnumName>
+        <EnumName code="Inv_Check_Status" :value="text" :color="true"></EnumName>
       </template>
       <span slot="action" slot-scope="text, record">
         <template>

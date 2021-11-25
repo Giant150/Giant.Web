@@ -26,7 +26,7 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item label="状态">
-                <EnumSelect code="Bus_Order_Status" v-model="queryParam.Status"></EnumSelect>
+                <EnumSelect code="Bus_Order_Status" v-model="queryParam.Status" :color="true"></EnumSelect>
               </a-form-item>
             </a-col>
           </template>
@@ -54,7 +54,7 @@
         <EnumName code="Bus_Order_Type" :value="text"></EnumName>
       </template>
       <template slot="Status" slot-scope="text">
-        <EnumName code="Bus_Order_Status" :value="text"></EnumName>
+        <EnumName code="Bus_Order_Status" :value="text" :color="true"></EnumName>
       </template>
       <span slot="action" slot-scope="text, record">
         <template>

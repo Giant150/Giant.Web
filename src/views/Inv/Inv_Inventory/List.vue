@@ -31,7 +31,7 @@
           <template v-if="advanced">
             <a-col :md="4" :sm="24">
               <a-form-item label="状态">
-                <EnumSelect code="Inv_Inventory_Status" v-model="queryParam.Status"></EnumSelect>
+                <EnumSelect code="Inv_Inventory_Status" v-model="queryParam.Status" :color="true"></EnumSelect>
               </a-form-item>
             </a-col>
             <a-col :md="4" :sm="24">
@@ -110,7 +110,7 @@
     </div>
     <s-table ref="table" rowKey="Id" :columns="columns" :data="loadData" :rowSelection="rowSelection" showPagination="auto" :size="choose?'small':'default'" :scroll="{ x: 3060 }">
       <template slot="Status" slot-scope="text">
-        <EnumName code="Inv_Inventory_Status" :value="text"></EnumName>
+        <EnumName code="Inv_Inventory_Status" :value="text" :color="true"></EnumName>
       </template>
       <span slot="action" slot-scope="text, record">
         <template>

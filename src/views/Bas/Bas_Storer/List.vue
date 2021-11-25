@@ -49,7 +49,7 @@
         <EnumName code="Bas_Storer_Type" :value="text"></EnumName>
       </template>
       <template slot="Status" slot-scope="text">
-        <EnumName code="State" :value="text"></EnumName>
+        <EnumName code="State" :value="text" :color="true"></EnumName>
       </template>
       <span slot="ModifyTime" slot-scope="text">
         {{ moment(text).format("yyyy-MM-DD") }}
