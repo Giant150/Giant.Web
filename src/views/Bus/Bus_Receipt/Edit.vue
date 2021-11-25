@@ -115,7 +115,7 @@
           <LotInput name="Lot10" :sku="record.Sku" v-model="record.Lot10" :disabled="!!record.LotId" size="small"></LotInput>
         </template>
         <template slot="Remark" slot-scope="text, record">
-          <a-input v-model="record.Remark" @select="(val,remark)=>{cacheFilling.Remark=val}" size="small"/>
+          <a-input v-model="record.Remark" @change="()=>{cacheFilling.Remark=record.Remark}" size="small"/>
         </template>
         <span slot="action" slot-scope="text, record">
           <template>
@@ -191,6 +191,7 @@ export default {
         { title: '物料', dataIndex: 'SkuId', width: 120, fixed: 'left', scopedSlots: { customRender: 'SkuId' } },
         { title: '预期数量', dataIndex: 'QtyUomExpected', width: 100, fixed: 'left', scopedSlots: { customRender: 'QtyUomExpected' } },
         { title: '单位', dataIndex: 'UomCode', width: 100, fixed: 'left', scopedSlots: { customRender: 'UomCode' } },
+        { title: '物料名称', dataIndex: 'Sku.Code', width: 120 },
         { title: '物料名称', dataIndex: 'Sku.Name', width: 120 },
         { title: '物料规格', dataIndex: 'Sku.Spec', width: 120 },
         { dataIndex: 'QtyUomReceived', slots: { title: 'QtyUomReceived' }, width: 100, scopedSlots: { customRender: 'QtyUomReceived' } },
@@ -524,13 +525,12 @@ export default {
         })
     },
     handleRemarkFilling() {
-       const firstRow = this.entity.ReceiptDetail
-       firstRow.forEach(detail => {
-          // if (!detail.Remark) {
-            detail.Remark = firstRow.Remark
-          // }
-          // detail.Remark = this.cacheFilling.Remark
+        if (this.cacheFilling.Remark) {
+        this.entity.ReceiptDetail.forEach(detail => {
+          console.log(detail.Remark)
+          detail.Remark = this.cacheFilling.Remark
         })
+      }
     }
   }
 }
