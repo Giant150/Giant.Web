@@ -30,6 +30,9 @@
       <span slot="ModifyTime" slot-scope="text">
         {{ moment(text).format("yyyy-MM-DD") }}
       </span>
+      <template slot="Color" slot-scope="text">
+        <EnumName code="Color" :value="text" :color="true"></EnumName>
+      </template>
       <span slot="action" slot-scope="text, record">
         <template>
           <a v-action:Update v-if="!record.IsSystem" @click="handleEdit(record)">修改</a>
@@ -46,6 +49,8 @@
 import { mapGetters } from 'vuex'
 import moment from 'moment'
 import { STable } from '@/components'
+import EnumSelect from '@/components/CF/EnumSelect'
+import EnumName from '@/components/CF/EnumName'
 import MainSvc from '@/api/CF/CF_EnumItemSvc'
 import EditForm from './Edit'
 
@@ -53,6 +58,7 @@ const columns = [
   { title: '名称', dataIndex: 'Name', sorter: true },
   { title: '编号', dataIndex: 'Code', sorter: true },
   { title: '排序', dataIndex: 'Sort', sorter: true },
+  { title: '颜色', dataIndex: 'Color', scopedSlots: { customRender: 'Color' } },
   { title: '系统必需', dataIndex: 'IsSystem', scopedSlots: { customRender: 'IsSystem' } },
   { title: '修改时间', dataIndex: 'ModifyTime', sorter: true, scopedSlots: { customRender: 'ModifyTime' } },
   { title: '操作', dataIndex: 'action', width: '200px', scopedSlots: { customRender: 'action' } }
@@ -62,7 +68,9 @@ export default {
   components: {
     STable,
     MainSvc,
-    EditForm
+    EditForm,
+    EnumSelect,
+    EnumName
   },
   data() {
     this.columns = columns
