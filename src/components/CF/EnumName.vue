@@ -1,5 +1,8 @@
 <template>
-  <span>{{ enumNameText }}</span>
+  <div>
+    <a-tag v-if="color" :color="enumItem?enumItem.Color:''">{{ enumItem?enumItem.Name:'' }}</a-tag>
+    <span v-else>{{ enumItem?enumItem.Name:'' }}</span>
+  </div>
 </template>
 
 <script>
@@ -7,7 +10,8 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   props: {
     code: { type: String, required: true },
-    value: { type: String, required: true }
+    value: { type: String, required: true },
+    color: { type: Boolean, required: false, default: false }
   },
   data() {
     return {
@@ -19,14 +23,9 @@ export default {
       defaultWhseId: 'whseId',
       defaultStorerId: 'storerId'
     }),
-    enumNameText() {
-      if (!this.enumData.EnumItems) return ''
-      var item = this.enumData.EnumItems.find(v => v.Code === this.value)
-      if (item) {
-        return item.Name
-      } else {
-        return ''
-      }
+    enumItem() {
+      if (!this.enumData.EnumItems) return null
+      return this.enumData.EnumItems.find(v => v.Code === this.value)
     }
   },
   mounted() {

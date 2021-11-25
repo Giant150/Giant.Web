@@ -1,6 +1,9 @@
 <template>
   <a-select v-model="curValue" :placeholder="enumData.Name" @change="handleChange" @select="handleSelected" v-bind="$attrs">
-    <a-select-option v-for="item in enumData.EnumItems" :key="item.Code" :value="item.Code">{{ item.Name }}</a-select-option>
+    <a-select-option v-for="item in enumData.EnumItems" :key="item.Code" :value="item.Code">
+      <span v-if="color" :style="{color:item.Color}">{{ item.Name }}</span>
+      <span v-else>{{ item.Name }}</span>
+    </a-select-option>
   </a-select>
 </template>
 
@@ -8,8 +11,9 @@
 import { mapGetters, mapActions } from 'vuex'
 export default {
   props: {
-    code: String,
-    value: String
+    code: { type: String, required: true },
+    value: String,
+    color: { type: Boolean, required: false, default: false }
   },
   data() {
     return {
