@@ -49,13 +49,13 @@
         <EnumName code="Bas_Loc_Type" :value="text"></EnumName>
       </template>
       <template slot="Flag" slot-scope="text">
-        <EnumName code="Bas_Loc_Flag" :value="text"></EnumName>
+        <EnumName code="Bas_Loc_Flag" :value="text" :color="true"></EnumName>
       </template>
       <template slot="ABC" slot-scope="text">
         <EnumName code="ABC" :value="text"></EnumName>
       </template>
       <template slot="Status" slot-scope="text">
-        <EnumName code="State" :value="text"></EnumName>
+        <EnumName code="State" :value="text" :color="true"></EnumName>
       </template>
       <span slot="action" slot-scope="text, record">
         <template>

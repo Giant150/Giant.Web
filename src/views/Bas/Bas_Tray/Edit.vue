@@ -15,7 +15,7 @@
           <a-checkbox :checked="entity.IsEmpty" @change="(e)=>{entity.IsEmpty=e.target.checked}">空托盘</a-checkbox>
         </a-form-model-item>
         <a-form-model-item label="状态" prop="Status">
-          <EnumSelect code="State" v-model="entity.Status"></EnumSelect>
+          <EnumSelect code="State" v-model="entity.Status" :color="true"></EnumSelect>
         </a-form-model-item>
       </a-form-model>
     </a-spin>
