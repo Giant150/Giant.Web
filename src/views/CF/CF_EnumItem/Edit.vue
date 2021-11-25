@@ -12,7 +12,7 @@
           <a-input-number v-model="entity.Sort" style="width:100%"></a-input-number>
         </a-form-model-item>
         <a-form-model-item label="颜色" prop="Color">
-          <EnumSelect code="Color" v-model="entity.Color" :color="true"></EnumSelect>
+          <a-input v-model="entity.Color" autocomplete="off" />
         </a-form-model-item>
         <a-form-model-item label="配置参数" prop="Config">
           <a-textarea v-model="entity.Config" autocomplete="off"></a-textarea>
