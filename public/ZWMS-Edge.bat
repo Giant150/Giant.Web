@@ -1,0 +1,1 @@
+start msedge --app=http://192.171.1.5:8051 --start-maximized
