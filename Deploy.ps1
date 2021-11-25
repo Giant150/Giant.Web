@@ -11,7 +11,7 @@ Compress-Archive -Path ".\dist\*" -DestinationPath $ZIPFilePath
 Write-Host "Compress Completed $ZIPFilePath" -ForegroundColor Green
 
 Write-Host 'Deploy Starting' -ForegroundColor Yellow
-$Session = New-PSSession -ComputerName 192.180.4.190 -Port 59850 -Credential Administrator
+$Session = New-PSSession -ComputerName 192.171.1.5 -Credential Administrator
 $Session
 if ($Session.State -eq "Opened") {
 	Write-Host 'Successfully connected to the server' -ForegroundColor Green
