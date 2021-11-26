@@ -8,6 +8,9 @@
         <a-form-model-item label="名称" prop="Name">
           <a-input v-model="entity.Name" autocomplete="off" />
         </a-form-model-item>
+        <a-form-model-item label="助记码" prop="PinYin">
+          <a-input v-model="entity.PinYin" autocomplete="off" />
+        </a-form-model-item>
         <a-form-model-item label="类型" prop="Type">
           <EnumSelect code="Bas_Storer_Type" v-model="entity.Type"></EnumSelect>
         </a-form-model-item>
@@ -57,7 +60,7 @@ export default {
     init() {
       this.loading = false
       this.visible = true
-      this.entity = { Id: '', WhseId: this.defaultWhseId, Code: '', Name: '', Type: undefined, Status: 'Enable' }
+      this.entity = { Id: '', WhseId: this.defaultWhseId, Code: '', Name: '', PinYin: null, Type: undefined, Status: 'Enable' }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })

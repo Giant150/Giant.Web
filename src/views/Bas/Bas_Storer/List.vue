@@ -82,6 +82,7 @@ import ListContact from '../Bas_Contact/List'
 const columns = [
   { title: '编号', dataIndex: 'Code', sorter: true },
   { title: '名称', dataIndex: 'Name', sorter: true },
+  { title: '助记码', dataIndex: 'PinYin', sorter: true },
   { title: '类型', dataIndex: 'Type', scopedSlots: { customRender: 'Type' } },
   { title: '状态', dataIndex: 'Status', scopedSlots: { customRender: 'Status' } },
   { title: '修改时间', dataIndex: 'ModifyTime', sorter: true, scopedSlots: { customRender: 'ModifyTime' } },
