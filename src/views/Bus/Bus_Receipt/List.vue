@@ -95,7 +95,8 @@ import LocSelect from '@/components/Bas/LocSelect'
 
 const columns = [
   { title: '货主', dataIndex: 'Storer.Name' },
-  { title: '编号', dataIndex: 'Code', sorter: true },
+  { title: '入库编号', dataIndex: 'Code', sorter: true },
+  { title: '收料编号', dataIndex: 'Refcode', sorter: true },
   { title: '收货类型', dataIndex: 'RecType', scopedSlots: { customRender: 'RecType' } },
   { title: '单据日期', dataIndex: 'DocDate', sorter: true, customRender: (value) => { return moment(value).format('yyyy-MM-DD') } },
   { title: '收货日期', dataIndex: 'RecDate', sorter: true, customRender: (value) => { return moment(value).format('yyyy-MM-DD') } },
