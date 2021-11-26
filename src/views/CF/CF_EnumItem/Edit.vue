@@ -13,6 +13,7 @@
         </a-form-model-item>
         <a-form-model-item label="颜色" prop="Color">
           <a-input v-model="entity.Color" autocomplete="off" />
+          <EnumSelect code="Color" :color="true" @select="(val)=>{entity.Color=val}"></EnumSelect>
         </a-form-model-item>
         <a-form-model-item label="配置参数" prop="Config">
           <a-textarea v-model="entity.Config" autocomplete="off"></a-textarea>
