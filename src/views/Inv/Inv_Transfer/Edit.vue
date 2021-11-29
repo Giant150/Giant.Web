@@ -85,7 +85,7 @@
           <a-input-number v-model="record.ToQty" :min="0" size="small"></a-input-number>
         </template>
         <template slot="Lot01" slot-scope="text, record">
-          <LotInput name="Lot01" :sku="record.ToSku" v-model="record.Lot01" size="small"></LotInput>
+          <LotInput name="Lot01" :sku="record.ToSku" v-model="record.Lot01" :search="{StorerId:entity.ToStorerId}" size="small"></LotInput>
         </template>
         <template slot="Lot02" slot-scope="text, record">
           <LotInput name="Lot02" :sku="record.ToSku" v-model="record.Lot02" size="small"></LotInput>
@@ -286,7 +286,7 @@ export default {
           Id: `new_${this.curDetailIndex}`, WhseId: this.defaultWhseId, TransferId: this.entity.Id, Code: '',
           FromStorerId: this.entity.FromStorerId, FromSkuId: inv.SkuId, FromLotId: inv.LotId, FromLocId: inv.LocId, FromTrayId: inv.TrayId, FromQty: inv.Qty,
           ToStorerId: this.entity.ToStorerId, ToSkuId: null, ToLotId: null, ToLocId: inv.LocId, ToTrayId: inv.TrayId, ToQty: inv.Qty,
-          Lot01: inv.Lot.Lot01, Lot02: inv.Lot.Lot02, Lot03: inv.Lot.Lot03, Lot04: inv.Lot.Lot04, Lot05: inv.Lot.Lot05, Lot06: inv.Lot.Lot06, Lot07: inv.Lot.Lot07, Lot08: inv.Lot.Lot08, Lot09: inv.Lot.Lot09, Lot10: inv.Lot.Lot10,
+          Lot01: '', Lot02: '', Lot03: inv.Lot.Lot03, Lot04: inv.Lot.Lot04, Lot05: inv.Lot.Lot05, Lot06: inv.Lot.Lot06, Lot07: inv.Lot.Lot07, Lot08: inv.Lot.Lot08, Lot09: inv.Lot.Lot09, Lot10: inv.Lot.Lot10,
           Status: 'Active'
         }
         this.entity.TransferDetail.push(detail)
