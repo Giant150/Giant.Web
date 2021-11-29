@@ -1,5 +1,5 @@
 <template>
-  <a-drawer title="收货管理" placement="right" width="70%" :visible="visible" @close="()=>{this.visible=false}" :maskClosable="false" :body-style="{ paddingBottom: '80px' }">
+  <a-drawer title="收货管理" placement="right" width="80%" :visible="visible" @close="()=>{this.visible=false}" :maskClosable="false" :body-style="{ paddingBottom: '80px' }">
     <a-spin :spinning="loading">
       <a-form-model ref="form" :model="entity" :rules="rules" v-bind="layout">
         <a-row>
@@ -57,7 +57,12 @@
       <div class="table-operator">
         <a-button type="primary" v-action:Add icon="plus" @click="handleAdd(null)">新建</a-button>
       </div>
-      <a-table ref="table" size="small" rowKey="Id" :columns="columns" :data-source="receiptDetail" :pagination="false" :scroll="{ x: 3000 }">
+      <a-table ref="table" size="small" rowKey="Id" :columns="columns" :data-source="receiptDetail" :pagination="false" :scroll="{ x: 3600 }">
+        <div slot="filterDropdown" slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }" style="padding: 8px" >
+          <a-input :placeholder="`查询 ${column.title}`" :value="selectedKeys[0]" style="width: 188px; margin-bottom: 8px; display: block;" @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])" @pressEnter="confirm" />
+          <a-button type="primary" icon="search" size="small" style="width: 90px; margin-right: 8px" @click="confirm" >查询</a-button>
+          <a-button size="small" style="width: 90px" @click="clearFilters">重置</a-button>
+        </div>
         <template slot="Code" slot-scope="text, record">
           <CodeInput code="Bus_ReceiptDetail_Code" v-model="record.Code" :para="{ReceiptCode:entity.Code}" size="small" :disabled="!!record.LotId"></CodeInput>
         </template>
@@ -188,6 +193,9 @@ export default {
         { title: '物料', dataIndex: 'SkuId', width: 150, fixed: 'left', scopedSlots: { customRender: 'SkuId' } },
         { title: '预期数量', dataIndex: 'QtyUomExpected', width: 120, fixed: 'left', scopedSlots: { customRender: 'QtyUomExpected' } },
         { title: '单位', dataIndex: 'UomCode', width: 120, fixed: 'left', scopedSlots: { customRender: 'UomCode' } },
+        { title: '物料编号', dataIndex: 'Sku.Code', width: 150, scopedSlots: { filterDropdown: 'filterDropdown' }, onFilter: (value, record) => record.Sku.Code.toString().includes(value) },
+        { title: '物料名称', dataIndex: 'Sku.Name', width: 200, scopedSlots: { filterDropdown: 'filterDropdown' }, onFilter: (value, record) => record.Sku.Name.toString().includes(value) },
+        { title: '物料规格', dataIndex: 'Sku.Spec', width: 200, scopedSlots: { filterDropdown: 'filterDropdown' }, onFilter: (value, record) => record.Sku.Spec.toString().includes(value) },
         { title: '已收数量', dataIndex: 'QtyUomReceived', width: 120, scopedSlots: { customRender: 'QtyUomReceived' } },
         { title: '库位', dataIndex: 'LocId', width: 120, scopedSlots: { customRender: 'LocId' } },
         { title: '托盘', dataIndex: 'TrayId', width: 120, scopedSlots: { customRender: 'TrayId' } },

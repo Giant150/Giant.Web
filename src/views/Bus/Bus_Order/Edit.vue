@@ -61,7 +61,12 @@
           <a-button type="primary" v-action:Add icon="plus" @click="handleAdd" v-if="entity.Status==='Active' || entity.Status==='Allocate' || entity.Status==='Allocated'">新建</a-button>
         </div>
         <a-tab-pane key="OrderDetail" tab="发货明细" forceRender>
-          <a-table ref="table" size="small" rowKey="Id" :columns="orderDetailColumn" :data-source="entity.OrderDetail" :rowSelection="orderRowSelection" :pagination="false" :scroll="{ x: 3500 }">
+          <a-table ref="table" size="small" rowKey="Id" :columns="orderDetailColumn" :data-source="entity.OrderDetail" :rowSelection="orderRowSelection" :pagination="false" :scroll="{ x: 4000 }">
+            <div slot="filterDropdown" slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }" style="padding: 8px" >
+              <a-input :placeholder="`查询 ${column.title}`" :value="selectedKeys[0]" style="width: 188px; margin-bottom: 8px; display: block;" @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])" @pressEnter="confirm" />
+              <a-button type="primary" icon="search" size="small" style="width: 90px; margin-right: 8px" @click="confirm" >查询</a-button>
+              <a-button size="small" style="width: 90px" @click="clearFilters">重置</a-button>
+            </div>
             <template slot="Code" slot-scope="text, record">
               <CodeInput code="Bus_OrderDetail_Code" v-model="record.Code" :para="{OrderCode:entity.Code}" size="small" :disabled="record.Status!=='Active'"></CodeInput>
             </template>
@@ -266,6 +271,9 @@ export default {
         { title: '物料', dataIndex: 'SkuId', width: 200, fixed: 'left', scopedSlots: { customRender: 'SkuId' } },
         { title: '订单数量', dataIndex: 'QtyUom', width: 80, fixed: 'left', scopedSlots: { customRender: 'QtyUom' } },
         { title: '单位', dataIndex: 'UomCode', width: 80, fixed: 'left', scopedSlots: { customRender: 'UomCode' } },
+        { title: '物料编号', dataIndex: 'Sku.Code', width: 150, scopedSlots: { filterDropdown: 'filterDropdown' }, onFilter: (value, record) => record.Sku.Code.toString().includes(value) },
+        { title: '物料名称', dataIndex: 'Sku.Name', width: 200, scopedSlots: { filterDropdown: 'filterDropdown' }, onFilter: (value, record) => record.Sku.Name.toString().includes(value) },
+        { title: '物料规格', dataIndex: 'Sku.Spec', width: 200, scopedSlots: { filterDropdown: 'filterDropdown' }, onFilter: (value, record) => record.Sku.Spec.toString().includes(value) },
         { title: '物料数量', dataIndex: 'Qty', width: 80 },
         { title: '状态', dataIndex: 'Status', width: 120, scopedSlots: { customRender: 'Status' } },
         { title: '已分配', dataIndex: 'QtyAllocated', width: 80 },
