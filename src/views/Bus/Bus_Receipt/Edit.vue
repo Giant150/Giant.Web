@@ -58,6 +58,12 @@
         <a-button type="primary" v-action:Add icon="plus" @click="handleAdd(null)">新建</a-button>
       </div>
       <a-table ref="table" size="small" rowKey="Id" :columns="columns" :data-source="receiptDetail" :pagination="false" :scroll="{ x: 3000 }">
+        <div slot="filterDropdown" slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }" style="padding: 8px" >
+          <a-input :placeholder="`查询 ${column.title}`" :value="selectedKeys[0]" style="width: 188px; margin-bottom: 8px; display: block;" @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])" @pressEnter="confirm" />
+          <a-button type="primary" icon="search" size="small" style="width: 90px; margin-right: 8px" @click="confirm" >查询</a-button>
+          <a-button size="small" style="width: 90px" @click="clearFilters">重置</a-button>
+        </div>
+        <a-icon slot="filterIcon" slot-scope="filtered" type="search" :style="{ color: filtered ? '#108ee9' : undefined }" />
         <span slot="LocId" >仓位&nbsp;&nbsp;&nbsp;&nbsp;<a-button type="link" size="small" title="填充" @click="handleLocFilling()"><a-icon type="line-height" /></a-button></span>
         <span slot="Lot01" >仓库&nbsp;&nbsp;&nbsp;&nbsp;<a-button type="link" size="small" title="填充" @click="handleLot01Filling()"><a-icon type="line-height" /></a-button></span>
         <span slot="Lot02" >项目号&nbsp;&nbsp;&nbsp;&nbsp;<a-button type="link" size="small" title="填充" @click="handleLot02Filling()"><a-icon type="line-height" /></a-button></span>
@@ -191,9 +197,9 @@ export default {
         { title: '物料', dataIndex: 'SkuId', width: 120, fixed: 'left', scopedSlots: { customRender: 'SkuId' } },
         { title: '预期数量', dataIndex: 'QtyUomExpected', width: 100, fixed: 'left', scopedSlots: { customRender: 'QtyUomExpected' } },
         { title: '单位', dataIndex: 'UomCode', width: 100, fixed: 'left', scopedSlots: { customRender: 'UomCode' } },
-        { title: '物料名称', dataIndex: 'Sku.Code', width: 120 },
-        { title: '物料名称', dataIndex: 'Sku.Name', width: 120 },
-        { title: '物料规格', dataIndex: 'Sku.Spec', width: 120 },
+        { title: '物料编码', dataIndex: 'Sku.Code', width: 120, scopedSlots: { filterDropdown: 'filterDropdown', filterIcon: 'filterIcon' }, onFilter: (value, record) => record.Sku.Code.toString().includes(value) },
+        { title: '物料名称', dataIndex: 'Sku.Name', width: 120, scopedSlots: { filterDropdown: 'filterDropdown', filterIcon: 'filterIcon' }, onFilter: (value, record) => record.Sku.Name.toString().includes(value) },
+        { title: '物料规格', dataIndex: 'Sku.Spec', width: 120, scopedSlots: { filterDropdown: 'filterDropdown', filterIcon: 'filterIcon' }, onFilter: (value, record) => record.Sku.Spec.toString().includes(value) },
         { dataIndex: 'QtyUomReceived', slots: { title: 'QtyUomReceived' }, width: 100, scopedSlots: { customRender: 'QtyUomReceived' } },
         { dataIndex: 'Lot01', slots: { title: 'Lot01' }, width: 100, scopedSlots: { customRender: 'Lot01' } },
         { dataIndex: 'LocId', slots: { title: 'LocId' }, width: 120, scopedSlots: { customRender: 'LocId' } },
