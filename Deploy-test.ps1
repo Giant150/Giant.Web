@@ -1,5 +1,5 @@
 Write-Host 'Build Starting' -ForegroundColor Yellow
-$BuildScript={npm run build:live}
+$BuildScript={npm run build:test}
 Invoke-Command -ScriptBlock $BuildScript
 Write-Host 'Build Completed' -ForegroundColor Green
 
@@ -12,7 +12,7 @@ Compress-Archive -Path ".\dist\*" -DestinationPath $ZIPFilePath
 Write-Host 'Compress Completed' -ForegroundColor Green
 
 Write-Host 'Deploy Starting' -ForegroundColor Yellow
-$Session = New-PSSession -ComputerName 139.9.69.110 -Credential Administrator
+$Session = New-PSSession -ComputerName 10.76.99.27 -Credential Administrator
 $Session
 if($Session.State -eq "Opened")
 {
