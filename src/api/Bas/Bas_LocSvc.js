@@ -71,5 +71,15 @@ export default {
             method: 'post',
             data: query
         })
+    },
+    /**
+     * 批量库位
+     */
+     InBatchLoc(data) {
+        return request({
+            url: '/api/Bas_Loc/InBatchLoc',
+            method: 'post',
+            data: data
+        })
     }
 }

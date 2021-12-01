@@ -32,6 +32,8 @@
           <a v-action:Update @click="handleEdit(record)">修改</a>
           <a-divider v-action:Delete type="vertical" />
           <a v-action:Delete @click="handleDelete([record])">删除</a>
+          <a-divider v-action:Delete type="vertical" />
+          <a v-action:Loc @click="handleStartLoc([record])">启用库位</a>
         </template>
       </span>
     </s-table>
@@ -44,6 +46,7 @@ import { mapGetters } from 'vuex'
 import moment from 'moment'
 import { STable } from '@/components'
 import MainSvc from '@/api/Bas/Bas_PutawayZoneSvc'
+import LocSvc from '@/api/Bas/Bas_LocSvc'
 import EditForm from './Edit'
 import EnumSelect from '@/components/CF/EnumSelect'
 import EnumName from '@/components/CF/EnumName'
@@ -61,6 +64,7 @@ export default {
   components: {
     STable,
     MainSvc,
+    LocSvc,
     EnumSelect,
     EnumName,
     EditForm
@@ -138,6 +142,17 @@ export default {
               }
             })
           })
+        }
+      })
+    },
+    handleStartLoc(record) {
+      var thisObj = this
+      LocSvc.InBatchLoc(record.Code).then(result => {
+        if (result.Success) {
+          thisObj.$message.success('操作成功!')
+          thisObj.$refs.table.refresh()
+        } else {
+          thisObj.$message.error(result.Msg)
         }
       })
     }
