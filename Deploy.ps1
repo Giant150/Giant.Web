@@ -11,14 +11,14 @@ Compress-Archive -Path ".\dist\*" -DestinationPath $ZIPFilePath
 Write-Host "Compress Completed $ZIPFilePath" -ForegroundColor Green
 
 Write-Host 'Deploy Starting' -ForegroundColor Yellow
-$Session = New-PSSession -ComputerName 114.115.162.100 -Credential WDeployAdmin
+$Session = New-PSSession -ComputerName 139.9.69.110 -Credential Administrator
 $Session
 if ($Session.State -eq "Opened") {
 	Write-Host 'Successfully connected to the server' -ForegroundColor Green
 	#站点名称
 	$WebSiteName = "WMSWeb"
 	#远程服务器部署文件存放路径(默认为当前站点根目录的父级目录,可修改为其它路径)
-	$RemotePath = "D:\Publish\"
+	$RemotePath = "C:\Publish\"
 	#站点监听端口
 	$WebSitePort = 8051
 
@@ -37,12 +37,18 @@ if ($Session.State -eq "Opened") {
 			}
 			Write-Host "2.创建程序池$siteName" -ForegroundColor Yellow
 			New-WebAppPool -Name $siteName
-			Write-Host "设置程序池.Net CLR版本为无托管代码" -ForegroundColor Yellow
-			#"":无托管代码,v4.0:.Net CLR版本为4.0
+			Write-Host "设置程序池参数" -ForegroundColor Yellow
+			#设置程序池.Net CLR版本 "":无托管代码,v4.0:.Net CLR版本为4.0
 			Set-ItemProperty -Path "IIS:\AppPools\$siteName" -Name managedRuntimeVersion -Value ""
+			#程序池启动模式 OnDemand:按需启动 AlwaysRunning:始终运行 (默认OnDemand)
+			#Set-ItemProperty -Path "IIS:\AppPools\$siteName" -Name startMode -Value AlwaysRunning
+			#程序池启动模式闲置超时时间(默认00:20:00)
+			#Set-ItemProperty -Path "IIS:\AppPools\$siteName" -Name processModel.idleTimeout -Value 00:00:00
 
 			Write-Host "3.创建站点$siteName" -ForegroundColor Yellow
 			New-Website -Name $siteName -Port $port -PhysicalPath $fullPath -ApplicationPool $siteName
+			#设置站点预加载是否启用(默认False)
+			#Set-ItemProperty "IIS:\Sites\$siteName" -Name applicationDefaults.preloadEnabled -Value True
 			Start-Website -Name $siteName
 
 			Write-Host "4.打开防火墙端口$port" -ForegroundColor Yellow
