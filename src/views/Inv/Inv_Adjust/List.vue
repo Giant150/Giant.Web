@@ -27,7 +27,8 @@
             <span class="table-page-search-submitButtons">
               <a-button type="primary" v-action:Query @click="()=>{this.$refs.table.refresh()}">查询</a-button>
               <a-button style="margin-left: 8px" @click="resetSearchForm()">重置</a-button>
-              <a-button type="primary" shape="round" icon="interaction" style="margin-left: 120px" @click="handleAutoInv()">ERP库存调整</a-button>
+              <!-- <a-switch style="margin-left: 120px" checked-children="ERP库存开" un-checked-children="ERP库存关" @click="handleAutoInv('0')"/> -->
+              <a-button type="primary" shape="round" icon="interaction" style="margin-left: 120px" @click="handleAutoInv('0')">ERP库存调整</a-button>
             </span>
           </a-col>
         </a-row>
@@ -212,8 +213,8 @@ export default {
         }
       })
     },
-    handleAutoInv() {
-      MainSvc.AutoInv().then(result => {
+    handleAutoInv(val) {
+      MainSvc.AutoInv(val).then(result => {
           if (result.Success) {
             this.$message.success('操作成功!')
             this.$refs.table.refresh()

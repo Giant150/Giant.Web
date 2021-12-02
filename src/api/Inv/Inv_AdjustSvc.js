@@ -75,9 +75,9 @@ export default {
      /**
      * ERP库存调整
      */
-      AutoInv() {
+      AutoInv(val) {
         return request({
-            url: '/api/Inv_Adjust/AutoAdjust',
+            url: '/api/Inv_Adjust/AutoAdjust?val=' + val,
             method: 'post'
         })
     }
