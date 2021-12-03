@@ -1,1 +1,1 @@
-start msedge --app=https://wmsweb.giantliu.cn --start-maximized
+start msedge --app=https://wmsweb.liuju.cc --start-maximized

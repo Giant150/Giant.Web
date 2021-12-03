@@ -1,1 +1,1 @@
-start chrome --app=https://wmsweb.giantliu.cn --start-maximized
+start chrome --app=https://wmsweb.liuju.cc --start-maximized
