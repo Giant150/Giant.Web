@@ -224,7 +224,7 @@ export default {
   },
   created() {
     this.queryParam.WhseId = this.defaultWhseId
-    this.queryParam.StorerId = this.defaultStorerId
+    // this.queryParam.StorerId = this.defaultStorerId
     Object.assign(this.queryParam, this.query)
     this.getEnum({ whseId: this.defaultWhseId, code: 'Bas_Lot_Field' }).then(result => {
       this.enumItems = result.EnumItems
@@ -264,7 +264,7 @@ export default {
     resetSearchForm() {
       this.querySku = undefined
       this.queryParam = {
-        WhseId: this.defaultWhseId, Keyword: '', StorerId: this.defaultStorerId, SkuId: '', LotId: '', LocId: '', TrayId: '', Status: '',
+        WhseId: this.defaultWhseId, Keyword: '', StorerId: '', SkuId: '', LotId: '', LocId: '', TrayId: '', Status: '',
         Lot01: '', Lot02: '', Lot03: '', Lot04: '', Lot05: '', Lot06: '', Lot07: '', Lot08: '', Lot09: '', Lot10: ''
       }
     },
