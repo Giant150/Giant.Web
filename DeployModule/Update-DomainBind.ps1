@@ -15,17 +15,18 @@ function Update-DomainBind {
                 Write-Host "Subject:$subject" -ForegroundColor Green
                 $thumbprint = $cert.Thumbprint
                 Write-Host "Thumbprint:$thumbprint" -ForegroundColor Green
-                Get-PACertificate $subject | Install-PACertificate
+                Install-PACertificate -PACertificate $cert
+                # Get-PACertificate $subject | Install-PACertificate
                 # while ($null -eq (Get-ChildItem "Cert:\LocalMachine\My" | Where-Object Thumbprint -eq $thumbprint | Select-Object -First 1)) {
                 #     Write-Host "Wait $subject Install" -ForegroundColor Yellow
                 #     Start-Sleep -Seconds 1
                 # }
-                Get-WebBinding -Protocol https | Where-Object BindingInformation -like $subject | ForEach-Object {
+                Get-WebBinding -Protocol https | Where-Object BindingInformation -Like $subject | ForEach-Object {
                     $bind = $_
                     $bind
-                    #$bind.RebindSslCertificate($thumbprint, "My")
-                    $bind.RemoveSslCertificate()
-                    $bind.AddSslCertificate($thumbprint, "My")
+                    $bind.RebindSslCertificate($thumbprint, "My")
+                    # $bind.RemoveSslCertificate()
+                    # $bind.AddSslCertificate($thumbprint, "My")
                 }
             }
         }
@@ -35,5 +36,5 @@ function Update-DomainBind {
     else {
         Write-Host 'Failed connected to the server' -ForegroundColor Red
     }
-    Write-Host 'Deploy Clear Completed' -ForegroundColor Green
+    Write-Host 'Update Domain Bindding Completed' -ForegroundColor Green
 }
