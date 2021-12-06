@@ -229,7 +229,7 @@ export default {
       defaultStorerId: 'storerId'
     }),
     receiptDetail() {
-      return this.entity.ReceiptDetail
+      return this.entity.ReceiptDetail.slice(0).sort((a, b) => ((a.Code < b.Code) ? -1 : (a.Code > b.Code) ? 1 : 0))
     },
     canPutawayTask() {
       return this.entity?.ReceiptDetail?.find(w => w.LotId && !w.HasTask)
