@@ -123,12 +123,12 @@
         </template>
         <span slot="action" slot-scope="text, record">
           <template>
-            <a v-action:Add v-if="record.LotId && (record.Status==='Receiving' || record.Status==='Completed')" @click="handleAdd(record)">复制</a>
+            <a v-action:Add v-if="record.LotId && (record.Status==='Receiving' || record.Status==='Completed') && entity.Status!=='Closed'" @click="handleAdd(record)">复制</a>
             <a v-action:Delete v-if="!record.LotId" @click="handleDelete(record)">删除</a>
-            <a-divider v-action:Adjust v-if="record.LotId && (record.Status==='Receiving' || record.Status==='Completed')" type="vertical" />
-            <a v-action:Adjust v-if="record.LotId && (record.Status==='Receiving' || record.Status==='Completed')" @click="handleAdjust(record)">回转</a>
-            <a-divider v-action:Serial v-if="record.LotId && (record.Status==='Receiving' || record.Status==='Completed')" type="vertical" />
-            <a v-action:Serial v-if="record.LotId && (record.Status==='Receiving' || record.Status==='Completed')" @click="handleSerial(record)">序列码</a>
+            <a-divider v-action:Adjust v-if="record.LotId && (record.Status==='Receiving' || record.Status==='Completed') && entity.Status!=='Closed'" type="vertical" />
+            <a v-action:Adjust v-if="record.LotId && (record.Status==='Receiving' || record.Status==='Completed') && entity.Status!=='Closed'" @click="handleAdjust(record)">回转</a>
+            <a-divider v-action:Serial v-if="record.Id" type="vertical" />
+            <a v-action:Serial v-if="record.Id" @click="handleSerial(record)">序列码</a>
           </template>
         </span>
       </a-table>
