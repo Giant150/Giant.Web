@@ -125,10 +125,10 @@
         </template>
         <span slot="action" slot-scope="text, record">
           <template>
-            <a v-action:Add v-if="record.LotId" @click="handleAdd(record)">复制</a>
+            <a v-action:Add v-if="record.LotId && entity.Status!=='Closed'" @click="handleAdd(record)">复制</a>
             <a v-action:Delete v-if="!record.LotId" @click="handleDelete(record)">删除</a>
-            <a-divider v-action:Adjust v-if="record.LotId" type="vertical" />
-            <a v-action:Adjust v-if="record.LotId" @click="handleAdjust(record)">回转</a>
+            <a-divider v-action:Adjust v-if="record.LotId && entity.Status!=='Closed'" type="vertical" />
+            <a v-action:Adjust v-if="record.LotId && entity.Status!=='Closed'" @click="handleAdjust(record)">回转</a>
           </template>
         </span>
       </a-table>
