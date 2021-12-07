@@ -1,5 +1,5 @@
 <template>
-  <a-drawer title="发货管理" placement="right" width="85%" :visible="visible" @close="()=>{this.visible=false}" :maskClosable="false" :body-style="{ paddingBottom: '80px' }">
+  <a-drawer title="发货管理" placement="right" width="85%" :visible="visible" @close="()=>{this.visible=false}" :maskClosable="false" :body-style="{ paddingBottom: '40px' }">
     <a-spin :spinning="loading">
       <a-form-model ref="form" :model="entity" :rules="rules" v-bind="layout">
         <a-row>
@@ -61,7 +61,7 @@
           <a-button type="primary" v-action:Add icon="plus" @click="handleAdd" v-if="entity.Status==='Active' || entity.Status==='Allocate' || entity.Status==='Allocated'">新建</a-button>
         </div>
         <a-tab-pane key="OrderDetail" tab="发货明细" forceRender>
-          <a-table ref="table" size="small" rowKey="Id" :columns="orderDetailColumn" :data-source="entity.OrderDetail" :rowSelection="orderRowSelection" :pagination="false" :scroll="{ x: 2700 }">
+          <a-table ref="table" size="small" rowKey="Id" :columns="orderDetailColumn" :data-source="entity.OrderDetail" :rowSelection="orderRowSelection" :pagination="false" :scroll="tableScroll">
             <div slot="filterDropdown" slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }" style="padding: 8px" >
               <a-input :placeholder="`查询 ${column.title}`" :value="selectedKeys[0]" style="width: 188px; margin-bottom: 8px; display: block;" @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])" @pressEnter="confirm" />
               <a-button type="primary" icon="search" size="small" style="width: 90px; margin-right: 8px" @click="confirm" >查询</a-button>
@@ -141,7 +141,7 @@
           </a-table>
         </a-tab-pane>
         <a-tab-pane key="PickDetail" tab="拣货明细" forceRender v-if="entity.Id">
-          <a-table ref="table" size="small" rowKey="Id" :columns="pickDetailColumn" :data-source="pickDetail" :pagination="false" :scroll="{ x: 3500 }">
+          <a-table ref="table" size="small" rowKey="Id" :columns="pickDetailColumn" :data-source="pickDetail" :pagination="false" :scroll="pickTableScroll">
             <template slot="Code" slot-scope="text, record">
               <CodeInput code="Bus_PickDetail_Code" v-model="record.Code" :para="{DetailCode:selectedOrderDetail.Code,DetailId:selectedOrderDetail.Id}" size="small" :disabled="!record.Id.startsWith('new_')"></CodeInput>
             </template>
@@ -240,6 +240,8 @@ export default {
   data() {
     return {
       title: '新建',
+      tableScroll: { x: 3000, y: document.body.clientHeight - 337 },
+      pickTableScroll: { x: 2300, y: document.body.clientHeight - 337 },
       layout: { labelCol: { xs: { span: 24 }, sm: { span: 6 } }, wrapperCol: { xs: { span: 24 }, sm: { span: 14 } } },
       rules: {
         StorerId: [{ required: true, message: '必填' }],
@@ -268,13 +270,13 @@ export default {
         }
       },
       orderDetailColumn: [
-        { title: '编号', dataIndex: 'Code', width: 100, fixed: 'left', scopedSlots: { customRender: 'Code' } },
+        { title: '编号', dataIndex: 'Code', width: 100, fixed: 'left', scopedSlots: { customRender: 'Code' }, defaultSortOrder: 'ascend', sorter: (a, b) => parseInt(a.Code) - parseInt(b.Code) },
         { title: '物料', dataIndex: 'SkuId', width: 200, fixed: 'left', scopedSlots: { customRender: 'SkuId' } },
         { title: '订单数量', dataIndex: 'QtyUom', width: 80, fixed: 'left', scopedSlots: { customRender: 'QtyUom' } },
         { title: '单位', dataIndex: 'UomCode', width: 80, fixed: 'left', scopedSlots: { customRender: 'UomCode' } },
         { title: '物料编号', dataIndex: 'Sku.Code', width: 150, scopedSlots: { filterDropdown: 'filterDropdown', filterIcon: 'filterIcon' }, onFilter: (value, record) => record.Sku.Code.toString().includes(value) },
-        { title: '物料名称', dataIndex: 'Sku.Name', width: 150, scopedSlots: { filterDropdown: 'filterDropdown', filterIcon: 'filterIcon' }, onFilter: (value, record) => record.Sku.Code.toString().includes(value) },
-        { title: '物料规格', dataIndex: 'Sku.Spec', width: 150, scopedSlots: { filterDropdown: 'filterDropdown', filterIcon: 'filterIcon' }, onFilter: (value, record) => record.Sku.Code.toString().includes(value) },
+        { title: '物料名称', dataIndex: 'Sku.Name', scopedSlots: { filterDropdown: 'filterDropdown', filterIcon: 'filterIcon' }, onFilter: (value, record) => record.Sku.Code.toString().includes(value) },
+        { title: '物料规格', dataIndex: 'Sku.Spec', scopedSlots: { filterDropdown: 'filterDropdown', filterIcon: 'filterIcon' }, onFilter: (value, record) => record.Sku.Code.toString().includes(value) },
         { title: '物料数量', dataIndex: 'Qty', width: 80 },
         { title: '状态', dataIndex: 'Status', width: 120, scopedSlots: { customRender: 'Status' } },
         { title: '已分配', dataIndex: 'QtyAllocated', width: 80 },
@@ -284,8 +286,8 @@ export default {
         { title: '优先规则', dataIndex: 'RotateType', width: 120, scopedSlots: { customRender: 'RotateType' } },
         { title: '发货策略', dataIndex: 'AllocStgId', width: 120, scopedSlots: { customRender: 'AllocStgId' } },
         { title: '货架寿命', dataIndex: 'RackLife', width: 80, scopedSlots: { customRender: 'RackLife' } },
-        { title: '指定库位', dataIndex: 'LocId', width: 120, scopedSlots: { customRender: 'LocId' } },
-        { title: '指定托盘', dataIndex: 'TrayId', width: 120, scopedSlots: { customRender: 'TrayId' } },
+        { title: '指定库位', dataIndex: 'LocId', width: 150, scopedSlots: { customRender: 'LocId' } },
+        { title: '指定托盘', dataIndex: 'TrayId', width: 150, scopedSlots: { customRender: 'TrayId' } },
         // { title: '指定批次', dataIndex: 'LotId', width: 120, scopedSlots: { customRender: 'LotId' } },
         { title: () => { return this.cusHeaderTitle('Lot01') }, dataIndex: 'Lot01', width: 150, scopedSlots: { customRender: 'Lot01' } },
         { title: () => { return this.cusHeaderTitle('Lot02') }, dataIndex: 'Lot02', width: 150, scopedSlots: { customRender: 'Lot02' } },
@@ -298,13 +300,16 @@ export default {
         // { title: () => { return this.cusHeaderTitle('Lot09') }, dataIndex: 'Lot09', width: 150, scopedSlots: { customRender: 'Lot09' } },
         // { title: () => { return this.cusHeaderTitle('Lot10') }, dataIndex: 'Lot10', width: 150, scopedSlots: { customRender: 'Lot10' } },
         { title: '备注', dataIndex: 'Remark', width: 120, scopedSlots: { customRender: 'Remark' } },
-        { title: '操作', dataIndex: 'action', fixed: 'right', scopedSlots: { customRender: 'action' } }
+        { title: '操作', dataIndex: 'action', width: 60, fixed: 'right', scopedSlots: { customRender: 'action' } }
       ],
       pickDetailColumn: [
         { title: '编号', dataIndex: 'Code', width: 120, fixed: 'left', scopedSlots: { customRender: 'Code' } },
-        { title: '库位', dataIndex: 'LocId', width: 120, scopedSlots: { customRender: 'LocId' } },
+        { title: '库位', dataIndex: 'LocId', width: 150, scopedSlots: { customRender: 'LocId' } },
         // { title: '托盘', dataIndex: 'TrayId', width: 120, scopedSlots: { customRender: 'TrayId' } },
         { title: '物料', dataIndex: 'SkuId', width: 200, scopedSlots: { customRender: 'SkuId' } },
+        { title: '物料编号', dataIndex: 'Sku.Code', width: 150 },
+        { title: '物料名称', dataIndex: 'Sku.Name' },
+        { title: '物料规格', dataIndex: 'Sku.Spec' },
         { title: '数量', dataIndex: 'Qty', width: 80, scopedSlots: { customRender: 'Qty' } },
         { title: '状态', dataIndex: 'Status', width: 120, scopedSlots: { customRender: 'Status' } },
         { title: '拣货数量', dataIndex: 'QtyUom', width: 80, scopedSlots: { customRender: 'QtyUom' } },
@@ -321,7 +326,7 @@ export default {
         // { title: () => { return this.cusHeaderTitle('Lot10') }, dataIndex: 'Lot.Lot10', width: 150 },
         { title: '至库位', dataIndex: 'ToLocId', width: 120, scopedSlots: { customRender: 'ToLocId' } },
         { title: '备注', dataIndex: 'Remark', width: 120, scopedSlots: { customRender: 'Remark' } },
-        { title: '操作', dataIndex: 'action', fixed: 'right', scopedSlots: { customRender: 'action' } }
+        { title: '操作', dataIndex: 'action', width: 60, fixed: 'right', scopedSlots: { customRender: 'action' } }
       ]
     }
   },
@@ -625,3 +630,15 @@ export default {
   }
 }
 </script>
+
+<style lang="less" scoped>
+/deep/ .ant-form-item {
+  margin-bottom: 0;
+}
+/deep/ .ant-drawer-body {
+  padding: 12px;
+}
+/deep/ .table-operator {
+  margin-bottom: 4px;
+}
+</style>
