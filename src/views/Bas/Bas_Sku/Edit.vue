@@ -110,7 +110,7 @@
           </a-col>
           <a-col :span="8">
             <a-form-model-item label="上架库位" prop="PutawayLocId">
-              <LocSelect v-model="entity.PutawayLocId" :zone="entity.PutawayZoneId" allowClear placeholder="上架库位"></LocSelect>
+              <LocSelect v-model="entity.PutawayLocId" allowClear placeholder="上架库位"></LocSelect>
             </a-form-model-item>
           </a-col>
           <a-col :span="8">

@@ -86,7 +86,7 @@
               </a-col>
               <a-col :span="8">
                 <a-form-model-item label="库位" prop="LocId">
-                  <LocSelect v-model="config.LocId" :zone="config.LocId"></LocSelect>
+                  <LocSelect v-model="config.LocId"></LocSelect>
                 </a-form-model-item>
               </a-col>
               <a-col :span="8">

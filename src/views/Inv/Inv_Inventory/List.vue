@@ -25,7 +25,7 @@
           </a-col>
           <a-col :md="4" :sm="24">
             <a-form-item label="库位">
-              <LocSelect v-model="queryParam.LocId" aria-placeholder="库位"></LocSelect>
+              <LocSelect v-model="queryParam.LocId"></LocSelect>
             </a-form-item>
           </a-col>
           <template v-if="advanced">
