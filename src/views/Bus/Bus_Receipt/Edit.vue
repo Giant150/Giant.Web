@@ -65,20 +65,20 @@
         </div>
         <a-icon slot="filterIcon" slot-scope="filtered" type="search" :style="{ color: filtered ? '#108ee9' : undefined }" />
         <span slot="LocId">仓位&nbsp;&nbsp;&nbsp;&nbsp;<a-button type="link" size="small" title="填充" @click="handleLocFilling()">
-            <a-icon type="line-height" />
-          </a-button></span>
+          <a-icon type="line-height" />
+        </a-button></span>
         <span slot="Lot01">仓库&nbsp;&nbsp;&nbsp;&nbsp;<a-button type="link" size="small" title="填充" @click="handleLot01Filling()">
-            <a-icon type="line-height" />
-          </a-button></span>
+          <a-icon type="line-height" />
+        </a-button></span>
         <span slot="Lot02">项目号&nbsp;&nbsp;&nbsp;&nbsp;<a-button type="link" size="small" title="填充" @click="handleLot02Filling()">
-            <a-icon type="line-height" />
-          </a-button></span>
+          <a-icon type="line-height" />
+        </a-button></span>
         <span slot="Remark">备注&nbsp;&nbsp;&nbsp;&nbsp;<a-button type="link" size="small" title="填充" @click="handleRemarkFilling()">
-            <a-icon type="line-height" />
-          </a-button></span>
+          <a-icon type="line-height" />
+        </a-button></span>
         <span slot="QtyUomReceived">已收数量<a-button type="link" size="small" title="填充" @click="handleQtyUomFilling()">
-            <a-icon type="line-height" />
-          </a-button></span>
+          <a-icon type="line-height" />
+        </a-button></span>
         <template slot="Code" slot-scope="text, record">
           <CodeInput code="Bus_ReceiptDetail_Code" v-model="record.Code" :para="{ReceiptCode:entity.Code}" size="small" :disabled="!!record.LotId"></CodeInput>
         </template>
@@ -204,7 +204,7 @@ export default {
       entity: {},
       expand: {},
       columns: [
-        { title: '编号', dataIndex: 'Code', width: 120, fixed: 'left', scopedSlots: { customRender: 'Code' }, defaultSortOrder: 'ascend', sorter: (a, b) => parseInt(a.Code) - parseInt(b.Code) },
+        { title: '编号', dataIndex: 'Code', width: 80, fixed: 'left', scopedSlots: { customRender: 'Code' }, defaultSortOrder: 'ascend', sorter: (a, b) => parseInt(a.Code) - parseInt(b.Code) },
         { title: '物料', dataIndex: 'SkuId', width: 120, fixed: 'left', scopedSlots: { customRender: 'SkuId' } },
         { title: '预期数量', dataIndex: 'QtyUomExpected', width: 80, fixed: 'left', scopedSlots: { customRender: 'QtyUomExpected' } },
         { title: '单位', dataIndex: 'UomCode', width: 100, fixed: 'left', scopedSlots: { customRender: 'UomCode' } },
