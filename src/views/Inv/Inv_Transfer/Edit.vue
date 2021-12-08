@@ -1,5 +1,5 @@
 <template>
-  <a-drawer title="内部转移" placement="right" width="60%" :visible="visible" @close="()=>{this.visible=false}" :maskClosable="false" :body-style="{ paddingBottom: '80px' }">
+  <a-drawer title="内部转移" placement="right" width="60%" :visible="visible" @close="()=>{this.visible=false}" :maskClosable="false" :body-style="{ paddingBottom: '40px' }">
     <a-spin :spinning="loading">
       <a-form-model ref="form" :model="entity" :rules="rules" v-bind="layout">
         <a-row>
@@ -50,7 +50,7 @@
       <div class="table-operator">
         <a-button type="primary" v-action:Add icon="plus" v-if="entity.Status==='Active'" @click="handleAdd()">新建</a-button>
       </div>
-      <a-table ref="table" size="small" rowKey="Id" :columns="columns" :data-source="transferDetail" :pagination="false" :scroll="{ x: 3500 }">
+      <a-table ref="table" size="small" rowKey="Id" :columns="columns" :data-source="transferDetail" :pagination="false" :scroll="tableScroll">
         <template slot="Code" slot-scope="text, record">
           <CodeInput code="Inv_TransferDetail_Code" v-model="record.Code" :para="{TransferCode:entity.Code}" placeholder="编号" size="small"></CodeInput>
         </template>
@@ -168,6 +168,7 @@ export default {
   data() {
     return {
       title: '新建',
+      tableScroll: { x: 1800, y: document.body.clientHeight - 337 },
       layout: { labelCol: { xs: { span: 24 }, sm: { span: 6 } }, wrapperCol: { xs: { span: 24 }, sm: { span: 14 } } },
       rules: {
         Code: [{ required: true, message: '' }],
@@ -186,24 +187,24 @@ export default {
         { title: '编号', dataIndex: 'Code', width: 100, scopedSlots: { customRender: 'Code' } },
         { title: '自物料', dataIndex: 'FromSkuId', width: 150, scopedSlots: { customRender: 'FromSkuId' } },
         { title: '自批次', dataIndex: 'FromLotId', width: 150, scopedSlots: { customRender: 'FromLotId' } },
-        { title: '自库位', dataIndex: 'FromLocId', width: 150, scopedSlots: { customRender: 'FromLocId' } },
-        { title: '自托盘', dataIndex: 'FromTrayId', width: 150, scopedSlots: { customRender: 'FromTrayId' } },
-        { title: '自数量', dataIndex: 'FromQty', width: 150, scopedSlots: { customRender: 'FromQty' } },
+        { title: '自库位', dataIndex: 'FromLocId', width: 120, scopedSlots: { customRender: 'FromLocId' } },
+        // { title: '自托盘', dataIndex: 'FromTrayId', width: 150, scopedSlots: { customRender: 'FromTrayId' } },
+        { title: '自数量', dataIndex: 'FromQty', width: 120, scopedSlots: { customRender: 'FromQty' } },
         { title: '至物料', dataIndex: 'ToSkuId', width: 150, scopedSlots: { customRender: 'ToSkuId' } },
         { title: '至批次', dataIndex: 'ToLotId', width: 150, scopedSlots: { customRender: 'ToLotId' } },
-        { title: '至库位', dataIndex: 'ToLocId', width: 150, scopedSlots: { customRender: 'ToLocId' } },
-        { title: '至托盘', dataIndex: 'ToTrayId', width: 150, scopedSlots: { customRender: 'ToTrayId' } },
-        { title: '至数量', dataIndex: 'ToQty', width: 150, scopedSlots: { customRender: 'ToQty' } },
+        { title: '至库位', dataIndex: 'ToLocId', width: 120, scopedSlots: { customRender: 'ToLocId' } },
+        // { title: '至托盘', dataIndex: 'ToTrayId', width: 150, scopedSlots: { customRender: 'ToTrayId' } },
+        { title: '至数量', dataIndex: 'ToQty', width: 120, scopedSlots: { customRender: 'ToQty' } },
         { title: () => { return this.cusHeaderTitle('Lot01') }, dataIndex: 'Lot01', width: 150, scopedSlots: { customRender: 'Lot01' } },
         { title: () => { return this.cusHeaderTitle('Lot02') }, dataIndex: 'Lot02', width: 150, scopedSlots: { customRender: 'Lot02' } },
         { title: () => { return this.cusHeaderTitle('Lot03') }, dataIndex: 'Lot03', width: 150, scopedSlots: { customRender: 'Lot03' } },
-        { title: () => { return this.cusHeaderTitle('Lot04') }, dataIndex: 'Lot04', width: 150, scopedSlots: { customRender: 'Lot04' } },
-        { title: () => { return this.cusHeaderTitle('Lot05') }, dataIndex: 'Lot05', width: 150, scopedSlots: { customRender: 'Lot05' } },
-        { title: () => { return this.cusHeaderTitle('Lot06') }, dataIndex: 'Lot06', width: 150, scopedSlots: { customRender: 'Lot06' } },
-        { title: () => { return this.cusHeaderTitle('Lot07') }, dataIndex: 'Lot07', width: 150, scopedSlots: { customRender: 'Lot07' } },
-        { title: () => { return this.cusHeaderTitle('Lot08') }, dataIndex: 'Lot08', width: 150, scopedSlots: { customRender: 'Lot08' } },
-        { title: () => { return this.cusHeaderTitle('Lot09') }, dataIndex: 'Lot09', width: 150, scopedSlots: { customRender: 'Lot09' } },
-        { title: () => { return this.cusHeaderTitle('Lot10') }, dataIndex: 'Lot10', width: 150, scopedSlots: { customRender: 'Lot10' } },
+        // { title: () => { return this.cusHeaderTitle('Lot04') }, dataIndex: 'Lot04', width: 150, scopedSlots: { customRender: 'Lot04' } },
+        // { title: () => { return this.cusHeaderTitle('Lot05') }, dataIndex: 'Lot05', width: 150, scopedSlots: { customRender: 'Lot05' } },
+        // { title: () => { return this.cusHeaderTitle('Lot06') }, dataIndex: 'Lot06', width: 150, scopedSlots: { customRender: 'Lot06' } },
+        // { title: () => { return this.cusHeaderTitle('Lot07') }, dataIndex: 'Lot07', width: 150, scopedSlots: { customRender: 'Lot07' } },
+        // { title: () => { return this.cusHeaderTitle('Lot08') }, dataIndex: 'Lot08', width: 150, scopedSlots: { customRender: 'Lot08' } },
+        // { title: () => { return this.cusHeaderTitle('Lot09') }, dataIndex: 'Lot09', width: 150, scopedSlots: { customRender: 'Lot09' } },
+        // { title: () => { return this.cusHeaderTitle('Lot10') }, dataIndex: 'Lot10', width: 150, scopedSlots: { customRender: 'Lot10' } },
         { title: '操作', dataIndex: 'action', width: 100, fixed: 'right', scopedSlots: { customRender: 'action' } }
       ]
     }
@@ -361,3 +362,14 @@ export default {
   }
 }
 </script>
+<style lang="less" scoped>
+/deep/ .ant-form-item {
+  margin-bottom: 0;
+}
+/deep/ .ant-drawer-body {
+  padding: 12px;
+}
+/deep/ .table-operator {
+  margin-bottom: 4px;
+}
+</style>
