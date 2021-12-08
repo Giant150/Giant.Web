@@ -1,5 +1,5 @@
 <template>
-  <a-drawer title="日志信息" placement="right" width="50%" :visible="visible" @close="()=>{this.visible=false}">
+  <a-drawer title="日志信息" placement="right" :width="1000" :visible="visible" @close="()=>{this.visible=false}">
     <a-descriptions layout="vertical">
       <a-descriptions-item label="日志应用">
         <EnumName code="Sys_Log_AppName" :value="entity.AppName"></EnumName>
@@ -11,8 +11,8 @@
       <a-descriptions-item label="用户Id">{{ entity.UserId }}</a-descriptions-item>
       <a-descriptions-item label="IP">{{ entity.IP }}</a-descriptions-item>
       <a-descriptions-item label="请求Url">{{ entity.Url }}</a-descriptions-item>
-      <a-descriptions-item label="日志内容" :span="3">{{ entity.Msg }}</a-descriptions-item>
-      <a-descriptions-item label="报错信息" v-if="entity.Exception" :span="3">{{ entity.Exception }}</a-descriptions-item>
+      <a-descriptions-item label="日志内容" :span="3"><pre class="msg-content">{{ entity.Msg }}</pre></a-descriptions-item>
+      <a-descriptions-item label="报错信息" v-if="entity.Exception" :span="3"><pre class="msg-content">{{ entity.Exception }}</pre></a-descriptions-item>
       <a-descriptions-item label="记录服务" :span="3">{{ entity.Logger }}</a-descriptions-item>
     </a-descriptions>
   </a-drawer>
@@ -77,7 +77,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
- /deep/ .ant-descriptions-item-content {
+/deep/ .msg-content {
+  width: 900px;
   white-space: pre-wrap;
 }
 </style>
