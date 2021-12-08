@@ -4,7 +4,7 @@
     <a-select-option v-for="item in data" :key="item.Id" :value="item.Id" :title="item.Code" :disabled="item.Status==='Disable'">
       <a-row type="flex" justify="start" :gutter="10">
         <a-col flex="auto">{{ item.Code }}</a-col>
-        <a-col flex="auto">{{ item.PutawayZone.Name }}</a-col>
+        <a-col flex="auto">{{ item.ZoneName }}</a-col>
         <a-col flex="auto">
           <EnumName code="Bas_Loc_Type" :value="item.Type"></EnumName>
         </a-col>
@@ -27,9 +27,7 @@ export default {
     EnumName
   },
   props: {
-    value: String,
-    type: String,
-    zone: String
+    value: String
   },
   data() {
     return {
@@ -63,18 +61,7 @@ export default {
   methods: {
     copy,
     loadData() {
-      MainSvc.GetPage({
-        PageNo: 1,
-        PageSize: 10,
-        SortField: 'Code',
-        Search: {
-          Id: this.curValue,
-          Keyword: this.keyword,
-          WhseId: this.defaultWhseId,
-          Type: this.type,
-          PutawayZoneId: this.zone
-        }
-      }).then(result => {
+      MainSvc.GetBySearch(this.defaultWhseId, this.curValue ? this.curValue : '', this.keyword ? this.keyword : '').then(result => {
         this.data = result.Data
       })
     },

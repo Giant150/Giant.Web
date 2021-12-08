@@ -16,6 +16,19 @@ export default {
         })
     },
     /**
+     * 查询数据
+     * @param {string} whseId 仓库Id
+     * @param {string} id 库位Id
+     * @param {string} keyword 关键字
+     * @returns 库位数据
+     */
+    GetBySearch(whseId, id, keyword) {
+        return request({
+            url: `/api/Bas_Loc/GetBySearch?whseId=${whseId}&id=${id}&keyword=${keyword}`,
+            method: 'get'
+        })
+    },
+    /**
      * 获取单个实体数据
      * @param {string} id 主键
      * @returns 实体数据
@@ -75,7 +88,7 @@ export default {
     /**
      * 批量库位
      */
-     InBatchLoc(data) {
+    InBatchLoc(data) {
         return request({
             url: '/api/Bas_Loc/InBatchLoc',
             method: 'post',
