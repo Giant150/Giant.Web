@@ -28,8 +28,9 @@ export default {
     value(newVal) {
       if (newVal !== this.curValue) {
         this.curValue = newVal
-        this.getListData()
       }
+      var item = this.listData.find(w => w.Uom === newVal)
+      if (item) this.$emit('select', newVal, item)
     },
     sku() {
       this.getListData()
@@ -57,7 +58,7 @@ export default {
               this.handleSelected(eaUom.Uom)
             }
           }
-        }
+        } else this.handleSelected(this.curValue)
       })
     },
     handleChange(val) {
