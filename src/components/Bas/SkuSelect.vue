@@ -67,17 +67,7 @@ export default {
   methods: {
     copy,
     loadData() {
-      MainSvc.GetPage({
-        PageNo: 1,
-        PageSize: 10,
-        SortField: 'Code',
-        Search: {
-          Id: this.curValue,
-          Keyword: this.keyword,
-          WhseId: this.defaultWhseId,
-          StorerId: this.storer
-        }
-      }).then(result => {
+      MainSvc.GetBySearch(this.defaultWhseId, this.storer ? this.storer : '', this.curValue ? this.curValue : '', this.keyword ? this.keyword : '').then(result => {
         this.data = result.Data
       })
     },

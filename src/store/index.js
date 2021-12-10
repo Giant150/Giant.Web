@@ -11,6 +11,7 @@ import user from './modules/user'
 import permission from './modules/async-router'
 import cfenum from './modules/cfenum'
 import cfconfig from './modules/cfconfig'
+import stglot from './modules/stglot'
 import getters from './getters'
 
 Vue.use(Vuex)
@@ -21,7 +22,8 @@ export default new Vuex.Store({
     user,
     permission,
     cfenum,
-    cfconfig
+    cfconfig,
+    stglot
   },
   state: {
 

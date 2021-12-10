@@ -16,6 +16,20 @@ export default {
         })
     },
     /**
+     * 查询数据
+     * @param {string} whseId 仓库Id
+     * @param {string} storerId 货主Id
+     * @param {string} id 物料Id
+     * @param {string} keyword 关键字
+     * @returns 物料数据
+     */
+    GetBySearch(whseId, storerId, id, keyword) {
+        return request({
+            url: `/api/Bas_Sku/GetBySearch?whseId=${whseId}&storerId=${storerId}&id=${id}&keyword=${keyword}`,
+            method: 'get'
+        })
+    },
+    /**
      * 获取单个实体数据
      * @param {string} id 主键
      * @returns 实体数据
@@ -54,7 +68,7 @@ export default {
          * 导出模板
          * @returns 是否成功
          */
-     Exporttemplet() {
+    Exporttemplet() {
         return request({
             url: '/api/Bas_Sku/Exporttemplet',
             method: 'get'

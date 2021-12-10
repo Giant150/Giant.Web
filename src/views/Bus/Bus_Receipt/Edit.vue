@@ -65,20 +65,20 @@
         </div>
         <a-icon slot="filterIcon" slot-scope="filtered" type="search" :style="{ color: filtered ? '#108ee9' : undefined }" />
         <span slot="LocId">仓位&nbsp;&nbsp;&nbsp;&nbsp;<a-button type="link" size="small" title="填充" @click="handleLocFilling()">
-          <a-icon type="line-height" />
-        </a-button></span>
+            <a-icon type="line-height" />
+          </a-button></span>
         <span slot="Lot01">仓库&nbsp;&nbsp;&nbsp;&nbsp;<a-button type="link" size="small" title="填充" @click="handleLot01Filling()">
-          <a-icon type="line-height" />
-        </a-button></span>
+            <a-icon type="line-height" />
+          </a-button></span>
         <span slot="Lot02">项目号&nbsp;&nbsp;&nbsp;&nbsp;<a-button type="link" size="small" title="填充" @click="handleLot02Filling()">
-          <a-icon type="line-height" />
-        </a-button></span>
+            <a-icon type="line-height" />
+          </a-button></span>
         <span slot="Remark">备注&nbsp;&nbsp;&nbsp;&nbsp;<a-button type="link" size="small" title="填充" @click="handleRemarkFilling()">
-          <a-icon type="line-height" />
-        </a-button></span>
+            <a-icon type="line-height" />
+          </a-button></span>
         <span slot="QtyUomReceived">已收数量<a-button type="link" size="small" title="填充" @click="handleQtyUomFilling()">
-          <a-icon type="line-height" />
-        </a-button></span>
+            <a-icon type="line-height" />
+          </a-button></span>
         <template slot="Code" slot-scope="text, record">
           <CodeInput code="Bus_ReceiptDetail_Code" v-model="record.Code" :para="{ReceiptCode:entity.Code}" size="small" :disabled="!!record.LotId"></CodeInput>
         </template>
@@ -147,7 +147,7 @@
       <a-button v-action:Close :style="{ marginRight: '8px' }" type="primary" v-if="entity.Status==='Receiving' || entity.Status==='Completed'" @click="handleClose">收货结束</a-button>
       <a-button :style="{ marginRight: '8px' }" v-if="isModify" type="default" @click="handlePrint">打印收货单</a-button>
       <a-button v-if="canPutawayTask" v-action:Putaway :style="{ marginRight: '8px' }" type="default" @click="handlePutaway">生成上架任务</a-button>
-      <a-button v-action:Update :style="{ marginRight: '8px' }" type="primary" v-if="entity.Status!=='Completed' && entity.Status!=='Closed'" @click="handleSubmit">保存</a-button>
+      <a-button v-action:Update :style="{ marginRight: '8px' }" type="primary" v-if="entity.Status!=='Closed'" @click="handleSubmit">保存</a-button>
       <a-button :style="{ marginRight: '8px' }" @click="()=>{this.visible=false}">关闭</a-button>
     </div>
   </a-drawer>
@@ -237,7 +237,8 @@ export default {
   computed: {
     ...mapGetters({
       defaultWhseId: 'whseId',
-      defaultStorerId: 'storerId'
+      defaultStorerId: 'storerId',
+      lotStgList: 'lotStgs'
     }),
     receiptDetail() {
       return this.entity.ReceiptDetail
@@ -272,7 +273,7 @@ export default {
   },
   methods: {
     moment,
-    ...mapActions({ getConfig: 'getConfig', getEnum: 'getEnum' }),
+    ...mapActions({ getConfig: 'getConfig', getEnum: 'getEnum', getLotStg: 'getLotStg' }),
     init() {
       this.loading = false
       this.visible = true
@@ -387,36 +388,38 @@ export default {
       record.QtyReceived = record.QtyUomReceived * record.UomCnt
       record.TotalAmt = record.QtyReceived * record.UnitPrice
       // 批属性处理
-      if (record.Sku && record.Sku.LotStg) {
-        for (const key in record.Sku.LotStg) {
-          if (key.endsWith('Type') && record.Sku.LotStg[key] === 'Quote') {
-            // (引用)
-            const lotName = key.replace('Type', '')
-            const quoteName = record.Sku.LotStg[`${lotName}Enum`]
-            const colVal = quoteName.startsWith('Expand.') ? this.entity.Expand[quoteName.replace('Expand.', '')] : this.entity[quoteName]
-            record[lotName] = colVal
-          } else if (key.endsWith('Type') && record.Sku.LotStg[key] === 'CalcExpiry') {
-            // (计算到期)
-            const lotName = key.replace('Type', '')
-            // const calcName = record.Sku.LotStg[`${lotName}Enum`]
-            const sourceVal = record[this.defaultProductDateLot]
-            if (!sourceVal) continue
-            const calcVal = moment(sourceVal).add(record.Sku.ShelfLife, 'days').format('YYYY-MM-DD')
-            record[lotName] = calcVal
-          }
-          // 处理默认值
-          if (key.endsWith('Default') && record.Sku.LotStg[key]) {
-            const lotName = key.replace('Default', '')
-            if (!record[lotName]) {
-              let defaultVal = record.Sku.LotStg[key]
-              switch (defaultVal) {
-                case '$Date$': defaultVal = moment().format('YYYY-MM-DD'); break
-                default: break
+      if (record.Sku && record.Sku.LotStgId) {
+        this.getLotStg(record.Sku.LotStgId).then(lotStg => {
+          for (const key in lotStg) {
+            if (key.endsWith('Type') && lotStg[key] === 'Quote') {
+              // (引用)
+              const lotName = key.replace('Type', '')
+              const quoteName = lotStg[`${lotName}Enum`]
+              const colVal = quoteName.startsWith('Expand.') ? this.entity.Expand[quoteName.replace('Expand.', '')] : this.entity[quoteName]
+              record[lotName] = colVal
+            } else if (key.endsWith('Type') && lotStg[key] === 'CalcExpiry') {
+              // (计算到期)
+              const lotName = key.replace('Type', '')
+              // const calcName = record.Sku.LotStg[`${lotName}Enum`]
+              const sourceVal = record[this.defaultProductDateLot]
+              if (!sourceVal) continue
+              const calcVal = moment(sourceVal).add(record.Sku.ShelfLife, 'days').format('YYYY-MM-DD')
+              record[lotName] = calcVal
+            }
+            // 处理默认值
+            if (key.endsWith('Default') && lotStg[key]) {
+              const lotName = key.replace('Default', '')
+              if (!record[lotName]) {
+                let defaultVal = lotStg[key]
+                switch (defaultVal) {
+                  case '$Date$': defaultVal = moment().format('YYYY-MM-DD'); break
+                  default: break
+                }
+                record[lotName] = defaultVal
               }
-              record[lotName] = defaultVal
             }
           }
-        }
+        })
       }
       // 批属性处理(计算)
     },
@@ -431,10 +434,9 @@ export default {
         list.forEach(detail => {
           if (!detail.Code) validMsg.push(`收货明细“编号”必需输入`)
           if (!detail.SkuId) validMsg.push(`收货明细${detail.Code}中“物料”必需选择`)
-          if (!detail.Lot01) validMsg.push(`收货明细${detail.Lot01}中“所属仓库”必需选择`)
           if (detail.QtyUomExpected === 0 && detail.QtyUomReceived === 0) validMsg.push(`收货明细${detail.Code}中 预期数量 和 已收数量 都为0`)
           if (detail.QtyUomReceived > 0) { // 只有真实的收货的时候，才验证批次属性
-            const lotStg = Object.assign({}, detail?.Sku?.LotStg)
+            const lotStg = this.lotStgList.find(v => v.Id === detail.Sku.LotStgId)
             // 批属性验证(必需)
             for (const key in lotStg) {
               if (key.endsWith('Required') && !key.endsWith('RFRequired') && lotStg[key]) {

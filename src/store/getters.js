@@ -12,7 +12,8 @@ const getters = {
   whseId: state => state.user.whseId,
   storerId: state => state.user.storerId,
   addRouters: state => state.permission.addRouters,
-  multiTab: state => state.app.multiTab
+  multiTab: state => state.app.multiTab,
+  lotStgs: state => state.stglot.lotStgList
 }
 
 export default getters
