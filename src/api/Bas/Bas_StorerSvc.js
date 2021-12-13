@@ -16,6 +16,20 @@ export default {
         })
     },
     /**
+     * 查询数据
+     * @param {string} whseId 仓库Id
+     * @param {string} id 货主Id
+     * @param {string} types 货主类型
+     * @param {string} keyword 关键字
+     * @returns 货主数据
+     */
+    GetBySearch(whseId, id, types, keyword) {
+        return request({
+            url: `/api/Bas_Storer/GetBySearch?whseId=${whseId}&id=${id}&types=${types.join(',')}&keyword=${keyword}`,
+            method: 'get'
+        })
+    },
+    /**
      * 获取单个实体数据
      * @param {string} id 主键
      * @returns 实体数据
@@ -54,7 +68,7 @@ export default {
          * 导出模板
          * @returns 是否成功
          */
-     Exporttemplet() {
+    Exporttemplet() {
         return request({
             url: '/api/Bas_Storer/Exporttemplet',
             method: 'get'
