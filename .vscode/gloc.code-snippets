@@ -9,7 +9,7 @@
 	"Giant Web Tag Loc": {
 		"prefix": "gloc",
 		"body": [
-"<LocSelect v-model=\"${1:entity.LocId}\" :type=\"${2:LocType}\" :zone=\"${3:entity.PutawayZoneId}\"></LocSelect>$0"
+"<LocSelect v-model=\"${1:entity.LocId}\"></LocSelect>$0"
 		],
 		"description": "Giant Web Tag Loc"
 	}

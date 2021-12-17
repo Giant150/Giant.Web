@@ -20,21 +20,12 @@
           </a-col>
           <a-col :md="6" :sm="24">
             <a-form-item label="台账物料">
-              <SkuSelect
-                v-model="queryParam.SkuId"
-                :storer="queryParam.StorerId"
-                @select="
-                  (val, sku) => {
-                    handleSkuSelect(sku)
-                  }
-                "
-                aria-placeholder="物料"
-              ></SkuSelect>
+              <SkuSelect v-model="queryParam.SkuId" :storer="queryParam.StorerId" @select="(val, sku)=>{handleSkuSelect(sku)}" aria-placeholder="物料"></SkuSelect>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="24">
             <a-form-item label="台账库位">
-              <LocSelect v-model="queryParam.LocId" aria-placeholder="库位"></LocSelect>
+              <LocSelect v-model="queryParam.LocId"></LocSelect>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="24">
