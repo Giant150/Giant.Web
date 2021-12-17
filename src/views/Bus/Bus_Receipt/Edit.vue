@@ -432,6 +432,7 @@ export default {
           if (!detail.Code) validMsg.push(`收货明细“编号”必需输入`)
           if (!detail.SkuId) validMsg.push(`收货明细${detail.Code}中“物料”必需选择`)
           if (!detail.Lot01) validMsg.push(`收货明细${detail.Lot01}中“所属仓库”必需选择`)
+          if (detail.LocId === 'WH1_Stage') validMsg.push(`收货明细${detail.Code}中“库位”输入错误,重新选择!`)
           if (detail.QtyUomExpected === 0 && detail.QtyUomReceived === 0) validMsg.push(`收货明细${detail.Code}中 预期数量 和 已收数量 都为0`)
           if (detail.QtyUomReceived > 0) { // 只有真实的收货的时候，才验证批次属性
             const lotStg = Object.assign({}, detail?.Sku?.LotStg)
