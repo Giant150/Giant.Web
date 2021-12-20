@@ -86,7 +86,7 @@
           <LocSelect v-model="record.LocId" size="small" :disabled="!!record.LotId"></LocSelect>
         </template>
         <template slot="TrayId" slot-scope="text, record">
-          <TraySelect v-model="record.TrayId" :type="record.Sku?record.Sku.TrayTypeId:''" size="small" allowClear :disabled="!!record.LotId"></TraySelect>
+          <TraySelect v-model="record.TrayId" size="small" allowClear :disabled="!!record.LotId"></TraySelect>
         </template>
         <template slot="Lot01" slot-scope="text, record">
           <LotInput name="Lot01" :sku="record.Sku" v-model="record.Lot01" :disabled="!!record.LotId" size="small"></LotInput>
