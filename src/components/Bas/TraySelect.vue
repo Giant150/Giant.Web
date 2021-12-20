@@ -4,8 +4,8 @@
     <a-select-option v-for="item in data" :key="item.Id" :value="item.Id" :title="item.Code" :disabled="item.Status==='Disable'">
       <a-row type="flex" justify="start" :gutter="10">
         <a-col flex="auto">{{ item.Code }}</a-col>
-        <a-col flex="auto">{{ item.TrayType.Name }}</a-col>
-        <a-col flex="auto">{{ item.IsEmpty?'空':'实' }}/{{ item.LocId?'库内':'库外' }}</a-col>
+        <a-col flex="auto">{{ item.TypeName }}</a-col>
+        <a-col flex="auto">{{ item.IsEmpty?'空':'实' }}</a-col>
         <a-col flex="auto">
           <a-button type="dashed" shape="circle" icon="copy" title="复制编码" size="small" @click="copy(item.Code)" />
         </a-col>
@@ -24,8 +24,7 @@ export default {
     EnumName
   },
   props: {
-    value: String,
-    type: String
+    value: String
   },
   data() {
     return {
@@ -59,17 +58,7 @@ export default {
   methods: {
     copy,
     loadData() {
-      MainSvc.GetPage({
-        PageNo: 1,
-        PageSize: 10,
-        SortField: 'Code',
-        Search: {
-          Id: this.curValue,
-          Keyword: this.keyword,
-          WhseId: this.defaultWhseId,
-          TrayTypeId: this.type
-        }
-      }).then(result => {
+      MainSvc.GetBySearch(this.defaultWhseId, this.curValue ? this.curValue : '', this.keyword ? this.keyword : '').then(result => {
         this.data = result.Data
       })
     },
