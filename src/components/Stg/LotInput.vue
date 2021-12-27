@@ -1,9 +1,9 @@
 <template>
   <div>
     <a-input-number v-model="curVal" v-if="lotStg[`${name}Type`]==='Number'" style="width:100%" v-bind="$attrs" />
-    <a-date-picker v-model="curVal" v-else-if="lotStg[`${name}Type`]==='Date'" valueFormat="YYYY-MM-DD" v-bind="$attrs" />
-    <EnumSelect :code="lotStg[`${name}Enum`]" v-model="curVal" v-else-if="lotStg[`${name}Type`]==='Enum'" style="width:100%" v-bind="$attrs" @select="(val,item)=>{$emit('select', val, item)}"></EnumSelect>
-    <CommonSelect :table="lotStg[`${name}Enum`]" v-model="curVal" v-else-if="lotStg[`${name}Type`]==='Select'" style="width:100%" v-bind="$attrs" @select="(val,item)=>{$emit('select', val, item)}"></CommonSelect>
+    <a-date-picker v-model="curVal" v-else-if="lotStg[`${name}Type`]==='Date'" valueFormat="YYYY-MM-DD" :allowClear="!lotStg[`${name}Required`]" v-bind="$attrs" />
+    <EnumSelect :code="lotStg[`${name}Enum`]" v-model="curVal" v-else-if="lotStg[`${name}Type`]==='Enum'" :allowClear="!lotStg[`${name}Required`]" style="width:100%" v-bind="$attrs" @select="(val,item)=>{$emit('select', val, item)}"></EnumSelect>
+    <CommonSelect :table="lotStg[`${name}Enum`]" v-model="curVal" v-else-if="lotStg[`${name}Type`]==='Select'" :allowClear="!lotStg[`${name}Required`]" style="width:100%" v-bind="$attrs" @select="(val,item)=>{$emit('select', val, item)}"></CommonSelect>
     <a-input v-else v-model="curVal" v-bind="$attrs" />
   </div>
 </template>
