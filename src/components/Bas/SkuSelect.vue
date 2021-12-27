@@ -83,6 +83,7 @@ export default {
       this.$emit('input', val)
       var item = this.data.find(w => w.Id === val)
       this.$emit('select', val, item)
+      MainSvc.IncrementPopular([val])
     }
   }
 }
