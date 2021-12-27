@@ -85,5 +85,17 @@ export default {
             method: 'post',
             data: query
         })
+    },
+    /**
+     * 导出数据
+     * @param {Array<String>} ids 查询条件
+     * @returns excel文件地址
+     */
+    IncrementPopular(ids) {
+        return request({
+            url: '/api/Bas_Sku/IncrementPopular',
+            method: 'patch',
+            data: ids
+        })
     }
 }
