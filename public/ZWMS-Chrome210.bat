@@ -1,0 +1,1 @@
+start chrome --app=http://192.168.100.210:8061 --start-maximized
