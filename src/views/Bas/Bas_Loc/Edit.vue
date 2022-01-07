@@ -40,7 +40,7 @@
           </a-col>
           <a-col :span="8">
             <a-form-model-item label="托盘类型" prop="TrayTypeId">
-              <CommonSelect v-model="entity.TrayTypeId" table="Bas_TrayType" placeholder="托盘类型"></CommonSelect>
+              <CommonSelect v-model="entity.TrayTypeId" table="Bas_TrayType" allowClear placeholder="托盘类型"></CommonSelect>
             </a-form-model-item>
           </a-col>
           <a-col :span="8">
@@ -84,6 +84,11 @@
               <a-input-number v-model="entity.MaxWeight" style="width:100%" />
             </a-form-model-item>
           </a-col>
+          <a-col :span="8">
+            <a-form-model-item label="固定托盘" prop="BindTrayId">
+              <TraySelect v-model="entity.BindTrayId" allowClear></TraySelect>
+            </a-form-model-item>
+          </a-col>
           <template v-if="entity.Expand">
             <a-col :span="8" v-for="item in expand.EnumItems" :key="item.Code">
               <a-form-model-item :label="item.Name" :prop="item.Code">
@@ -104,13 +109,15 @@ import EnumSelect from '@/components/CF/EnumSelect'
 import CodeInput from '@/components/CF/CodeInput'
 import CommonSelect from '@/components/CF/CommonSelect'
 import ExpandInput from '@/components/CF/ExpandInput'
+import TraySelect from '@/components/Bas/TraySelect'
 export default {
   components: {
     MainSvc,
     CodeInput,
     EnumSelect,
     CommonSelect,
-    ExpandInput
+    ExpandInput,
+    TraySelect
   },
   props: {},
   data() {

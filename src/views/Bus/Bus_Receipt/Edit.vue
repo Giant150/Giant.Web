@@ -83,7 +83,7 @@
           <a-input-number v-model="record.QtyUomReceived" :min="record.QtyUomReceivedMin" :disabled="!!record.LotId" style="width:100%" size="small" />
         </template>
         <template slot="LocId" slot-scope="text, record">
-          <LocSelect v-model="record.LocId" size="small" :disabled="!!record.LotId"></LocSelect>
+          <LocSelect v-model="record.LocId" size="small" @select="(val,loc)=>{if(loc.BindTrayId) record.TrayId=loc.BindTrayId}" :disabled="!!record.LotId"></LocSelect>
         </template>
         <template slot="TrayId" slot-scope="text, record">
           <TraySelect v-model="record.TrayId" size="small" allowClear :disabled="!!record.LotId"></TraySelect>
