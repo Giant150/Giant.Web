@@ -95,7 +95,7 @@
               <a-input-number v-model="record.RackLife" :min="0" style="width:100%" size="small" :disabled="record.Status!=='Active'" />
             </template>
             <template slot="LocId" slot-scope="text, record">
-              <LocSelect v-model="record.LocId" size="small" allowClear :disabled="record.Status!=='Active'"></LocSelect>
+              <LocSelect v-model="record.LocId" size="small" allowClear @select="(val,loc)=>{if(loc.BindTrayId) record.TrayId=loc.BindTrayId}" :disabled="record.Status!=='Active'"></LocSelect>
             </template>
             <template slot="TrayId" slot-scope="text, record">
               <TraySelect v-model="record.TrayId" size="small" allowClear :disabled="record.Status!=='Active'"></TraySelect>
