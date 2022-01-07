@@ -108,7 +108,7 @@
       <a-button type="primary" v-action:Update icon="edit" @click="handleUpdateStatus('None',selectedRowKeys)">批量解冻</a-button>
       <a-button type="default" v-action:Query icon="export" @click="handleExport()">导出</a-button>
     </div>
-    <s-table ref="table" rowKey="Id" :columns="columns" :data="loadData" :rowSelection="rowSelection" showPagination="auto" :size="choose?'small':'default'" :scroll="{ x: 3060 }">
+    <s-table ref="table" rowKey="Id" :columns="columns" :data="loadData" :alert="true" :rowSelection="rowSelection" showPagination="auto" :size="choose?'small':'default'" :scroll="{ x: 3060 }">
       <template slot="Status" slot-scope="text">
         <EnumName code="Inv_Inventory_Status" :value="text" :color="true"></EnumName>
       </template>
@@ -194,10 +194,10 @@ export default {
         { title: '批次', dataIndex: 'LotId', sorter: true, width: 120, customRender: (value, record) => { return record.Lot.Code } },
         { title: '库位', dataIndex: 'LocId', sorter: true, width: 120, customRender: (value, record) => { return record.Loc.Code } },
         { title: '托盘', dataIndex: 'TrayId', sorter: true, width: 120, customRender: (value, record) => { return record?.Tray?.Code } },
-        { title: '库存数量', dataIndex: 'Qty', sorter: true, width: 120 },
+        { title: '库存数量', dataIndex: 'Qty', sorter: true, width: 120, needTotal: true },
         { title: '可用数量', width: 100, customRender: (value, record) => { return record.Status === 'Hold' ? 0 : (record.Qty - record.QtyAllocated - record.QtyPicked) } },
-        { title: '已分配', dataIndex: 'QtyAllocated', width: 100 },
-        { title: '已拣货', dataIndex: 'QtyPicked', width: 100 },
+        { title: '已分配', dataIndex: 'QtyAllocated', width: 100, needTotal: true },
+        { title: '已拣货', dataIndex: 'QtyPicked', width: 100, needTotal: true },
         { title: '库存状态', dataIndex: 'Status', width: 120, scopedSlots: { customRender: 'Status' } },
         { title: () => { return this.cusHeaderTitle('Lot01') }, dataIndex: 'Lot.Lot01' },
         { title: () => { return this.cusHeaderTitle('Lot02') }, dataIndex: 'Lot.Lot02' },
