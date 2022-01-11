@@ -9,7 +9,8 @@
         <div class="top">
           <div class="header">
             <a href="/">
-              <img src="~@/assets/logo.svg" class="logo" alt="logo">
+              <!-- <img src="~@/assets/logo.svg" class="logo" alt="logo"> -->
+              <logo-svg class="logo" alt="logo" />
               <span class="title">ZEQP WMS</span>
             </a>
           </div>
@@ -36,11 +37,13 @@
 <script>
 import { deviceMixin } from '@/store/device-mixin'
 import SelectLang from '@/components/SelectLang'
+import LogoSvg from '../assets/logo.svg?inline'
 
 export default {
   name: 'UserLayout',
   components: {
-    SelectLang
+    SelectLang,
+    LogoSvg
   },
   mixins: [deviceMixin],
   mounted () {
@@ -68,8 +71,8 @@ export default {
   .container {
     width: 100%;
     min-height: 100%;
-    //background: #f0f2f5 url(~@/assets/background.svg) no-repeat 50%;
-    background: #f0f2f5 url(https://open.saintic.com/api/bingPic/) no-repeat 50%;
+    background: #f0f2f5 url(~@/assets/background.svg) no-repeat 50%;
+    //background: #f0f2f5 url(https://open.saintic.com/api/bingPic/) no-repeat 50%;
     background-size: 100%;
     //padding: 50px 0 84px;
     position: relative;
@@ -113,6 +116,7 @@ export default {
           }
 
           .logo {
+            width: 44px;
             height: 44px;
             vertical-align: top;
             margin-right: 16px;
