@@ -37,11 +37,13 @@
 <script>
 import { deviceMixin } from '@/store/device-mixin'
 import SelectLang from '@/components/SelectLang'
+import LogoSvg from '../assets/logo.svg?inline'
 
 export default {
   name: 'UserLayout',
   components: {
-    SelectLang
+    SelectLang,
+    LogoSvg
   },
   mixins: [deviceMixin],
   mounted () {
