@@ -14,7 +14,7 @@
     -->
     <template v-slot:menuHeaderRender>
       <div>
-        <logo-svg />
+        <logo-svg style="width:50px;height:20px" />
         <h1>{{ title }}</h1>
       </div>
     </template>
