@@ -11,7 +11,7 @@
             <a href="/">
               <!-- <img src="~@/assets/logo.svg" class="logo" alt="logo"> -->
               <logo-svg class="logo" alt="logo" />
-              <span class="title">ZEQP WMS</span>
+              <span class="title">WMS</span>
             </a>
           </div>
           <div class="desc">中南智能仓库管理系统</div>
@@ -116,20 +116,20 @@ export default {
           }
 
           .logo {
-            width: 44px;
-            height: 44px;
+            width: 110px;
+            height: 40px;
             vertical-align: top;
             margin-right: 16px;
             border-style: none;
           }
 
           .title {
-            font-size: 33px;
+            font-size: 50px;
             color: rgba(0, 0, 0, .85);
             font-family: Avenir, 'Helvetica Neue', Arial, Helvetica, sans-serif;
             font-weight: 600;
             position: relative;
-            top: 2px;
+            top: 0px;
           }
         }
         .desc {
