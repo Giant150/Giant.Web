@@ -16,12 +16,12 @@
           </a-col>
           <a-col :md="4" :sm="24">
             <a-form-item label="应用">
-              <EnumSelect code="Sys_Log_AppName" v-model="queryParam.AppName"></EnumSelect>
+              <EnumSelect code="Sys_Log_AppName" v-model="queryParam.AppName" allowClear></EnumSelect>
             </a-form-item>
           </a-col>
           <a-col :md="4" :sm="24">
             <a-form-item label="级别">
-              <EnumSelect code="Sys_Log_Level" v-model="queryParam.Level" :color="true"></EnumSelect>
+              <EnumSelect code="Sys_Log_Level" v-model="queryParam.Level" color allowClear></EnumSelect>
             </a-form-item>
           </a-col>
           <a-col :md="4" :sm="24">
@@ -44,6 +44,9 @@
       </template>
       <template slot="Level" slot-scope="text">
         <EnumName code="Sys_Log_Level" :value="text" :color="true"></EnumName>
+      </template>
+      <template slot="CreateTime" slot-scope="text">
+        <span @click="handlerTimeClick(text)">{{ moment(text).format("HH:mm:ss") }}</span>
       </template>
       <span slot="action" slot-scope="text, record">
         <template>
@@ -70,7 +73,7 @@ import LocSelect from '@/components/Bas/LocSelect'
 const columns = [
   { title: '应用', dataIndex: 'AppName', width: 100, fixed: 'left', scopedSlots: { customRender: 'AppName' } },
   { title: '级别', dataIndex: 'Level', width: 100, fixed: 'left', scopedSlots: { customRender: 'Level' } },
-  { title: '时间', dataIndex: 'CreateTime', width: 100, fixed: 'left', sorter: true },
+  { title: '时间', dataIndex: 'CreateTime', width: 100, fixed: 'left', sorter: true, scopedSlots: { customRender: 'CreateTime' } },
   { title: '内容', dataIndex: 'Msg', customRender: (value) => { return value ? value.substring(0, 200) : '' } },
   { title: '服务', dataIndex: 'Logger', width: 300 },
   { title: '用户', dataIndex: 'UserId', width: 120 },
@@ -145,6 +148,11 @@ export default {
     },
     resetSearchForm() {
       this.queryParam = { Keyword: '', CreateTime: moment(), StartTime: moment('00:00:00', 'HH:mm:ss'), EndTime: moment('23:59:59', 'HH:mm:ss'), AppName: undefined, Level: undefined }
+    },
+    handlerTimeClick(date) {
+      console.log('handlerTimeClick:', date)
+      this.queryParam.StartTime = moment(date).add(-5, 's')
+      this.queryParam.EndTime = moment(date).add(5, 's')
     }
   }
 }
