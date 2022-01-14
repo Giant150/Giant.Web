@@ -135,13 +135,17 @@ export default {
       invSkuType: [],
       storerInv: [],
       putawayInv: [],
-      commits: []
+      commits: [],
+      workers: {
+        Sku: null
+      }
     }
   },
   computed: {
     ...mapGetters({
       defaultWhseId: 'whseId',
-      defaultStorerId: 'storerId'
+      defaultStorerId: 'storerId',
+      token: 'token'
     }),
     listCommit() {
       return this.commits.slice(0).sort((a, b) => new Date(b.commit.committer.date) - new Date(a.commit.committer.date)).slice(0, 4)
@@ -189,6 +193,15 @@ export default {
       return `提交人:${item.commit.committer.name}(${item.commit.committer.email}) 提交时间:${item.commit.committer.date}`
     }
   },
+  created() {
+    this.workers.Sku = new Worker(`/Workers/CacheSku.js?t=${Math.random()}`)
+    this.workers.Sku.onmessage = function (msg) {
+      console.log('Sku Worker Msg:', msg)
+    }
+    const workerInit = { WhseId: this.defaultWhseId, BaseUrl: process.env.VUE_APP_API_BASE_URL, Token: this.token }
+    console.log('Sku Worker workerInit:', workerInit)
+    this.workers.Sku.postMessage(workerInit)
+  },
   mounted() {
     this.loading = true
     this.getInvSummary()
@@ -198,6 +211,9 @@ export default {
     this.getSummaryByStorer()
     this.getGitLog()
     this.loading = false
+  },
+  destroyed() {
+    this.workers.Sku.terminate()
   },
   methods: {
     moment,
