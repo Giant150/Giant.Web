@@ -135,10 +135,7 @@ export default {
       invSkuType: [],
       storerInv: [],
       putawayInv: [],
-      commits: [],
-      workers: {
-        Sku: null
-      }
+      commits: []
     }
   },
   computed: {
@@ -193,15 +190,7 @@ export default {
       return `提交人:${item.commit.committer.name}(${item.commit.committer.email}) 提交时间:${item.commit.committer.date}`
     }
   },
-  created() {
-    this.workers.Sku = new Worker(`/Workers/CacheSku.js?t=${Math.random()}`)
-    this.workers.Sku.onmessage = function (msg) {
-      console.log('Sku Worker Msg:', msg)
-    }
-    const workerInit = { WhseId: this.defaultWhseId, BaseUrl: process.env.VUE_APP_API_BASE_URL, Token: this.token }
-    console.log('Sku Worker workerInit:', workerInit)
-    this.workers.Sku.postMessage(workerInit)
-  },
+  created() { },
   mounted() {
     this.loading = true
     this.getInvSummary()
@@ -209,11 +198,8 @@ export default {
     this.getSummaryBySkuType()
     this.getSummaryByPutaway()
     this.getSummaryByStorer()
-    this.getGitLog()
+    // this.getGitLog()
     this.loading = false
-  },
-  destroyed() {
-    this.workers.Sku.terminate()
   },
   methods: {
     moment,
