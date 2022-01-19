@@ -28,7 +28,9 @@ const rootRouter = {
   component: 'BasicLayout',
   redirect: '/Home',
   meta: {
-    title: '首页'
+    title: '首页',
+    icon: 'home',
+    keepAlive: true
   },
   children: []
 }

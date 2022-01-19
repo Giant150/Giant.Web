@@ -189,6 +189,7 @@ export default {
       return `提交人:${item.commit.committer.name}(${item.commit.committer.email}) 提交时间:${item.commit.committer.date}`
     }
   },
+  created() { },
   mounted() {
     this.loading = true
     this.getInvSummary()
@@ -196,7 +197,7 @@ export default {
     this.getSummaryBySkuType()
     this.getSummaryByPutaway()
     this.getSummaryByStorer()
-    this.getGitLog()
+    // this.getGitLog()
     this.loading = false
   },
   methods: {

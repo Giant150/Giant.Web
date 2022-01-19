@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import storage from 'store'
+import moment from 'moment'
 import copy from 'copy-to-clipboard'
 import { mapGetters } from 'vuex'
 import MainSvc from '@/api/Bas/Bas_SkuSvc'
@@ -67,9 +69,31 @@ export default {
   methods: {
     copy,
     loadData() {
-      MainSvc.GetBySearch(this.defaultWhseId, this.storer ? this.storer : '', this.curValue ? this.curValue : '', this.keyword ? this.keyword : '').then(result => {
-        this.data = result.Data
-      })
+      const last = storage.get(`Worker_Bas_Sku_LastModifyTime`) || '2000-01-01'
+      if (moment(last, 'YYYY-MM-DD HH:mm:ss').isSameOrAfter(moment().format('YYYY-MM-DD'))) {
+        const version = storage.get('Worker_Bas_Sku_Version')
+        var db = window.openDatabase('wms', version, 'WMS Cache Data', 500 * 1024 * 1024)
+        db.transaction((ctx) => {
+          var sql = `SELECT * FROM (SELECT * FROM Bas_Sku WHERE WhseId='${this.defaultWhseId}'`
+          if (this.storer) sql += ` AND StorerId='${this.storer}'`
+          if (this.keyword) sql += ` AND (Code LIKE '%${this.keyword}%' OR Name LIKE '%${this.keyword}%')`
+          sql += ' ORDER BY Popular DESC LIMIT 10)'
+          if (this.curValue) sql += ` UNION SELECT * FROM Bas_Sku WHERE Id='${this.curValue}' ORDER BY Popular DESC`
+          console.log('sql', sql)
+          ctx.executeSql(sql, [], (c, r) => {
+            var rows = r.rows
+            var listData = []
+            for (var i = 0; i < rows.length; i++) {
+              listData.push(rows[i])
+            }
+            this.data = listData
+          })
+        })
+      } else {
+        MainSvc.GetBySearch(this.defaultWhseId, this.storer ? this.storer : '', this.curValue ? this.curValue : '', this.keyword ? this.keyword : '').then(result => {
+          this.data = result.Data
+        })
+      }
     },
     handlerSearch(val) {
       if (this.timeout) {
