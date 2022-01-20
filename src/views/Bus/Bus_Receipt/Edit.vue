@@ -137,7 +137,7 @@
       <a-button v-action:Close :style="{ marginRight: '8px' }" type="primary" v-if="entity.Status==='Receiving' || entity.Status==='Completed'" @click="handleClose">收货结束</a-button>
       <a-button :style="{ marginRight: '8px' }" v-if="isModify" type="default" @click="handlePrint">打印收货单</a-button>
       <a-button v-if="canPutawayTask" v-action:Putaway :style="{ marginRight: '8px' }" type="default" @click="handlePutaway">生成上架任务</a-button>
-      <a-button v-action:Update :style="{ marginRight: '8px' }" type="primary" v-if="entity.Status!=='Closed'" @click="handleSubmit">保存</a-button>
+      <a-button v-action:Update :style="{ marginRight: '8px' }" type="primary" v-if="entity.Status!=='Closed'" @click="handleSubmit" :loading="loading">保存</a-button>
       <a-button :style="{ marginRight: '8px' }" @click="()=>{this.visible=false}">关闭</a-button>
     </div>
   </a-drawer>

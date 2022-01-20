@@ -189,7 +189,7 @@
       <a-button :style="{ marginRight: '8px' }" type="primary" @click="handlePicking" v-action:Picking v-if="entity.Status==='Allocated'">拣货确认</a-button>
       <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleShipping" v-action:Shipping v-if="entity.Status==='Picked'">发货确认</a-button>
       <a-button :style="{ marginRight: '8px' }" @click="handleShipPrint" v-action:Shipping v-if="entity.Status==='Shipped'">打印送货单</a-button>
-      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleSubmit" v-action:Update v-if="entity.Status==='Active' || entity.Status==='Allocate' || entity.Status==='Allocated'">保存</a-button>
+      <a-button :style="{ marginRight: '8px' }" type="primary" @click="handleSubmit" v-action:Update v-if="entity.Status==='Active' || entity.Status==='Allocate' || entity.Status==='Allocated'" :loading="loading">保存</a-button>
       <a-button :style="{ marginRight: '8px' }" @click="()=>{this.visible=false}">关闭</a-button>
     </div>
   </a-drawer>
