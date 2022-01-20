@@ -18,7 +18,7 @@ export default {
             var data = msg.data
             var entityName = data.entity
             if (data.type === 'complete') {
-                var lastModifyTime = moment().format('YYYY-MM-DD HH:mm:ss')
+                var lastModifyTime = moment().add(-1, 'm').format('YYYY-MM-DD HH:mm:ss')
                 storage.set(`Worker_${entityName}_LastModifyTime`, lastModifyTime)
                 var version = moment().format('YYYYMMDD')
                 if (this.Database.version !== version) {
