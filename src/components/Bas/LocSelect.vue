@@ -18,6 +18,9 @@
 </template>
 
 <script>
+import CacheWorker from '@/utils/cacheWorker'
+import storage from 'store'
+import moment from 'moment'
 import copy from 'copy-to-clipboard'
 import { mapGetters } from 'vuex'
 import MainSvc from '@/api/Bas/Bas_LocSvc'
@@ -61,9 +64,32 @@ export default {
   methods: {
     copy,
     loadData() {
-      MainSvc.GetBySearch(this.defaultWhseId, this.curValue ? this.curValue : '', this.keyword ? this.keyword : '').then(result => {
-        this.data = result.Data
-      })
+      const last = storage.get(`Worker_Bas_Loc_LastModifyTime`) || '2000-01-01'
+      if (moment(last, 'YYYY-MM-DD HH:mm:ss').isSameOrAfter(moment().format('YYYY-MM-DD'))) {
+        var db = window.openDatabase(CacheWorker.Name, CacheWorker.Version, CacheWorker.Name, CacheWorker.Size)
+        db.transaction((ctx) => {
+          var sql = `SELECT * FROM (SELECT * FROM Bas_Loc WHERE WhseId='${this.defaultWhseId}'`
+          if (this.keyword) sql += ` AND (Code LIKE '%${this.keyword}%' OR Name LIKE '%${this.keyword}%')`
+          sql += ' ORDER BY Code DESC LIMIT 10)'
+          if (this.curValue) sql += ` UNION SELECT * FROM Bas_Loc WHERE Id='${this.curValue}' ORDER BY Code DESC`
+          console.log('sql', sql)
+          ctx.executeSql(sql, [], (c, r) => {
+            var rows = r.rows
+            var listData = []
+            for (var i = 0; i < rows.length; i++) {
+              var row = { ...rows[i] }
+              row.IsEmpty = row.IsEmpty === 'true'
+              row.HasTray = row.HasTray === 'true'
+              listData.push(row)
+            }
+            this.data = listData
+          })
+        })
+      } else {
+        MainSvc.GetBySearch(this.defaultWhseId, this.curValue ? this.curValue : '', this.keyword ? this.keyword : '').then(result => {
+          this.data = result.Data
+        })
+      }
     },
     handlerSearch(val) {
       if (this.timeout) {
