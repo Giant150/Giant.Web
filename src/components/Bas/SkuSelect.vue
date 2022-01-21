@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import CacheWorker from '@/utils/cacheWorker'
 import storage from 'store'
 import moment from 'moment'
 import copy from 'copy-to-clipboard'
@@ -71,8 +72,7 @@ export default {
     loadData() {
       const last = storage.get(`Worker_Bas_Sku_LastModifyTime`) || '2000-01-01'
       if (moment(last, 'YYYY-MM-DD HH:mm:ss').isSameOrAfter(moment().format('YYYY-MM-DD'))) {
-        const version = storage.get('Worker_Bas_Sku_Version')
-        var db = window.openDatabase('wms', version, 'WMS Cache Data', 500 * 1024 * 1024)
+        var db = window.openDatabase(CacheWorker.Name, CacheWorker.Version, CacheWorker.Name, CacheWorker.Size)
         db.transaction((ctx) => {
           var sql = `SELECT * FROM (SELECT * FROM Bas_Sku WHERE WhseId='${this.defaultWhseId}'`
           if (this.storer) sql += ` AND StorerId='${this.storer}'`
@@ -84,7 +84,7 @@ export default {
             var rows = r.rows
             var listData = []
             for (var i = 0; i < rows.length; i++) {
-              listData.push(rows[i])
+              listData.push({ ...rows[i] })
             }
             this.data = listData
           })
