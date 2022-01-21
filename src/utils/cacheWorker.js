@@ -1,7 +1,7 @@
 import storage from 'store'
 import moment from 'moment'
 export default {
-    Name: 'xemc_wms',
+    Name: 'zeqp_wms',
     Version: '202201211149',
     Size: 500 * 1024 * 1024,
     Database: null,
