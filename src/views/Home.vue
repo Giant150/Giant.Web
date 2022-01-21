@@ -197,7 +197,7 @@ export default {
     this.getSummaryBySkuType()
     this.getSummaryByPutaway()
     this.getSummaryByStorer()
-    // this.getGitLog()
+    this.getGitLog()
     this.loading = false
   },
   methods: {
@@ -230,7 +230,7 @@ export default {
     getGitLog() {
       this.commits = []
       axios({
-        url: '/repos/LiuJu150/Giant.Web/commits?per_page=6',
+        url: '/repos/LiuJu150/Giant.Web/commits?per_page=6&sha=master',
         method: 'get',
         baseURL: 'https://api.github.com',
         headers: { 'Accept': 'application/vnd.github.v3+json' }
@@ -240,7 +240,7 @@ export default {
         }
       })
       axios({
-        url: '/repos/LiuJu150/Giant.RF/commits?per_page=6',
+        url: '/repos/LiuJu150/Giant.RF/commits?per_page=6&sha=master',
         method: 'get',
         baseURL: 'https://api.github.com',
         headers: { 'Accept': 'application/vnd.github.v3+json' }
